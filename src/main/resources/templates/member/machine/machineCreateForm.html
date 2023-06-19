@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="container">
+  <h2 th:text="${companyName} + ' 기계 목록'"></h2>
+  <form action="/account/info/machines/all/update" method="post">
+    <input type="hidden" name="memberId" th:value="${memberId}">
+    <table>
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>기계 ss이름</th>
+        <th>모델명</th>
+        <th>소프트웨어 버전</th>
+        <th>기계 제조일자</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="machine, machineStat : ${machineList.machines}">
+        <td th:text="${machineStat.index + 1}"></td>
+        <td><input type="text" th:field="*{machineList.machines[__${machineStat.index}__].machineName}" th:value="${machine.machineName}" /></td>
+        <td><input type="text" th:field="*{machineList.machines[__${machineStat.index}__].machineModel}" th:value="${machine.machineModel}" /></td>
+        <td><input type="text" th:field="*{machineList.machines[__${machineStat.index}__].softwareVersion}" th:value="${machine.softwareVersion}" /></td>
+        <td><input type="text" th:field="*{machineList.machines[__${machineStat.index}__].dateManufacture}" th:value="${machine.dateManufacture}" /></td>
+        <input type="hidden" th:field="*{machineList.machines[__${machineStat.index}__].memberId}" th:value="${machine.memberId}" />
+        <input type="hidden" th:field="*{machineList.machines[__${machineStat.index}__].id}" th:value="${machine.id}" />
+      </tr>
+      </tbody>
+    </table>
+
+    <button type="submit">수정하기</button>
+  </form>
+
+  <form action="/account/info/machines/all" method="post" >
+    <input type="hidden" name="memberId" th:value="${memberId}">
+    <div>
+      <label for="machineCode">기계 코드:</label>
+      <input id="machineCode" type="text" name="machineCode">
+    </div>
+    <div>
+      <label for="machineName">기계 이름:</label>
+      <input id="machineName" type="text" name="machineName">
+    </div>
+    <div>
+      <label for="softwareVersion">소프트웨어 버전:</label>
+      <input id="softwareVersion" type="text" name="softwareVersion">
+    </div>
+    <div>
+      <label for="dateManufacture">제조 일자:</label>
+      <input id="dateManufacture" type="text" name="dateManufacture">
+    </div>
+    <button type="submit">추가하기</button>
+  </form>
+
+</div> <!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="container">
+  <form action="/account/info" method="post">
+    <input type="hidden" name="id" th:value="${id}">
+    <div>
+      <label for="loginId">아이디:</label>
+      <span id="loginId" th:text="${member.loginId}"></span>
+    </div>
+    <div>
+      <label for="loginPassword">비밀번호:</label>
+      <input id="loginPassword" type="text" name="loginPassword" th:value="${member.loginPassword}">
+    </div>
+    <div>
+      <label for="companyName">회사이름:</label>
+      <input id="companyName" type="text" name="companyName" th:value="${member.companyName}">
+    </div>
+    <div>
+      <label for="machinesNum">기계 수:</label>
+      <input id="machinesNum" type="text" name="machinesNum" th:value="${member.machinesNum}">
+    </div>
+    <div>
+      <label for="createdDateTime">생성일자:</label>
+      <span id="createdDateTime" th:text="${member.createdDateTime}"></span>
+    </div>
+    <div>
+      <label for="updatedDateTime">수정일자:</label>
+      <span id="updatedDateTime" th:text="${member.updatedDateTime}"></span>
+    </div>
+    <button type="submit">수정하기</button>
+  </form>
+
+  <form action="/account/info/machines" method="post">
+    <input type="hidden" name="id" th:value="${id}">
+    <button type="submit">기계 목록보기</button>
+  </form>
+</div> <!-- /container -->
+
+</body>
+</html>
