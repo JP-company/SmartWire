@@ -36,7 +36,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         parameters.put("login_id", member.getLoginId());
         parameters.put("login_password", member.getLoginPassword());
         parameters.put("company_name", member.getCompanyName());
-        parameters.put("machines_num", member.getMachinesNum());
         parameters.put("created_date_time", member.getCreatedDateTime());
         parameters.put("updated_date_time", member.getUpdatedDateTime());
 
@@ -50,7 +49,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         member.setUpdatedDateTime(LocalDateTime.now());
         jdbcTemplate.update("UPDATE members SET login_password = ? WHERE id = ? ", member.getLoginPassword(), member.getId());
         jdbcTemplate.update("UPDATE members SET company_name = ? WHERE id = ? ", member.getCompanyName(), member.getId());
-        jdbcTemplate.update("UPDATE members SET machines_num = ? WHERE id = ? ", member.getMachinesNum(), member.getId());
         jdbcTemplate.update("UPDATE members SET updated_date_time = ? WHERE id = ? ", member.getUpdatedDateTime(), member.getId());
         return null;
     }
@@ -79,7 +77,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
             member.setLoginId(rs.getString("login_id"));
             member.setLoginPassword(rs.getString("login_password"));
             member.setCompanyName(rs.getString("company_name"));
-            member.setMachinesNum(rs.getInt("machines_num"));
             member.setCreatedDateTime(rs.getTimestamp("created_date_time").toLocalDateTime());
             member.setUpdatedDateTime(rs.getTimestamp("updated_date_time").toLocalDateTime());
             return member;

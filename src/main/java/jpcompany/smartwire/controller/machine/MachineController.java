@@ -27,8 +27,7 @@ public class MachineController {
         this.machineService = machineService;
         this.memberService = memberService;
     }
-
-
+    
 //    @GetMapping("/account/info/machines")
 //    public String machines(Model model) {
 //        List<Machine> allMachines = machineService.findAllMachines();

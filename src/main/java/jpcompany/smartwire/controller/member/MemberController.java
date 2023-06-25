@@ -16,12 +16,13 @@ import java.util.Optional;
 @Controller
 public class MemberController {
 
+
+
     private final MemberService memberService;
 
     @Autowired
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        // System.out.println("memberService = " + memberService.getClass());
     }
 
 
@@ -35,7 +36,6 @@ public class MemberController {
         member.setLoginId(memberForm.getLoginId());
         member.setLoginPassword(memberForm.getLoginPassword());
         member.setCompanyName(memberForm.getCompanyName());
-        member.setMachinesNum(memberForm.getMachinesNum());
         memberService.join(member);
         return "redirect:/";
     }
@@ -67,7 +67,6 @@ public class MemberController {
         Member member = memberService.findOne(id).get();
         member.setLoginPassword(memberForm.getLoginPassword());
         member.setCompanyName(memberForm.getCompanyName());
-        member.setMachinesNum(memberForm.getMachinesNum());
         memberService.updateInfo(member);
         return "redirect:/account/info?id=" + id;
     }

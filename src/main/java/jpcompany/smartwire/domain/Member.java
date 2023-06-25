@@ -8,24 +8,21 @@ public class Member {
     private String loginId;
     private String loginPassword;
     private String companyName;
-    private int machinesNum;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
     public Member() {}
-    public Member(String loginId, String loginPassword, String companyName, int machinesNum) {
+    public Member(String loginId, String loginPassword, String companyName) {
         this.loginId = loginId;
         this.loginPassword = loginPassword;
         this.companyName = companyName;
-        this.machinesNum = machinesNum;
     }
 
-    public Member(long id, String loginId, String loginPassword, String companyName, int machinesNum) {
+    public Member(long id, String loginId, String loginPassword, String companyName) {
         this.id = id;
         this.loginId = loginId;
         this.loginPassword = loginPassword;
         this.companyName = companyName;
-        this.machinesNum = machinesNum;
     }
 
 
@@ -77,14 +74,6 @@ public class Member {
         this.updatedDateTime = updatedDate;
     }
 
-    public int getMachinesNum() {
-        return machinesNum;
-    }
-
-    public void setMachinesNum(int machinesNum) {
-        this.machinesNum = machinesNum;
-    }
-
     @Override
     public String toString() {
         return "Member{" +
@@ -92,7 +81,6 @@ public class Member {
                 ", loginId='" + loginId + '\'' +
                 ", loginPassword='" + loginPassword + '\'' +
                 ", companyName='" + companyName + '\'' +
-                ", machinesNum=" + machinesNum +
                 ", createdDateTime=" + createdDateTime +
                 ", updatedDateTime=" + updatedDateTime +
                 '}';

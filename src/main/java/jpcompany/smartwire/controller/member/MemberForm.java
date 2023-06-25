@@ -4,7 +4,6 @@ public class MemberForm {
     private String companyName;
     private String loginId;
     private String loginPassword;
-    private int machinesNum;
 
 
     public String getCompanyName() {
@@ -31,13 +30,6 @@ public class MemberForm {
         this.loginPassword = loginPassword;
     }
 
-    public int getMachinesNum() {
-        return machinesNum;
-    }
-
-    public void setMachinesNum(int machinesNum) {
-        this.machinesNum = machinesNum;
-    }
 
     @Override
     public String toString() {
@@ -45,7 +37,6 @@ public class MemberForm {
                 "companyName='" + companyName + '\'' +
                 ", loginId='" + loginId + '\'' +
                 ", loginPassword='" + loginPassword + '\'' +
-                ", machinesNum=" + machinesNum +
                 '}';
     }
 }
