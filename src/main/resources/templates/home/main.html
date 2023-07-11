@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/image/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css"/>
+  <title th:text="#{title}">스마트 와이어</title>
+</head>
+<body>
+
+<nav id="main-navbar">
+  <div id="main-navbar-left">
+    <a th:href="@{/}">
+      <img src="/image/logo.png" alt="로고" />
+      <span>SMART WIRE</span>
+    </a>
+  </div>
+  <div id="main-navbar-right">
+    <span th:text="${member.companyName}">Company name</span>
+    <button th:onclick="|location.href='@{/my_page(companyName=${member.companyName})}'|"><img src="/image/account.png" alt="마이페이지"/></button>
+    <form action="/logout" method="post">
+      <button th:text="#{logout}">로그아웃</button>
+    </form>
+
+  </div>
+</nav>
+
+<div id="main-wrap">
+  <div id="main-left">
+    <div>
+      <button id="main-left-status">
+        <img src="/image/check_circle.png" alt="" /><span>작동 상태</span>
+      </button>
+      <button id="main-left-data">
+        <img src="/image/assessment.png" alt="" /><span>가공 통계</span>
+      </button>
+    </div>
+  </div>
+  <div id="main-right">
+    <div id="main-right-grid">
+      <div class="main-right-grid-card">
+        <div class="header">
+          <span>1호기</span>
+          <img src="/image/breaking.png" alt="" />
+        </div>
+        <div class="middle">
+          <div>
+            <div>파일명</div>
+            <div>로그명</div>
+          </div>
+          <div>
+            <div><button>HST_HM_DE 노칭편.NC</button></div>
+            <span class="log-text">M코드 정지</span>
+            <div>2023-06-23 12:04:42</div>
+          </div>
+        </div>
+        <div class="bottom">
+          <img src="/image/clock.png" alt="작동시간" />
+          <span>00:00</span>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

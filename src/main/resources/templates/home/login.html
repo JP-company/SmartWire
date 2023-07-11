@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <link rel="icon" href="/image/favicon.ico" />
+    <title th:text="#{title}">스마트 와이어</title>
+</head>
+<body>
+<div id="wrap">
+    <div id="login-box">
+        <div id="login-logo">
+            <img src="/image/logo.png" height="40" width="40" />
+            <span id="login-name">SMART WIRE</span>
+        </div>
+
+        <div>
+            <form id="login-input-button" method="post" th:action th:object="${memberLoginForm}">
+                <input
+                  type="text"
+                  th:field="*{loginId}"
+                  th:placeholder="#{login.id.placeholder}"
+                  th:errorclass="field-error-input"
+                />
+                <input
+                  type="password"
+                  th:field="*{loginPassword}"
+                  th:placeholder="#{login.password.placeholder}"
+                  th:errorclass="field-error-input"
+                />
+                <div th:if="${#fields.hasGlobalErrors()}" id="login-error">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+
+                <button id="login-button" th:text="#{login.button}" type="submit">로그인</button>
+            </form>
+            <div id="login-admin">
+                <button
+                  th:onclick="|location.href='@{/join}'|"
+                  th:text="#{login.join}"
+                >
+                    회원가입
+                </button>
+                <button th:text="#{login.idFind}">아이디 찾기</button>
+                <button th:text="#{login.passwordFind}">비밀번호 찾기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-cs" th:utext="#{login.contact}">
+        CS Center 010-8714-4246<br />평일 10:00~20:00 | 주말, 공휴일 휴무
+    </div>
+</div>
+</body>
+</html>
