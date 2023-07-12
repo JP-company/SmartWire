@@ -2,17 +2,17 @@ package jpcompany.smartwire.domain.member.repository;
 
 import groovy.util.logging.Slf4j;
 import jpcompany.smartwire.domain.member.Member;
-import org.assertj.core.api.Assertions;
+import jpcompany.smartwire.web.member.dto.MemberJoinDto;
+import jpcompany.smartwire.web.member.repository.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Slf4j
@@ -42,9 +42,38 @@ class MemoryMemberRepositoryTest {
         repository.save(member);
 
         member.setCompanyName("SIT");
-        Member update = repository.update(member);
+        repository.update(member);
+        Member result = repository.findById(member.getId()).get();
 
-        assertThat(update.getCompanyName()).isEqualTo("SIT");
+        assertThat(result.getCompanyName()).isEqualTo("SIT");
+    }
+
+    @Test
+    @DisplayName("이메일 인증키 생성, 이메일 재설정")
+    void setEmailVerifyKeyNEmail() {
+        Member member = new Member("sitsit", "1234", "에스아이티");
+        Member savedMember = repository.save(member);
+        assertThat(savedMember.getAuthCode()).isNull();
+        assertThat(savedMember.getEmail()).isNull();
+
+        String uuid = UUID.randomUUID().toString();
+        member.setEmail("wjsdj2008@gmail.com");
+        repository.setAuthCodeEmail(member.getLoginId(), uuid, member.getEmail());
+        Member result = repository.findById(member.getId()).get();
+        assertThat(result.getAuthCode()).isNotNull();
+        assertThat(result.getEmail()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("해당 계정에 메일인증 여부 추가")
+    void setEmailVerified() {
+        Member member = new Member("sitsit", "1234", "에스아이티");
+        member.setEmailVerified(false);
+        repository.save(member);
+
+        repository.setEmailVerified(member.getLoginId());
+        Member result = repository.findByLoginId(member.getLoginId()).get();
+        assertThat(result.getEmailVerified()).isTrue();
     }
 
     @Test

@@ -19,7 +19,10 @@
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.companyName}">Company name</span>
-    <button th:onclick="|location.href='@{/my_page(companyName=${member.companyName})}'|"><img src="/image/account.png" alt="마이페이지"/></button>
+    <form action="/profile" method="post" th:object="${member}" >
+      <input th:field="*{loginId}" hidden>
+      <button type="submit"><img src="/image/account.png" alt="마이페이지"/></button>
+    </form>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
