@@ -8,7 +8,7 @@
 
   <div style="border:1px solid black; ">
     <h3 style="color:blue"> 아래 인증버튼을 누르시면 인증이 완료됩니다.</h3>
-    <a th:href="@{http://localhost:8080/email_verify/{loginId}/{authCode}(loginId=${loginId}, authCode=${authCode})}" >인증하기</a>
+    <a th:href="@{{domain}/email_verify/{loginId}/{authCode}(domain=#{domain} ,loginId=${loginId}, authCode=${authCode})}" >인증하기</a>
   </div>
   <br/>
 </div>
