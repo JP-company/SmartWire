@@ -60,6 +60,8 @@ public class MemberJoinController {
         return "redirect:/";
     }
 
+
+
     @PostConstruct
     public void init() {
         MemberJoinDto member1 = new MemberJoinDto("sitsit8800", "Arkskekfk1!", "Arkskekfk1!",

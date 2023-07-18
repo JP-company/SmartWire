@@ -35,6 +35,7 @@ public class MemberLoginController {
         if (loginMember == null) {
             return "home/login";
         }
+
         model.addAttribute("member", loginMember);
         log.info("loginMember={}", loginMember);
 

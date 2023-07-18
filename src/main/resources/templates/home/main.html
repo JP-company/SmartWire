@@ -19,10 +19,7 @@
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.companyName}">Company name</span>
-    <form action="/profile" method="post" th:object="${member}" >
-      <input th:field="*{loginId}" hidden>
-      <button type="submit"><img src="/image/account.png" alt="마이페이지"/></button>
-    </form>
+    <button type="submit"><img src="/image/account.png" alt="마이페이지"/></button>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
@@ -43,6 +40,7 @@
   </div>
   <div id="main-right">
     <div id="main-right-grid">
+
       <div class="main-right-grid-card">
         <div class="header">
           <span>1호기</span>
@@ -64,7 +62,6 @@
           <span>00:00</span>
         </div>
       </div>
-
 
     </div>
   </div>
