@@ -17,7 +17,7 @@
         </div>
 
         <div>
-            <form id="login-input-button" method="post" th:action th:object="${memberLoginForm}">
+            <form id="login-input-button" method="post" th:action th:object="${memberLoginDto}">
                 <input
                   type="text"
                   th:field="*{loginId}"

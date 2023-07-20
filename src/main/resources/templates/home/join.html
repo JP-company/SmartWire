@@ -28,7 +28,7 @@
 </head>
 <body>
 
-<form th:action method="post" th:object="${memberJoinForm}">
+<form th:action method="post" th:object="${memberJoinDto}">
   <div>
     <label for="loginId" th:text="#{join.id}">아이디</label>
     <input type="text" id="loginId" class="join-input" th:field="*{loginId}" th:placeholder="#{join.id.placeholder}" th:errorclass="field-error-input"/>

@@ -19,7 +19,7 @@ public class MemberServiceLogin {
     }
 
     public void updateAuthCode(String loginId, String authCode, String email) {
-        repository.setAuthCodeEmail(loginId, authCode, email);
+        repository.updateAuthCodeEmail(loginId, authCode, email);
     }
 
     public Member verifyAuthCode(String loginId, String authCode) {

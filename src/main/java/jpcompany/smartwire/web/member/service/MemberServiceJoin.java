@@ -4,7 +4,11 @@ import jpcompany.smartwire.domain.member.Member;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 
 
 @Service
@@ -12,8 +16,9 @@ import org.springframework.stereotype.Service;
 public class MemberServiceJoin {
 
     private final MemberRepository repository;
+    private final MemberServiceEmail memberServiceEmail;
 
-    public Member join(MemberJoinDto memberJoinDto) {
+    public Member join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
         Member member = new Member();
         member.setLoginId(memberJoinDto.getLoginId());
         member.setLoginPassword(memberJoinDto.getLoginPassword());
@@ -22,6 +27,9 @@ public class MemberServiceJoin {
         member.setPhoneNumber(memberJoinDto.getPhoneNumber());
         member.setTermOfUse(memberJoinDto.getTermOfUse());
         member.setEmailVerified(false);
+
+        String authCode = memberServiceEmail.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail());
+        member.setAuthCode(authCode);
         repository.save(member);
         return member;
     }

@@ -29,11 +29,23 @@ public class Member {
         this.companyName = companyName;
     }
 
-    public Member(String loginId, String loginPassword, String companyName, String email, String phoneNumber) {
+    public Member(String loginId, String loginPassword, String companyName, String email, String phoneNumber, Boolean termOfUse) {
         this.loginId = loginId;
         this.loginPassword = loginPassword;
         this.companyName = companyName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.termOfUse = termOfUse;
+    }
+
+    public Member(String loginId, String loginPassword, String companyName, String email, String phoneNumber, Boolean termOfUse, Boolean emailVerified, String authCode) {
+        this.loginId = loginId;
+        this.loginPassword = loginPassword;
+        this.companyName = companyName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.termOfUse = termOfUse;
+        this.emailVerified = emailVerified;
+        this.authCode = authCode;
     }
 }

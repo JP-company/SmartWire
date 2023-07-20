@@ -9,16 +9,14 @@
 <body>
   <h2>인증 메일을 보내드렸어요. 인증 메일을 확인해주세요</h2>
   <p>가입한 이메일을 인증해주시고 아래 인증 완료 버튼을 눌러주시면, 스마트 와이어 서비스를 마음껏 이용하실 수 있습니다. 가입해주셔서 감사합니다.</p>
-  <form action="/email-verify" method="post" th:object="${member}">
+  <form action="/email_verify" method="post" th:object="${member}">
     <input type="email" th:field="*{email}" th:placeholder="#{verify.placeholder}">
     <input type="text" th:field="*{loginId}" hidden>
     <button th:text="#{verify.button}" type="submit">인증 메일 재요청</button>
   </form>
 
   <div>
-    <button th:text="#{verify.login}" type="button" th:onclick="|location.href='@{/}'|">인증 완료</button>
-    <form action="/logout" method="post">
-      <button th:text="#{logout}">로그아웃</button>
+    <button th:text="#{verify.login}" type="button" th:onclick="|location.href='@{/}'|">로그인 하러가기</button>
     </form>
   </div>
 </body>

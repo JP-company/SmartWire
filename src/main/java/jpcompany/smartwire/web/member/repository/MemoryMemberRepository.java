@@ -1,12 +1,11 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.member.Member;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Repository
+//@Repository
 public class MemoryMemberRepository implements MemberRepository{
 
     private final static Map<Long, Member> memberDB = new HashMap<>();
@@ -29,14 +28,12 @@ public class MemoryMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Member update(Member member) {
+    public void update(Member member) {
         Member result = findById(member.getId()).get();
         result.setLoginPassword(member.getLoginPassword());
         result.setEmail(member.getEmail());
         result.setCompanyName(member.getCompanyName());
         result.setPhoneNumber(member.getPhoneNumber());
-
-        return result;
     }
 
     @Override
@@ -51,13 +48,9 @@ public class MemoryMemberRepository implements MemberRepository{
                 .findAny();
     }
 
-    @Override
-    public List<Member> findAll() {
-        return new ArrayList<>(memberDB.values());
-    }
 
     @Override
-    public void setAuthCodeEmail(String loginId, String AuthCode, String email) {
+    public void updateAuthCodeEmail(String loginId, String AuthCode, String email) {
         Member member = findByLoginId(loginId).get();
         member.setAuthCode(AuthCode);
         member.setEmail(email);
