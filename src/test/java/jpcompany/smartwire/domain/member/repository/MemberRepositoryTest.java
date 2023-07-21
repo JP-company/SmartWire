@@ -3,7 +3,9 @@ package jpcompany.smartwire.domain.member.repository;
 import groovy.util.logging.Slf4j;
 import jpcompany.smartwire.domain.member.Member;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
+import jpcompany.smartwire.web.member.repository.MemoryMemberRepository;
 import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
 @Slf4j
 @SpringBootTest
 @Transactional
@@ -24,6 +25,12 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository repository;
+
+//    MemoryMemberRepository repository = new MemoryMemberRepository();
+//    @AfterEach
+//    void afterEach() {
+//        repository.clearStore();
+//    }
 
     @Test
     @DisplayName("회원 저장")
@@ -62,7 +69,7 @@ class MemberRepositoryTest {
 
         String newUuid = UUID.randomUUID().toString();
         String newEmail = "wjsdj2008@gmail.com";
-        repository.updateAuthCodeEmail(member.getLoginId(), newUuid, "wjsdj2008@gmail.com");
+        repository.updateAuthCodeEmail(member.getLoginId(), newUuid, newEmail);
         Member result = repository.findById(member.getId()).get();
 
         assertThat(result.getAuthCode()).isEqualTo(newUuid);

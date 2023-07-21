@@ -1,6 +1,7 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.member.Member;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,6 +31,7 @@ public class MemoryMemberRepository implements MemberRepository{
     @Override
     public void update(Member member) {
         Member result = findById(member.getId()).get();
+        setDateTime(result);
         result.setLoginPassword(member.getLoginPassword());
         result.setEmail(member.getEmail());
         result.setCompanyName(member.getCompanyName());

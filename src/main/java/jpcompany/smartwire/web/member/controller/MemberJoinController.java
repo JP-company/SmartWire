@@ -2,7 +2,6 @@ package jpcompany.smartwire.web.member.controller;
 
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import jpcompany.smartwire.web.member.service.MemberServiceJoin;
-import jpcompany.smartwire.web.member.service.MemberServiceLogin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 public class MemberJoinController {
 
     private final MemberServiceJoin serviceJoin;
-
-    private final MemberServiceLogin serviceLogin;
 
     @GetMapping("/join")
     public String join(Model model) {
@@ -46,16 +43,14 @@ public class MemberJoinController {
             bindingResult.rejectValue("loginId", "Duplicated");
         }
 
-        // 회원가입 폼 입력 검증 오류 시
+        // 검증 오류 시
         if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "home/join";
         }
 
-        // 회원가입 성공
+        // 회원가입 성공 -> 메일 인증 요청 페이지 이동
         serviceJoin.join(memberJoinDto);
-
-        // 메일 인증 요청 페이지
         model.addAttribute("member", memberJoinDto);
         return "home/email_verify";
     }

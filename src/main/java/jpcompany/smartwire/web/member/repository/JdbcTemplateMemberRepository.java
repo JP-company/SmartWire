@@ -31,6 +31,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
                 .usingGeneratedKeyColumns("id");
 //                .usingColumns("item_name", "price", "quantity"); // 생략가능
     }
+
     @Override
     public Member save(Member member) {
         updateDateTime(member);
@@ -65,7 +66,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         try {
             Map<String, Object> param = Map.of("id", id);
             Member member = template.queryForObject(sql, param, MemberRowMapper());  // 없으면 예외터짐
-            return Optional.of(member);
+            return Optional.ofNullable(member);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -80,7 +81,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         try {
             Map<String, Object> param = Map.of("loginId", loginId);
             Member member = template.queryForObject(sql, param, MemberRowMapper());  // 없으면 예외터짐
-            return Optional.of(member);
+            return Optional.ofNullable(member);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

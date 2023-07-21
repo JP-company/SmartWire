@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -78,11 +77,9 @@ public class MemberLoginController {
         HttpSession session = request.getSession();
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
-        // 세션 ID를 쿠키로 전달
+        // 세션 ID를 쿠키로 전달, 쿠키 유효시간 설정
         Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
-        // 쿠키의 유효 기간 설정 (예: 1시간)
-        sessionCookie.setMaxAge(3600);
-        // 쿠키를 클라이언트(브라우저)에게 전달
+        sessionCookie.setMaxAge(432000);
         response.addCookie(sessionCookie);
         return "redirect:/";
     }
@@ -99,14 +96,13 @@ public class MemberLoginController {
 
     @PostMapping("/email_verify")
     public String resendMail(@Validated @ModelAttribute("member") MemberResendEmailDto member) throws MessagingException, UnsupportedEncodingException {
-
         String authCode = memberServiceEmail.sendEmail(member.getLoginId(), member.getEmail());
         serviceLogin.updateAuthCode(member.getLoginId(), authCode, member.getEmail());
         return "home/email_verify";
     }
 
     @GetMapping("/email_verify/{loginId}/{authKey}")
-    public String verifyAuthMail(@PathVariable String loginId, @PathVariable String authKey, Model model, HttpServletRequest request) {
+    public String verifyAuthMail(@PathVariable String loginId, @PathVariable String authKey, Model model) {
         Member member = serviceLogin.verifyAuthCode(loginId, authKey);
         if (member == null) {
             model.addAttribute("verified", "인증에 실패하였습니다. 홈페이지에서 인증 메일을 다시 요청해주세요");
