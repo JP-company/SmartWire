@@ -35,7 +35,6 @@ public class MemberServiceEmail {
         return UUID.randomUUID().toString();
     }
 
-
     //메일 양식 작성
     private MimeMessage createEmailForm(String loginId, String email, String authCode) throws MessagingException, UnsupportedEncodingException {
 

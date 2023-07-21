@@ -7,7 +7,7 @@
 
 * {
     box-sizing: border-box;
-    font-family: "Pretendard";
+    font-family: "Pretendard", serif;
     font-style: normal;
 }
 body {
@@ -29,7 +29,7 @@ body {
     width: 580px;
     height: 480px;
     display: inline-block;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     vertical-align: middle;
 }

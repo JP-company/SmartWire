@@ -1,11 +1,8 @@
 package jpcompany.smartwire.domain.member.repository;
 
 import groovy.util.logging.Slf4j;
-import jpcompany.smartwire.domain.member.Member;
+import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
-import jpcompany.smartwire.web.member.repository.MemoryMemberRepository;
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository repository;
 
-//    MemoryMemberRepository repository = new MemoryMemberRepository();
+//    MemberRepositoryMemory repository = new MemberRepositoryMemory();
 //    @AfterEach
 //    void afterEach() {
 //        repository.clearStore();
@@ -128,7 +125,7 @@ class MemberRepositoryTest {
                 "wjsdj2008@naver.com", "010-8714-4246", true,
                 false, "asd");
         repository.save(member1);
-        assertThat(repository.findById(0L).isPresent()).isFalse();
+        assertThat(repository.findById(0).isPresent()).isFalse();
     }
 
     @Test

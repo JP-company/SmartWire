@@ -2,7 +2,7 @@ package jpcompany.smartwire.web.member.controller;
 
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import jpcompany.smartwire.web.member.dto.MemberResendEmailDto;
-import jpcompany.smartwire.domain.member.Member;
+import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.SessionConst;
 import jpcompany.smartwire.web.member.service.MemberServiceEmail;
 import jpcompany.smartwire.web.member.service.MemberServiceLogin;
@@ -30,7 +30,8 @@ public class MemberLoginController {
     private final MemberServiceEmail memberServiceEmail;
 
     @GetMapping("/")
-    public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model) {
+    public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+                       HttpServletRequest request, HttpServletResponse response, Model model) {
         // 임시 데이터 (삭제 해야함)
         model.addAttribute("memberLoginDto", new MemberLoginDto("wjsdj2009"));
 
@@ -46,7 +47,11 @@ public class MemberLoginController {
             return "home/email_verify";
         }
 
-        // 세션 유지, 이메일 인증되었으면 로그인으로 이동
+        // 세션 유지, 이메일 인증되었으면 메인페이지로 이동, 쿠키 유효기간 연장
+        HttpSession session = request.getSession();
+        Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
+        sessionCookie.setMaxAge(432000);
+        response.addCookie(sessionCookie);
         return "home/main";
     }
 

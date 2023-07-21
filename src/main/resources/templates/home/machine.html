@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/machine.css" />
+  <link rel="icon" href="/image/favicon.ico">
+  <title th:text="#{title}">스마트 와이어</title>
+</head>
+<body>
+
+<nav id="main-navbar">
+  <div id="main-navbar-left">
+    <a th:href="@{/}">
+      <img src="/image/logo.png" alt="로고" />
+      <span>SMART WIRE</span>
+    </a>
+  </div>
+  <div id="main-navbar-right">
+    <span th:text="${member.getCompanyName()}">Company name</span>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/image/account.png" alt="마이페이지"/></button>
+    <form action="/logout" method="post">
+      <button th:text="#{logout}">로그아웃</button>
+    </form>
+  </div>
+</nav>
+
+<div id="main-wrap">
+  <div id="main-left">
+    <div>
+      <button id="main-left-status" th:onclick="|location.href='@{/member}'|">
+        <img src="/image/check_grey.png" alt=""/><span>계정 관리</span>
+      </button>
+      <button id="main-left-data" th:onclick="|location.href='@{/member/machine}'|">
+        <img src="/image/assessment_white.png" alt=""/><span>기계 관리</span>
+      </button>
+    </div>
+  </div>
+  <div id="main-right">
+    <div>
+      <button onclick="addMachine()">플러스</button>
+      <form th:action method="post" th:object="${machine}">
+        <div id="machine-form">
+          <div>
+            <input type="text" th:field="*{machineName}" placeholder="회사에서 부르는 기계이름을 입력해주세요 예) 1호기, 2호기">
+            <input type="text" th:field="*{machineModel}" placeholder="기계 모델명 (선택)">
+            <input type="date" th:field="*{dateManufacture}" placeholder="제조일자 (선택)">
+            <button type="button">펼치기</button>
+          </div>
+
+
+        </div>
+        <button type="submit">설정완료</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    const machineForm = document.querySelector("#machine-form");
+    const addMachine = function() {
+        // create element (form)
+        var newForm = document.createElement('div');
+        // set attribute (form)
+        newForm.name = 'newForm';
+        newForm.method = 'post';
+        newForm.action = 'https://ifuwanna.tistory.com/196';
+        newForm.target = '_blank';
+
+        // create element (input)
+        var input1 = document.createElement('input');
+        var input2 = document.createElement('input');
+        var input3 = document.createElement('input');
+
+        // append input (to form)
+        newForm.appendChild(input1);
+        newForm.appendChild(input2);
+        newForm.appendChild(input3)
+        machineForm.appendChild(newForm);
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package jpcompany.smartwire.web.member.repository;
 
-import jpcompany.smartwire.domain.member.Member;
+import jpcompany.smartwire.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,12 +19,12 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-public class JdbcTemplateMemberRepository implements MemberRepository{
+public class MemberRepositoryJdbcTemplate implements MemberRepository{
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateMemberRepository(DataSource dataSource) {
+    public MemberRepositoryJdbcTemplate(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("members")
@@ -37,12 +37,12 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         updateDateTime(member);
         SqlParameterSource param = new BeanPropertySqlParameterSource(member);
         Number key = jdbcInsert.executeAndReturnKey(param);
-        member.setId(key.longValue());
+        member.setId(key.intValue());
         return member;
     }
 
     @Override
-    public void update(Member member) {
+    public Member update(Member member) {
         String sql = "update members " +
                 "set company_name=:companyName, phone_number=:phoneNumber, updated_date_time=:updatedDateTime " +
                 "where login_id=:loginId";
@@ -53,12 +53,13 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
                 .addValue("phoneNumber", member.getPhoneNumber())
                 .addValue("updatedDateTime", member.getUpdatedDateTime())
                 .addValue("loginId", member.getLoginId());
-
         template.update(sql, param);
+
+        return findByLoginId(member.getLoginId()).get();
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
+    public Optional<Member> findById(Integer id) {
         String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
                 "email_verified, auth_code, created_date_time, updated_date_time " +
                 "from members where id = :id";

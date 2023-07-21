@@ -19,7 +19,7 @@
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.companyName}">Company name</span>
-    <button type="submit"><img src="/image/account.png" alt="마이페이지"/></button>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/image/account.png" alt="마이페이지"/></button>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
@@ -40,28 +40,28 @@
   </div>
   <div id="main-right">
     <div id="main-right-grid">
-
-      <div class="main-right-grid-card">
-        <div class="header">
-          <span>1호기</span>
-          <img src="/image/breaking.png" alt="" />
-        </div>
-        <div class="middle">
-          <div>
-            <div>파일명</div>
-            <div>로그명</div>
-          </div>
-          <div>
-            <div><button>HST_HM_DE 노칭편.NC</button></div>
-            <span class="log-text">M코드 정지</span>
-            <div>2023-06-23 12:04:42</div>
-          </div>
-        </div>
-        <div class="bottom">
-          <img src="/image/clock.png" alt="작동시간" />
-          <span>00:00</span>
-        </div>
-      </div>
+        <button th:onclick="|location.href='@{/member/machine}'|" id="main-right-machine-button">기계 추가하기</button>
+<!--      <div class="main-right-grid-card">-->
+<!--        <div class="header">-->
+<!--          <span>1호기</span>-->
+<!--          <img src="/image/breaking.png" alt="" />-->
+<!--        </div>-->
+<!--        <div class="middle">-->
+<!--          <div>-->
+<!--            <div>파일명</div>-->
+<!--            <div>로그명</div>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <div><button>HST_HM_DE 노칭편.NC</button></div>-->
+<!--            <span class="log-text">M코드 정지</span>-->
+<!--            <div>2023-06-23 12:04:42</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="bottom">-->
+<!--          <img src="/image/clock.png" alt="작동시간" />-->
+<!--          <span>00:00</span>-->
+<!--        </div>-->
+<!--      </div>-->
 
     </div>
   </div>

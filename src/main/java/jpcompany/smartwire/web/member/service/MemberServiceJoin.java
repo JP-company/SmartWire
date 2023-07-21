@@ -1,11 +1,11 @@
 package jpcompany.smartwire.web.member.service;
 
-import jpcompany.smartwire.domain.member.Member;
+import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +18,7 @@ public class MemberServiceJoin {
     private final MemberRepository repository;
     private final MemberServiceEmail memberServiceEmail;
 
+    @Transactional
     public Member join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
         Member member = new Member();
         member.setLoginId(memberJoinDto.getLoginId());
@@ -34,6 +35,7 @@ public class MemberServiceJoin {
         return member;
     }
 
+    @Transactional
     public boolean idDuplicateCheck(String loginId) {
         return repository.findByLoginId(loginId).orElse(null) == null;
     }
