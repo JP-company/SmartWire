@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WindowController {
 
-    @PostMapping("/api")
+    @PostMapping("/api/login")
     public String post(@RequestBody String UserId) {
-        log.info("api 전송받음={}", UserId);
-        return "ok";
+        log.info("api 전송받음 userId={}", UserId);
+        return "ok" + UserId;
     }
 }
