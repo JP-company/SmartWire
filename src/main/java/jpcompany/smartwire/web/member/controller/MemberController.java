@@ -1,9 +1,6 @@
 package jpcompany.smartwire.web.member.controller;
 
-import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.web.machine.dto.MachineSaveDto;
-import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.service.MachineService;
 import jpcompany.smartwire.web.member.SessionConst;
 import jpcompany.smartwire.web.member.dto.MemberUpdateDto;
@@ -44,19 +41,5 @@ public class MemberController {
         return "redirect:/member";
     }
 
-    @GetMapping("/member/machine")
-    public String machine(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model) {
-        model.addAttribute("member", loginMember);
-        model.addAttribute("machine", new MachineSaveDto());
-        log.info("loginMember={}", loginMember);
-        return "home/machine";
-    }
 
-    @PostMapping("/member/machine")
-    public String postMachine(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                              @ModelAttribute MachineSaveDto machineSaveDto) {
-        Machine machine = machineService.saveMachineInfo(loginMember.getId(), machineSaveDto);
-
-        return "redirect:/member/machine";
-    }
 }

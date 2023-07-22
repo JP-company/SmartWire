@@ -14,16 +14,18 @@ public class Machine {
     private Integer id;
     private String machineName;
     private String machineModel;
-    private String dateManufacture;
+    private LocalDate dateManufacture;
+    private Integer sequence;
     private Boolean selected;
     private Integer memberId;
 
     public Machine() {}
 
-    public Machine(String machineName, String machineModel, String dateManufacture, Boolean selected, Integer memberId) {
+    public Machine(String machineName, String machineModel, LocalDate dateManufacture, Integer sequence, Boolean selected, Integer memberId) {
         this.machineName = machineName;
         this.machineModel = machineModel;
         this.dateManufacture = dateManufacture;
+        this.sequence = sequence;
         this.selected = selected;
         this.memberId = memberId;
     }

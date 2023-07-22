@@ -6,7 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/css/machine.css" />
   <link rel="icon" href="/image/favicon.ico">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css"
+  />
   <title th:text="#{title}">스마트 와이어</title>
+  <style>
+    input {
+        width: 50px;
+    }
+  </style>
 </head>
 <body>
 
@@ -39,47 +48,119 @@
   </div>
   <div id="main-right">
     <div>
-      <button onclick="addMachine()">플러스</button>
-      <form th:action method="post" th:object="${machine}">
-        <div id="machine-form">
-          <div>
-            <input type="text" th:field="*{machineName}" placeholder="회사에서 부르는 기계이름을 입력해주세요 예) 1호기, 2호기">
-            <input type="text" th:field="*{machineModel}" placeholder="기계 모델명 (선택)">
-            <input type="date" th:field="*{dateManufacture}" placeholder="제조일자 (선택)">
-            <button type="button">펼치기</button>
-          </div>
+      <button onclick="addRow()()">기계 추가</button>
+      <form th:action method="post" th:object="${machineDtoList}">
+          <table id="product-list">
+            <thead>
+              <tr>
+                <th>순서</th>
+                <th>id</th>
+                <th>기계 이름</th>
+                <th>기계 모델명</th>
+                <th>제조일자</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr th:each="machine, machineStat : *{machines}">
+              <td>
+                <span class="drag-handle" draggable="true">&#9776;</span>
+                <input type="number" class="row-position"
+                       th:field="*{machines[__${machineStat.index}__].sequence}"
+                       th:value="${machine.sequence}" readonly/>
+              </td>
+              <td>
+                <input type="text"
+                       th:field="*{machines[__${machineStat.index}__].id}"
+                       th:value="${machine.id}" readonly>
+              </td>
+              <td>
+                <input type="text"
+                       th:field="*{machines[__${machineStat.index}__].machineName}"
+                       th:value="${machine.machineName}"
+                       placeholder="">
+                <div th:errors="*{machines[__${machineStat.index}__].machineName}">오류</div>
+              </td>
+              <td>
+                <input type="text"
+                       th:field="*{machines[__${machineStat.index}__].machineModel}"
+                       th:value="${machine.machineModel}"
+                       placeholder="">
+                <div th:errors="*{machines[__${machineStat.index}__].machineModel}">오류</div>
+              </td>
+              <td>
+                <input type="date"
+                       th:field="*{machines[__${machineStat.index}__].dateManufacture}"
+                       th:value="${machine.dateManufacture}"
+                       placeholder="">
+              </td>
+              <td>
+              </td>
+            </tr>
+            </tbody>
+          </table>
 
-
-        </div>
         <button type="submit">설정완료</button>
       </form>
     </div>
   </div>
 </div>
 <script>
-    const machineForm = document.querySelector("#machine-form");
-    const addMachine = function() {
-        // create element (form)
-        var newForm = document.createElement('div');
-        // set attribute (form)
-        newForm.name = 'newForm';
-        newForm.method = 'post';
-        newForm.action = 'https://ifuwanna.tistory.com/196';
-        newForm.target = '_blank';
-
-        // create element (input)
-        var input1 = document.createElement('input');
-        var input2 = document.createElement('input');
-        var input3 = document.createElement('input');
-
-        // append input (to form)
-        newForm.appendChild(input1);
-        newForm.appendChild(input2);
-        newForm.appendChild(input3)
-        machineForm.appendChild(newForm);
+    function addRow() {
+        const table = document.querySelector("table");
+        const tbody = document.querySelector("tbody");
+        const newRow = document.createElement("tr");
+        let index = table.rows.length-1;
+        // <tr> 태그 내부의 HTML 코드를 생성합니다.
+        newRow.innerHTML = `
+          <td>
+            <span class="drag-handle" draggable="true">&#9776;</span>
+            <input type="number" class="row-position" value="${index}" name="machines[${index}].sequence" readonly>
+          </td>
+          <td><input type="text" value="" readonly name="machines[${index}].id"></td>
+          <td><input type="text" value="" placeholder="기계 이름" name="machines[${index}].machineName"></td>
+          <td><input type="text" value="" placeholder="기계 모델명" name="machines[${index}].machineModel"></td>
+          <td><input type="date" value="" placeholder="제조일자" name="machines[${index}].dateManufacture"></td>
+          <td><button class="delete-row" type="button">삭제</button></td>
+        `;
+        // Delete button's click event
+        newRow.querySelector('.delete-row').addEventListener('click', function() {
+            this.closest('tr').remove();
+            updateRowPositions(); // Update row positions after a row is deleted
+        });
+        tbody.appendChild(newRow);
     }
+</script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+<script>
+    var container = document
+        .getElementById("product-list")
+        .getElementsByTagName("tbody")[0];
+    var drake = dragula([container], {
+        moves: function (el, container, handle) {
+            return handle.className === "drag-handle";
+        },
+        accepts: function (el, target, source, sibling) {
+            return target !== document.querySelector("#product-list thead");
+        },
+    });
 
+    drake.on("drop", function (el, target, source, sibling) {
+        updateRowPositions();
+    });
+
+    function updateRowPositions() {
+        document.querySelectorAll("#product-list tbody tr").forEach((row, i) => {
+            row.querySelectorAll('input').forEach(input => {
+                const parts = input.name.split(".");
+                if (parts.length > 1) {
+                    input.name = `machines[${i}].${parts[1]}`;
+                }
+            });
+            row.querySelector(".row-position").value = i;
+        });
+    }
 </script>
 </body>
 </html>

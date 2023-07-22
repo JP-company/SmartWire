@@ -1,13 +1,16 @@
 package jpcompany.smartwire.web.machine.service;
 
 import jpcompany.smartwire.domain.Machine;
-import jpcompany.smartwire.web.machine.dto.MachineSaveDto;
+import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,14 +20,22 @@ public class MachineService {
 
     private final MemberRepository memberRepository;
 
+
     private final MachineRepositoryJdbcTemplate machineRepository;
 
-    public Machine saveMachineInfo(Integer memberId, MachineSaveDto machineSaveDto) {
+    public void saveMachineForm(Integer memberId, MachineDto machineDto) {
         Machine machine = new Machine();
-        machine.setMachineName(machineSaveDto.getMachineName());
-        machine.setMachineModel(machineSaveDto.getMachineModel());
-        machine.setDateManufacture(machineSaveDto.getDateManufacture());
+        machine.setId(machineDto.getId());
+        machine.setMachineName(machineDto.getMachineName());
+        machine.setMachineModel(machineDto.getMachineModel());
+        machine.setDateManufacture(machineDto.getDateManufacture());
         machine.setMemberId(memberId);
-        return machineRepository.save(machine);
+        machine.setSequence(machineDto.getSequence());
+
+        if (machineDto.getId() == null) {
+            machineRepository.save(machine);
+        } else {
+            machineRepository.updateInformation(machineDto);
+        }
     }
 }

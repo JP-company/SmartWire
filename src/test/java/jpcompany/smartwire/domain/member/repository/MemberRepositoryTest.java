@@ -1,6 +1,6 @@
 package jpcompany.smartwire.domain.member.repository;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MemberRepositoryTest {
 
     @Autowired
-    MemberRepository repository;
+    private MemberRepository repository;
 
 //    MemberRepositoryMemory repository = new MemberRepositoryMemory();
 //    @AfterEach
