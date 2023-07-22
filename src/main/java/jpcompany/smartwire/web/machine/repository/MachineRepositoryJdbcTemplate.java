@@ -2,10 +2,8 @@ package jpcompany.smartwire.web.machine.repository;
 
 import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
-import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,14 +21,12 @@ public class MachineRepositoryJdbcTemplate {
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
-    private final MemberRepository memberRepository;
 
-    public MachineRepositoryJdbcTemplate(DataSource dataSource, MemberRepository memberRepository) {
+    public MachineRepositoryJdbcTemplate(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("machines")
                 .usingGeneratedKeyColumns("id");
-        this.memberRepository = memberRepository;
     }
 
     public Machine save(Machine machine) {
