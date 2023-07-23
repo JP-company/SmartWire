@@ -55,6 +55,9 @@ html, body {
     color: #999999;
     margin-right: 18px;
 }
+#profile-img {
+    vertical-align: inherit;
+}
 #main-navbar-right > button:nth-child(2) {
     align-items: center;
     border: none;

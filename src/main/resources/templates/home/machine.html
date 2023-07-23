@@ -42,7 +42,7 @@
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.getCompanyName()}">Company name</span>
-    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/image/account.png" alt="마이페이지"/></button>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img id="profile-img" src="/image/account.png" alt="마이페이지"/></button>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
@@ -155,6 +155,10 @@
 </div>
 </body>
 <script th:inline="javascript">
+    window.onload = function() {
+        updateRowPositions();
+    }
+
     let popupMessage = [[${popupMessage}]];
     if (popupMessage) {
         alert(popupMessage);
@@ -184,7 +188,6 @@
         let index = table.rows.length-1;
         // <tr> 태그 내부의 HTML 코드를 생성합니다.
         newRow.innerHTML = `
-
           <td>
             <span class="drag-handle" draggable="true">&#9776;</span>
             <input type="text" value="" placeholder="기계 이름" name="machines[${index}].machineName">
