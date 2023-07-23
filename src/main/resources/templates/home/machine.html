@@ -231,8 +231,10 @@
                 if (parts.length > 1) {
                     input.name = `machines[${i}].${parts[1]}`;
                 }
+                if (parts[1] === 'sequence') {
+                    input.value = i;
+                }
             });
-            row.querySelector(".row-position").value = i;
         });
     }
 </script>
