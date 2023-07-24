@@ -1,6 +1,6 @@
-package jpcompany.smartwire.web.member.intercepter;
+package jpcompany.smartwire.web.intercepter;
 
-import jpcompany.smartwire.web.member.SessionConst;
+import jpcompany.smartwire.web.member.controller.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

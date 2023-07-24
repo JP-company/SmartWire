@@ -59,9 +59,15 @@ public class MemoryMemberRepository implements MemberRepository{
         member.setEmail(email);
     }
 
+    @Override
     public void setEmailVerified(String loginId) {
         Member member = findByLoginId(loginId).get();
         member.setEmailVerified(true);
+    }
+
+    @Override
+    public void updateHaveMachine(Integer memberId, Boolean bool) {
+
     }
 
     public void clearStore() {

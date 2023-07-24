@@ -54,6 +54,6 @@ public class MemberServiceEmail {
         Context context = new Context();
         context.setVariable("authCode", authCode);
         context.setVariable("loginId", loginId);
-        return templateEngine.process("mail", context); // mail.html
+        return templateEngine.process("email/mail", context); // mail.html
     }
 }

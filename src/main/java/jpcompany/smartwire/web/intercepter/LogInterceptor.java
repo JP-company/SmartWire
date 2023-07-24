@@ -1,4 +1,4 @@
-package jpcompany.smartwire.web.member.intercepter;
+package jpcompany.smartwire.web.intercepter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;

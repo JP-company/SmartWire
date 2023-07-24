@@ -76,8 +76,8 @@ public class MemberRepositoryJdbcTemplate implements MemberRepository{
     @Override
     public Optional<Member> findByLoginId(String loginId) {
         String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_code, created_date_time, updated_date_time " +
-                "from members where login_id = :loginId";
+                "email_verified, auth_code, created_date_time, updated_date_time, have_machine" +
+                " from members where login_id = :loginId";
 
         try {
             Map<String, Object> param = Map.of("loginId", loginId);
@@ -109,6 +109,15 @@ public class MemberRepositoryJdbcTemplate implements MemberRepository{
 
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("loginId", loginId);
+
+        template.update(sql, param);
+    }
+
+    public void updateHaveMachine(Integer memberId, Boolean bool) {
+        String sql = "update members set have_machine=:bool where id=:memberId";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("bool", bool);
 
         template.update(sql, param);
     }

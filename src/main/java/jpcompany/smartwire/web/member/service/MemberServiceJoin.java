@@ -28,9 +28,10 @@ public class MemberServiceJoin {
         member.setPhoneNumber(memberJoinDto.getPhoneNumber());
         member.setTermOfUse(memberJoinDto.getTermOfUse());
         member.setEmailVerified(false);
-
+        member.setHaveMachine(false);
         String authCode = memberServiceEmail.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail());
         member.setAuthCode(authCode);
+
         repository.save(member);
         return member;
     }

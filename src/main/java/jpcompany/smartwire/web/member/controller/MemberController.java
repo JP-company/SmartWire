@@ -1,8 +1,6 @@
 package jpcompany.smartwire.web.member.controller;
 
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.web.machine.service.MachineService;
-import jpcompany.smartwire.web.member.SessionConst;
 import jpcompany.smartwire.web.member.dto.MemberUpdateDto;
 import jpcompany.smartwire.web.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    private final MachineService machineService;
-
     @GetMapping("/member")
     public String member(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model) {
         model.addAttribute("member", loginMember);
@@ -33,13 +29,11 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String postMember(@ModelAttribute(name = "memberUpdateDto") MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+    public String postMember(@ModelAttribute(name = "memberUpdateDto") MemberUpdateDto memberUpdateDto,
+                             HttpServletRequest request) {
         Member member = memberService.updateCompanyNameNPhoneNumber(memberUpdateDto);
-        log.info("memberUpdateDto={}", memberUpdateDto);
         HttpSession session = request.getSession(false);
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
         return "redirect:/member";
     }
-
-
 }

@@ -5,6 +5,7 @@ import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,13 @@ class MachineRepositoryJdbcTemplateTest {
         for (Machine listMachine : listMachines) {
             machineRepository.save(listMachine);
         }
+    }
+
+    @Test
+    @DisplayName("기계 없을 때 리스트 불러오기")
+    void findAllWhenNone() {
+        List<MachineDto> all = machineRepository.findAll(-1);
+        assertThat(all.size()).isEqualTo(0);
     }
 
     @Test

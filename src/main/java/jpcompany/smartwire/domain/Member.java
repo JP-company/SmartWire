@@ -18,6 +18,7 @@ public class Member {
     private Boolean termOfUse;
     private Boolean emailVerified;
     private String authCode;
+    private Boolean haveMachine;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
@@ -32,5 +33,9 @@ public class Member {
         this.termOfUse = termOfUse;
         this.emailVerified = emailVerified;
         this.authCode = authCode;
+    }
+
+    boolean hasMachine() {
+        return this.haveMachine;
     }
 }

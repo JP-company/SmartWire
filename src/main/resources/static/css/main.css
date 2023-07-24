@@ -291,4 +291,5 @@ html, body {
 #main-right-machine-button {
     width: 150px;
     height: 50px;
+    cursor: pointer;
 }

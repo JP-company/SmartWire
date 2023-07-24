@@ -1,9 +1,9 @@
 package jpcompany.smartwire.web.member.controller;
 
+import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import jpcompany.smartwire.web.member.dto.MemberResendEmailDto;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.web.member.SessionConst;
 import jpcompany.smartwire.web.member.service.MemberServiceEmail;
 import jpcompany.smartwire.web.member.service.MemberServiceLogin;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +52,12 @@ public class MemberLoginController {
         Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
         sessionCookie.setMaxAge(432000);
         response.addCookie(sessionCookie);
+
+        // 기계 정보 하나라도 있는지 확인
+        if (!loginMember.getHaveMachine()) {
+            return "home/main_no_machine";
+        }
+
         return "home/main";
     }
 
@@ -64,8 +70,10 @@ public class MemberLoginController {
             return "home/login";
         }
 
-        // 로그인 실패 아이디 비밀번호 불일치
         Member loginMember = serviceLogin.login(memberLogin.getLoginId(), memberLogin.getLoginPassword());
+        log.info("로그인 했을때={}", loginMember);
+
+        // 로그인 실패 아이디 비밀번호 불일치
         if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "home/login";
@@ -111,9 +119,9 @@ public class MemberLoginController {
         Member member = serviceLogin.verifyAuthCode(loginId, authKey);
         if (member == null) {
             model.addAttribute("verified", "인증에 실패하였습니다. 홈페이지에서 인증 메일을 다시 요청해주세요");
-            return "mail_complete";
+            return "email/mail_complete";
         }
         model.addAttribute("verified", "인증에 성공하였습니다.");
-        return "mail_complete";
+        return "email/mail_complete";
     }
 }

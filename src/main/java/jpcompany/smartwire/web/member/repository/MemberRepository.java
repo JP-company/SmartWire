@@ -11,4 +11,5 @@ public interface MemberRepository {
     Optional<Member> findByLoginId(String loginId);
     void updateAuthCodeEmail(String loginId, String AuthCode, String email);
     void setEmailVerified(String loginId);
+    void updateHaveMachine(Integer memberId, Boolean bool);
 }

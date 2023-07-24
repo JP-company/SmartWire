@@ -1,7 +1,7 @@
-package jpcompany.smartwire.web.member.config;
+package jpcompany.smartwire.web.intercepter.config;
 
-import jpcompany.smartwire.web.member.intercepter.LogInterceptor;
-import jpcompany.smartwire.web.member.intercepter.LoginCheckInterceptor;
+import jpcompany.smartwire.web.intercepter.LogInterceptor;
+import jpcompany.smartwire.web.intercepter.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

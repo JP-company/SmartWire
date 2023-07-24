@@ -55,9 +55,6 @@ html, body {
     color: #999999;
     margin-right: 18px;
 }
-#profile-img {
-    vertical-align: inherit;
-}
 #main-navbar-right > button:nth-child(2) {
     align-items: center;
     border: none;
@@ -117,18 +114,16 @@ html, body {
     display: flex;
     justify-content: center;
 }
-#main-left-status {
+#main-left-status, #main-left-data {
     display: flex;
     margin-bottom: 16px;
     padding: 13px 24px;
     width: 186px;
     height: 48px;
-
-
-    background: white;
     border: 1px solid #cacaca;
-
+    background-color: #ffffff;
     border-radius: 24px;
+
     font-style: normal;
     font-weight: 700;
     font-size: 18px;
@@ -136,24 +131,6 @@ html, body {
     align-items: center;
     text-align: center;
     color: #999999;
-}
-#main-left-data {
-    display: flex;
-    padding: 13px 24px;
-    width: 186px;
-    height: 48px;
-
-    background: #000000;
-    border: none;
-
-    border-radius: 24px;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 22px;
-    align-items: center;
-    text-align: center;
-    color: #ffffff;
 }
 #main-left-status > img,
 #main-left-data > img {
@@ -174,6 +151,93 @@ html, body {
 #main-left-data:hover {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
     cursor: pointer;
+}
+#main-right-grid {
+    display: grid;
+    height: 588px;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    grid-gap: 24px;
+    background-color: #f4f4f4;
+    flex: 1;
+}
+#main-right-grid > div {
+    width: 320px;
+    height: 206px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 16px;
+}
+.main-right-grid-card {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+}
+.main-right-grid-card:hover {
+    background-color: #999999;
+}
+.main-right-grid-card .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    width: 320px;
+    background-color: #f82f47;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+.main-right-grid-card .header span {
+    padding-left: 24px;
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+    position: relative;
+    top: 1px;
+}
+.main-right-grid-card .header img {
+    width: 22px;
+    height: 22px;
+    margin-right: 17px;
+}
+.main-right-grid-card .middle {
+    display: flex;
+    padding: 16px 24px;
+    flex: 1;
+}
+.main-right-grid-card .middle div {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+}
+.main-right-grid-card .middle div div:first-child {
+    margin-bottom: 10px;
+}
+.main-right-grid-card .middle > div:nth-child(2) {
+    margin-left: 16px;
+}
+.main-right-grid-card .middle div button {
+    background-color: #ffffff;
+    border: none;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+
+    text-align: start;
+}
+.main-right-grid-card .middle div button {
+    text-overflow: ellipsis;
+    width: 216px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.main-right-grid-card .middle .log-text {
+    font-weight: 800;
+    color: #f82f47;
 }
 .bottom {
     display: flex;
@@ -196,119 +260,41 @@ html, body {
     position: relative;
     top: 2px;
 }
-#main-right-machine {
-    width: 680px;
+
+#main-right-machine-button {
+    width: 245px;
+    height: 52px;
+    cursor: pointer;
+    border-radius: 800px;
+    background-color: #00c220;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    border: none;
+}
+#main-right-machine-button:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.23);
+    cursor: pointer;
+}
+#main-right-notice {
+    width: 560px;
+    height: 380px;
     background-color: #ffffff;
     border-radius: 16px;
-    height: fit-content;
 }
-#machine-form-empty-text {
+#main-right-machine-img {
+    width: 80px;
+    height: 80px;
+    margin-top: 72px;
+}
+#main-right-machine-text {
+    margin-top: 24px;
+    margin-bottom: 40px;
+    font-size: 18px;
     text-align: center;
-    margin-bottom: 32px;
 }
-#machine-list-add-button {
-    width: 440px;
-    height: 48px;
-    border-radius: 8px;
-    background-color: #f4f4f4;
-    border: none;
-}
-#machine-list-add-button > img {
-    width: 24px;
-    height: 24px;
-}
-#machine-list-save-button {
-    width: 400px;
-    height: 52px;
-    border-radius: 800px;
-    background-color: #000000;
-    color: #ffffff;
-    border: none;
-    margin-top: 36px;
-    margin-bottom: 100px;
-}
-#main-right-machine-form {
+#main-right-notice {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-top: 100px;
-}
-#machine-list-element {
-    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    width: 440px;
-    border: solid 1px #cacaca;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    padding: 12px 24px;
-    position: relative;
-}
-.machine-list-hide {
-    display: none;
-    margin-top: 16px;
-    flex-direction: column;
-    align-items: center;
-}
-#machine-list-element > div:nth-child(1) {
-    display: flex;
-}
-#machine-list-element > div:nth-child(1) > input {
-    border: none;
-    flex-grow: 1;
-    font-size: 16px;
-    font-weight: 900;
-    padding: 0 0 0 16px;
-}
-#machine-list-element > div:nth-child(1) > input:focus-visible {
-    outline: none;
-}
-#machine-list-element > div:nth-child(2) > input {
-    border: none;
-    border-bottom: 1px solid #cacaca;
-    width: 312px;
-    height: 36px;
-    font-size: 16px;
-}
-#machine-list-element > div:nth-child(2) > input:nth-of-type(2) {
-    margin-top: 8px;
-}
-#machine-list-element > div:nth-child(2) > button {
-    background-color: #ffffff;
-    color: #999999;
-    border: none;
-    margin-top: 16px;
-    margin-bottom: 4px;
-    border-radius: 0;
-    cursor: pointer;
-    padding: 0;
-    font-size: 14px;
-    height: 22px;
-}
-.machine-list-hamburger {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-}
-.machine-list-stretch-button {
-    background-image: url("../image/expand.png");
-    background-size: 24px;
-    background-color: #ffffff;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    width: 24px;
-    height: 24px;
-    border: none;
-}
-.machine-quick-delete-button {
-    position: absolute;
-    top: 10px;
-    right: -42px;
-    border: none;
-    background-color: #ffffff;
-    background-image: url(../image/minus_machine.png);
-    background-size: 28px;
-    background-repeat: no-repeat;
-    width: 28px;
-    height: 28px;
 }
