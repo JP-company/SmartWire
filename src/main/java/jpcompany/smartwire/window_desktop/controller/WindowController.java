@@ -1,5 +1,6 @@
 package jpcompany.smartwire.window_desktop.controller;
 
+import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,10 @@ public class WindowController {
     }
 
     @PostMapping("/api/log_test")
-    public void realTimeUpdate(@RequestBody LogDto logDto, Principal principal) {
-        log.info("받은 LogDto={}", logDto);
-        log.info("만든 Principal 객체={}", principal);
-        log.info("만든 Principal 내용={}", principal.getName());
-        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", logDto);
+    public void realTimeUpdate(@RequestBody LogDto logDto) {
+        String companyId = "wjsdj2009";
+        this.messagingTemplate.convertAndSend("/topic/logs/" + companyId, logDto);
+
+
     }
 }

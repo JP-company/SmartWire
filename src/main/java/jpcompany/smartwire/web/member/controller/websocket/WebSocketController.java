@@ -20,7 +20,7 @@ public class WebSocketController {
 
     @Scheduled(fixedDelay = 5000)
     public void updateLogInfo(LogDto logDto, Principal principal) {
-        template.convertAndSendToUser(principal.getName(), "/queue/messages", logDto);
+        template.convertAndSendToUser(principal.getName(), "/topic/logs", logDto);
     }
 }
 
