@@ -1,12 +1,13 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 //@Repository
-public class MemoryMemberRepository implements MemberRepository{
+public class MemberMemoryRepository implements MemberRepository{
 
     private final static Map<Integer, Member> memberDB = new HashMap<>();
     private static Integer sequence = 0;

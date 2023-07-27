@@ -40,10 +40,11 @@
   </div>
   <div id="main-right">
     <div id="main-right-grid">
-      <div class="main-right-grid-card">
+
+      <div class="main-right-grid-card" th:each="log, logStat : ${logDto}">
         <div class="header">
-          <span>1호기</span>
-          <img src="/image/breaking.png" alt="" />
+          <span th:text="${log.machineName}">기계명</span>
+          <img src="/image/breaking.png" alt="기계 상태" />
         </div>
         <div class="middle">
           <div>
@@ -51,14 +52,14 @@
             <div>로그명</div>
           </div>
           <div>
-            <div><button>HST_HM_DE 노칭편.NC</button></div>
-            <span class="log-text">M코드 정지</span>
-            <div>2023-06-23 12:04:42</div>
+            <div><button th:text="${log.file}">파일명</button></div>
+            <span class="log-text" th:text="${log.log}">로그명</span>
+            <div th:text="|${log.date} ${log.logTime}|">로그 시간</div>
           </div>
         </div>
         <div class="bottom">
           <img src="/image/clock.png" alt="작동시간" />
-          <span>00:00</span>
+          <span th:text="${log.startedTime}">00:00 (현재 파일 가공 시간)</span>
         </div>
       </div>
 
@@ -66,4 +67,27 @@
   </div>
 </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    // Connect to WebSocket server.
+    var socket = new SockJS('/ws');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        console.log('웹 소켓 연결됐어!');
+        // Subscribe to "/topic/messages" destination.
+        stompClient.subscribe('/user/queue/messages', function(message) {
+            // Handle received message.
+            handleUpdate(JSON.parse(message.body));
+        });
+    });
+
+    function handleUpdate(message) {
+        console.log(message);
+        // Update DOM according to the message.
+        // ...
+    }
+</script>
+
 </html>
+

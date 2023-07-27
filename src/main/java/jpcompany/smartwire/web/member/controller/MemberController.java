@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,10 +31,11 @@ public class MemberController {
 
     @PostMapping("/member")
     public String postMember(@ModelAttribute(name = "memberUpdateDto") MemberUpdateDto memberUpdateDto,
-                             HttpServletRequest request) {
+                             HttpServletRequest request, RedirectAttributes redirectAttrs) {
         Member member = memberService.updateCompanyNameNPhoneNumber(memberUpdateDto);
         HttpSession session = request.getSession(false);
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+        redirectAttrs.addFlashAttribute("popupMessage", "변경 사항이 저장되었습니다.");
         return "redirect:/member";
     }
 }

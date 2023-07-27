@@ -4,6 +4,10 @@
     font-weight: 500;
     font-style: normal;
 }
+input:focus-visible {
+    border: black 1px solid;
+    outline: black 1px solid;
+}
 
 * {
     box-sizing: border-box;

@@ -1,6 +1,10 @@
 package jpcompany.smartwire.web.member.controller;
 
 import jpcompany.smartwire.domain.Machine;
+import jpcompany.smartwire.web.log.dto.LogDto;
+import jpcompany.smartwire.web.log.repository.LogRepositoryJdbcTemplate;
+import jpcompany.smartwire.web.machine.dto.MachineDto;
+import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import jpcompany.smartwire.web.member.dto.MemberResendEmailDto;
 import jpcompany.smartwire.domain.Member;
@@ -20,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +35,8 @@ public class MemberLoginController {
 
     private final MemberServiceLogin serviceLogin;
     private final MemberServiceEmail memberServiceEmail;
+    private final MachineRepositoryJdbcTemplate machineRepository;
+    private final LogRepositoryJdbcTemplate logRepository;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
@@ -35,7 +44,7 @@ public class MemberLoginController {
         // 임시 데이터 (삭제 해야함)
         model.addAttribute("memberLoginDto", new MemberLoginDto("wjsdj2009"));
 
-        // 세션에 회원 데이터가 없으면 home 으로 이동
+        // 세션에 회원 데이터가 없으면 login 페이지로 이동
         log.info("loginMember={}",loginMember);
         if (loginMember == null) {
             return "home/login";
@@ -53,11 +62,18 @@ public class MemberLoginController {
         sessionCookie.setMaxAge(432000);
         response.addCookie(sessionCookie);
 
-        // 기계 정보 하나라도 있는지 확인
+        // 기계 설정 없는 화면
         if (!loginMember.getHaveMachine()) {
             return "home/main_no_machine";
         }
 
+        // 정상 화면
+        List<MachineDto> machines = machineRepository.findAll(loginMember.getId());
+        List<Integer> machineIds = machines.stream()
+                .map(MachineDto::getId)
+                .collect(Collectors.toList());
+        List<LogDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
+        model.addAttribute("logDto", recentLogAtEachMachineList);
         return "home/main";
     }
 

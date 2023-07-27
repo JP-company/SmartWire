@@ -19,12 +19,12 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-public class MemberRepositoryJdbcTemplate implements MemberRepository{
+public class MemberJdbcTemplateRepository implements MemberRepository{
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public MemberRepositoryJdbcTemplate(DataSource dataSource) {
+    public MemberJdbcTemplateRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("members")

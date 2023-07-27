@@ -3,6 +3,8 @@ package jpcompany.smartwire.web.machine.repository;
 
 import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.web.log.dto.LogDto;
+import jpcompany.smartwire.web.log.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,9 @@ class MachineRepositoryJdbcTemplateTest {
     private MachineRepositoryJdbcTemplate machineRepository;
     @Autowired
     private MemberRepository repository;
+
+    @Autowired
+    private LogRepositoryJdbcTemplate logRepository;
 
     @Test
     void save() {

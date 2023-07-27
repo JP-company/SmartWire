@@ -4,6 +4,9 @@
     font-weight: 500;
     font-style: normal;
 }
+button:focus-visible, button:focus {
+    outline: none !important;
+}
 
 * {
     box-sizing: border-box;
@@ -174,27 +177,6 @@ html, body {
 #main-left-data:hover {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
     cursor: pointer;
-}
-.bottom {
-    display: flex;
-    width: 320px;
-    height: 48px;
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    background-color: #f4f4f4;
-    align-items: center;
-}
-.bottom > img {
-    width: 20px;
-    height: 20px;
-    margin-left: 26px;
-    margin-right: 34px;
-}
-.bottom > span {
-    font-size: 16px;
-    font-weight: bold;
-    position: relative;
-    top: 2px;
 }
 #main-right-machine {
     width: 680px;

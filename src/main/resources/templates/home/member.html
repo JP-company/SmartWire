@@ -37,8 +37,10 @@
       </button>
     </div>
   </div>
+
+
   <div id="main-right">
-    <form th:action method="post" th:object="${member}">
+    <form th:action method="post" th:object="${member}" id="main-right-member-form">
       <div>
         <label for="loginId">아이디</label>
         <input id="loginId" th:field="*{loginId}" readonly>
@@ -55,15 +57,27 @@
       </div>
 
       <div>
-        <label for="phoneNumber">회사 전화번호</label>
+        <label for="phoneNumber">전화번호</label>
         <input id="phoneNumber" th:field="*{phoneNumber}">
       </div>
-      <button type="submit">변경 완료</button>
+
+      <span>
+        <button type="button" class="profile-change-button">이메일 변경하기</button>
+        <button type="button" class="profile-change-button">비밀번호 변경하기</button>
+      </span>
+
+      <button type="submit" id="profile-save-button">저장 하기</button>
     </form>
-    <button type="button">이메일 변경하기</button>
-    <button type="button">비밀번호 변경하기</button>
   </div>
+
+
 </div>
 
 </body>
+<script th:inline="javascript">
+    let popupMessage = [[${popupMessage}]];
+    if (popupMessage) {
+        alert(popupMessage);
+    }
+</script>
 </html>

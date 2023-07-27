@@ -7,7 +7,7 @@
 
 * {
     box-sizing: border-box;
-    font-family: "Pretendard";
+    font-family: "Pretendard", serif;
 }
 html, body {
     width: 100%;
@@ -111,6 +111,8 @@ html, body {
 #main-right {
     margin-right: 128px;
     flex: 1;
+    display: flex;
+    justify-content: center;
 }
 #main-left-status {
     display: flex;
@@ -167,124 +169,76 @@ html, body {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
     cursor: pointer;
 }
-#main-right-grid {
-    display: grid;
-    height: 588px;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    grid-gap: 24px;
-    background-color: #f4f4f4;
-    flex: 1;
-}
-#main-right-grid > div {
-    width: 320px;
-    height: 206px;
-    background-color: white;
+#main-right-member-form {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
+    background-color: #ffffff;
+    width: 680px;
+    height: 580px;
     border-radius: 16px;
+    padding: 100px 0;
 }
-.main-right-grid-card {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+#main-right-member-form > div:first-child, #main-right-member-form > div:nth-of-type(2) {
+    background-color: #f4f4f4;
+    cursor: default;
 }
-.main-right-grid-card:hover {
-    background-color: #999999;
+#main-right-member-form > div:first-child > input, #main-right-member-form > div:nth-of-type(2) > input {
+    color: #999999;
+    background-color: #f4f4f4;
 }
-.main-right-grid-card .header {
+#main-right-member-form > div {
+    margin-bottom: 16px;
+    width: 440px;
+    height: 48px;
+    border: 1px #cacaca solid;
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 56px;
-    width: 320px;
-    background-color: #f82f47;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
 }
-.main-right-grid-card .header span {
-    padding-left: 24px;
-    font-family: "Pretendard";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    color: #ffffff;
-    position: relative;
-    top: 1px;
-}
-.main-right-grid-card .header img {
-    width: 22px;
-    height: 22px;
-    margin-right: 17px;
-}
-.main-right-grid-card .middle {
-    display: flex;
-    padding: 16px 24px;
-    flex: 1;
-}
-.main-right-grid-card .middle div {
-    font-style: normal;
-    font-weight: 500;
+#main-right-member-form > div > label {
+    color: #999999;
     font-size: 14px;
-    line-height: 20px;
+    width: 50px;
+    margin: 0 16px 0 24px;
 }
-.main-right-grid-card .middle div div:first-child {
-    margin-bottom: 10px;
-}
-.main-right-grid-card .middle > div:nth-child(2) {
-    margin-left: 16px;
-}
-.main-right-grid-card .middle div button {
+#main-right-member-form > div > input {
+    font-size: 16px;
     background-color: #ffffff;
     border: none;
-    font-weight: bold;
-    line-height: 20px;
     padding: 0;
-    margin: 0;
+    flex-grow: 1;
+}
+#main-right-member-form > div > input:focus-visible {
+    outline: none;
+}
+.profile-change-button {
+    background-color: #ffffff;
+    border: none;
     cursor: pointer;
-
-    text-align: start;
+    padding: 0;
+    margin: 0 12px;
 }
-.main-right-grid-card .middle div button {
-    text-overflow: ellipsis;
-    width: 216px;
-    white-space: nowrap;
-    overflow: hidden;
+.profile-change-button:hover {
+    text-decoration: underline;
 }
-.main-right-grid-card .middle .log-text {
-    font-weight: 800;
-    color: #f82f47;
-}
-.bottom {
-    display: flex;
-    width: 320px;
-    height: 48px;
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    background-color: #f4f4f4;
-    align-items: center;
-}
-.bottom > img {
-    width: 20px;
-    height: 20px;
-    margin-left: 26px;
-    margin-right: 34px;
-}
-.bottom > span {
-    font-size: 16px;
-    font-weight: bold;
-    position: relative;
-    top: 2px;
+#profile-save-button {
+    width: 400px;
+    height: 52px;
+    border-radius: 800px;
+    color: #ffffff;
+    background-color: #000000;
+    border: none;
+    font-size: 18px;
+    margin-top: 56px;
+    cursor: pointer;
 }
 
-.main-right-grid-card .middle .log-start {
-    color: #00c220;
-}
-.main-right-grid-card .header-start {
-    background-color: #00c220;
-}
-.main-right-grid-card .middle .log-finished {
-    color: blue;
-}
-.main-right-grid-card .header-finished {
-    background-color: blue;
-}
+
+
+
+
+
+
+
+

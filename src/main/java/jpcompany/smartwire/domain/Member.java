@@ -34,8 +34,4 @@ public class Member {
         this.emailVerified = emailVerified;
         this.authCode = authCode;
     }
-
-    boolean hasMachine() {
-        return this.haveMachine;
-    }
 }
