@@ -52,16 +52,21 @@ public class MemberLoginController {
                 .map(MachineDto::getId)
                 .collect(Collectors.toList());
         model.addAttribute("machines", machines);
+        log.info("기계 아이디 리스트={}", machineIds);
 
         List<LogVIewDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
         List<String> machineNameWhoHasLog = recentLogAtEachMachineList.stream()
                 .map(LogVIewDto::getMachineName)
                 .collect(Collectors.toList());
+        log.info("로그 있는 기계={}", recentLogAtEachMachineList);
+        log.info("로그 있는 기계={}", machineNameWhoHasLog);
 
         machines.stream().filter(machine -> !machineNameWhoHasLog.contains(machine.getMachineName()))
                 .forEach(machine -> recentLogAtEachMachineList.add(new LogVIewDto(machine.getMachineName(), machine.getSequence())));
 
         recentLogAtEachMachineList.sort(Comparator.comparingInt(LogVIewDto::getSequence));
+
+        log.info("기계 로그 리스트={}", recentLogAtEachMachineList);
 
         model.addAttribute("logDto", recentLogAtEachMachineList);
         return "home/main";

@@ -1,7 +1,7 @@
 package jpcompany.smartwire.web.log_view.repository;
 
-import groovy.util.logging.Slf4j;
 import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -26,12 +26,14 @@ public class LogRepositoryJdbcTemplate {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<LogVIewDto> getRecentLogAtEachMachine(List<Integer>  memberIdList) {
+    public List<LogVIewDto> getRecentLogAtEachMachine(List<Integer>  machineIdList) {
+        log.info("기계 아이디 리스트 리포={}", machineIdList);
+
         String sql = "SELECT log, log_time, processes.file, processes.thickness, processes.started_time, dates.date, machines.sequence, machines.machine_name\n" +
                 "FROM (\n" +
                 "  SELECT MAX(id) as id, machine_id\n" +
                 "  FROM logs\n" +
-                "  WHERE machine_id IN (:memberIdList)\n" +
+                "  WHERE machine_id IN (:machineIdList)\n" +
                 "  GROUP BY machine_id\n" +
                 ") as latest_logs\n" +
                 "INNER JOIN logs ON latest_logs.id = logs.id\n" +
@@ -39,8 +41,9 @@ public class LogRepositoryJdbcTemplate {
                 "INNER JOIN dates ON logs.machine_date_id = dates.id \n" +
                 "INNER JOIN machines ON logs.machine_id = machines.id";
 
+
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("memberIdList", memberIdList);
+                .addValue("machineIdList", machineIdList);
         return template.query(sql, param, LogRowMapper());
     }
 

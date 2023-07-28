@@ -27,7 +27,7 @@ public class LogService {
     public void saveLog(LogSaveDto logSaveDto) {
         Member member = memberRepository.findByLoginId(logSaveDto.getLoginId()).get();
         Integer machineId = machineRepository.findByMemberIdNMachineName(member.getId(), logSaveDto.getMachineName()).get();
-        Integer machineDateId = logReceiverRepository.findRecentDateIdByMachineId(machineId).get();
+        Integer machineDateId = logReceiverRepository.findRecentDateIdByMachineId(machineId).orElse(null);
         log.info("machineDateId 처음에={}", machineDateId);
 
         if (logSaveDto.getDate() != null) {
@@ -46,6 +46,11 @@ public class LogService {
             Process processDto = new Process();
             processDto.setFile(logSaveDto.getFile());
             processDto.setThickness(logSaveDto.getThickness());
+            processDto.setStartedTime(logSaveDto.getLogTime());
+            processDto.setMachineDateId(machineDateId);
+            processId = logReceiverRepository.saveProcess(processDto).getId();
+        } else if (logSaveDto.getLog().split("_")[0].equals("stop.reset")) {
+            Process processDto = new Process();
             processDto.setStartedTime(logSaveDto.getLogTime());
             processDto.setMachineDateId(machineDateId);
             processId = logReceiverRepository.saveProcess(processDto).getId();
