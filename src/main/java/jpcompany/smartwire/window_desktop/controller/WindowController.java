@@ -28,7 +28,7 @@ public class WindowController {
 
     @PostMapping("/api/log_test")
     public void realTimeUpdate(@RequestBody LogDto logDto) {
-        String companyId = "wjsdj2009";
+        String companyId = "wjsdj2008";
         this.messagingTemplate.convertAndSend("/topic/logs/" + companyId, logDto);
 
 

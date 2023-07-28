@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class MemberService {
+public class MemberEditService {
 
     private final MemberRepository repository;
 

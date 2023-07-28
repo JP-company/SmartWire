@@ -1,7 +1,8 @@
 package jpcompany.smartwire.web.member.controller;
 
+import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
-import jpcompany.smartwire.web.member.service.MemberServiceJoin;
+import jpcompany.smartwire.web.member.service.MemberJoinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 @Slf4j
 public class MemberJoinController {
 
-    private final MemberServiceJoin serviceJoin;
+    private final MemberJoinService serviceJoin;
 
     @GetMapping("/join")
     public String join(Model model) {

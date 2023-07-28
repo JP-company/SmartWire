@@ -5,9 +5,14 @@ import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.dto.MachineDtoList;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.service.MachineService;
+import jpcompany.smartwire.web.member.auth.PrincipalDetails;
 import jpcompany.smartwire.web.member.controller.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -32,12 +37,14 @@ public class MachineController {
     private final MachineRepositoryJdbcTemplate machineRepository;
 
     @GetMapping("/member/machine")
-    public String machine(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-                          Model model) {
+    public String machine(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        Member loginMember = principalDetails.getMember();
         model.addAttribute("member", loginMember);
+
         List<MachineDto> machines = machineRepository.findAll(loginMember.getId());
         machines.sort(Comparator.comparingInt(MachineDto::getSequence));
-        log.info("machines={}", machines);
+
+        log.info("기계가 몇대있나요={}", machines);
         model.addAttribute("machineDtoList", new MachineDtoList(machines));
         return "home/machine";
     }
@@ -46,9 +53,10 @@ public class MachineController {
     // TODO - machine id 값 클라이언트 노출
     @Transactional
     @PostMapping("/member/machine")
-    public String postMachine(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+    public String postMachine(@AuthenticationPrincipal PrincipalDetails principalDetails,
                               @Valid @ModelAttribute MachineDtoList machineDtoList, BindingResult bindingResult,
                               RedirectAttributes redirectAttrs, Model model, HttpServletRequest request) {
+        Member loginMember = principalDetails.getMember();
 
         Set<String> set = new HashSet<>();
         if (machineDtoList.getMachines().stream().anyMatch(n -> !set.add(n.getMachineName()))) {
@@ -67,16 +75,17 @@ public class MachineController {
 
             redirectAttrs.addFlashAttribute("popupMessage", "기계 설정이 완료되었습니다.");
             if (!machineService.saveMachineFormNHaveMachine(loginMember.getId(), loginMember.getHaveMachine(), machineDto)) {
-                updateHaveMachineSession(request, true);
+                updateMemberSession(loginMember, true);
             }
         }
         return "redirect:/member/machine";
     }
 
     @PostMapping("/member/machine/delete")
-    public String deleteMachine(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
+    public String deleteMachine(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @RequestParam Integer machineIdSend, @RequestParam String loginPassword,
                                 RedirectAttributes redirectAttrs, HttpServletRequest request) {
+        Member loginMember = principalDetails.getMember();
 
         if (!loginPassword.equals(loginMember.getLoginPassword())) {
             redirectAttrs.addFlashAttribute("popupMessage", "비밀번호가 일치하지 않습니다.");
@@ -86,7 +95,7 @@ public class MachineController {
         // 기계가 하나도 없으면 DB, 세션 업데이트
         // TODO - Member 의 Setter 가 열려 있음
         if (!machineService.deleteMachineNHaveMachine(machineIdSend, loginMember.getId())) {
-            updateHaveMachineSession(request, false);
+            updateMemberSession(loginMember, false);
         }
 
         log.info("정상 삭제={}", machineIdSend);
@@ -95,10 +104,13 @@ public class MachineController {
     }
 
     // TODO - 새션 값 변경 동시성 문제
-    private static void updateHaveMachineSession(HttpServletRequest request, boolean haveMachine) {
-        HttpSession session = request.getSession(false);
-        Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
-        member.setHaveMachine(haveMachine);
-        log.info("새션 맴버={}",member);
+    private static void updateMemberSession(Member loginMember, boolean havMachine) {
+        loginMember.setHaveMachine(havMachine);
+        PrincipalDetails newPrincipalDetails = new PrincipalDetails(loginMember);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                newPrincipalDetails,    // 변경된 정보를 가진 새로운 PrincipalDetails
+                newPrincipalDetails.getPassword(),    // 보통 기존 패스워드를 그대로 사용합니다
+                newPrincipalDetails.getAuthorities());    // 보통 기존 권한을 그대로 사용합니다
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

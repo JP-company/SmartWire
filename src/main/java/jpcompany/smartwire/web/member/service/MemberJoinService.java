@@ -4,6 +4,7 @@ import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,24 +14,24 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceJoin {
+public class MemberJoinService {
 
     private final MemberRepository repository;
-    private final MemberServiceEmail memberServiceEmail;
+    private final MemberEmailService memberEmailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public Member join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
         Member member = new Member();
         member.setLoginId(memberJoinDto.getLoginId());
-        member.setLoginPassword(memberJoinDto.getLoginPassword());
+        member.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
         member.setCompanyName(memberJoinDto.getCompanyName());
         member.setEmail(memberJoinDto.getEmail());
         member.setPhoneNumber(memberJoinDto.getPhoneNumber());
         member.setTermOfUse(memberJoinDto.getTermOfUse());
         member.setEmailVerified(false);
         member.setHaveMachine(false);
-        String authCode = memberServiceEmail.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail());
-        member.setAuthCode(authCode);
+        member.setAuthToken(memberEmailService.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail()));
 
         repository.save(member);
         return member;

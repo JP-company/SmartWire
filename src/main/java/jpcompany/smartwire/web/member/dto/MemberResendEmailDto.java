@@ -15,4 +15,9 @@ public class MemberResendEmailDto {
     @NotEmpty
     @Email
     private String email;
+
+    public MemberResendEmailDto(String loginId, String email) {
+        this.loginId = loginId;
+        this.email = email;
+    }
 }

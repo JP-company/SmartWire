@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceEmail {
+public class MemberEmailService {
 
     //의존성 주입을 통해서 필요한 객체를 가져온다.
     private final JavaMailSender emailSender;
@@ -53,7 +53,6 @@ public class MemberServiceEmail {
     private String setContext(String loginId, String authCode) {
         Context context = new Context();
         context.setVariable("authCode", authCode);
-        context.setVariable("loginId", loginId);
         return templateEngine.process("email/mail", context); // mail.html
     }
 }

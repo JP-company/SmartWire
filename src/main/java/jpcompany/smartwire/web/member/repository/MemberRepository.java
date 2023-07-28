@@ -9,7 +9,8 @@ public interface MemberRepository {
     Member update(Member member);
     Optional<Member> findById(Integer id);
     Optional<Member> findByLoginId(String loginId);
-    void updateAuthCodeEmail(String loginId, String AuthCode, String email);
-    void setEmailVerified(String loginId);
+    Optional<Member> findByAuthToken(String token);
+    void updateAuthTokenEmail(String loginId, String authToken, String email);
+    void setEmailVerified(String token);
     void updateHaveMachine(Integer memberId, Boolean bool);
 }

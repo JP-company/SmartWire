@@ -34,7 +34,7 @@ public class MachineService {
         }
 
         log.info("추가 할떄 기계 있나요={}", haveMachine);
-        // 기게 정보가 없으면 세션 업데이트를 위해 false 반환
+        // 기게 정보가 없으면 세션 업데이트를 위해 false 반환 -> 기게있는 페이지를 메인에서 보여줘야하니까
         if (!haveMachine) {
             memberRepository.updateHaveMachine(memberId, true);
             return false;

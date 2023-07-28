@@ -61,7 +61,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
     @Override
     public Optional<Member> findById(Integer id) {
         String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_code, created_date_time, updated_date_time " +
+                "email_verified, auth_token, created_date_time, updated_date_time " +
                 "from members where id = :id";
 
         try {
@@ -76,7 +76,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
     @Override
     public Optional<Member> findByLoginId(String loginId) {
         String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_code, created_date_time, updated_date_time, have_machine" +
+                "email_verified, auth_token, created_date_time, updated_date_time, have_machine" +
                 " from members where login_id = :loginId";
 
         try {
@@ -88,15 +88,30 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
         }
     }
 
+    @Override
+    public Optional<Member> findByAuthToken(String token) {
+        String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
+                "email_verified, auth_token, created_date_time, updated_date_time " +
+                "from members where auth_token = :token";
+
+        try {
+            Map<String, Object> param = Map.of("token", token);
+            Member member = template.queryForObject(sql, param, MemberRowMapper());  // 없으면 예외터짐
+            return Optional.ofNullable(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
 
     @Override
-    public void updateAuthCodeEmail(String loginId, String AuthCode, String email) {
+    public void updateAuthTokenEmail(String loginId, String authToken, String email) {
         String sql = "update members " +
-                "set auth_code=:authCode, email=:email " +
+                "set auth_token=:authToken, email=:email " +
                 "where login_id=:loginId";
 
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("authCode", AuthCode)
+                .addValue("authToken", authToken)
                 .addValue("email", email)
                 .addValue("loginId", loginId);
 
@@ -104,11 +119,11 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
     }
 
     @Override
-    public void setEmailVerified(String loginId) {
-        String sql = "update members set email_verified=true where login_id=:loginId";
+    public void setEmailVerified(String token) {
+        String sql = "update members set email_verified=true where auth_token=:token";
 
         MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("loginId", loginId);
+                .addValue("token", token);
 
         template.update(sql, param);
     }

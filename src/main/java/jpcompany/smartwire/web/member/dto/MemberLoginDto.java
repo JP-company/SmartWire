@@ -15,6 +15,8 @@ public class MemberLoginDto {
     @NotEmpty
     private String loginPassword;
 
+    private String role;
+
     public MemberLoginDto() {
     }
 

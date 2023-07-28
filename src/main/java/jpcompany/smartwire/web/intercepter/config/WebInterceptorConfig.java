@@ -16,9 +16,9 @@ public class WebInterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/image/**", "/error/**");
 
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .order(2)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/image/**", "/error/**", "/", "/join", "/email_verify/**", "/api/**");
+//        registry.addInterceptor(new LoginCheckInterceptor())
+//                .order(2)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/css/**", "/image/**", "/error/**", "/", "/join", "/email_verify/**", "/api/**");
     }
 }

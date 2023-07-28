@@ -52,11 +52,16 @@ public class MemberMemoryRepository implements MemberRepository{
                 .findAny();
     }
 
+    @Override
+    public Optional<Member> findByAuthToken(String token) {
+        return Optional.empty();
+    }
+
 
     @Override
-    public void updateAuthCodeEmail(String loginId, String AuthCode, String email) {
+    public void updateAuthTokenEmail(String loginId, String AuthCode, String email) {
         Member member = findByLoginId(loginId).get();
-        member.setAuthCode(AuthCode);
+        member.setAuthToken(AuthCode);
         member.setEmail(email);
     }
 
