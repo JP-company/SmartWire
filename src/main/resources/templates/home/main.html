@@ -7,6 +7,11 @@
   <link rel="icon" href="/image/favicon.ico">
   <link rel="stylesheet" href="/css/main.css"/>
   <title th:text="#{title}">스마트 와이어</title>
+  <style>
+      .main-right-grid-card > .new-class {
+        background-color: #FFD232;
+    }
+  </style>
 </head>
 <body>
 
@@ -41,25 +46,31 @@
   <div id="main-right">
     <div id="main-right-grid">
 
-      <div class="main-right-grid-card" th:each="log, logStat : ${logDto}">
-        <div class="header">
-          <span th:text="${log.machineName}">기계명</span>
-          <img src="/image/breaking.png" alt="기계 상태" />
+      <div class="main-right-grid-card" th:each="machine, machineStat : ${machines}">
+        <div class="header" th:id="|header${machineStat.index}|">
+          <span class="machine-name" th:text="${logDto[__${machineStat.index}__].machineName}">기계명</span>
+          <img src="/image/breaking.png" th:id="|image${machineStat.index}|" alt="기계 상태"/>
         </div>
         <div class="middle">
-          <div>
+          <div th:id="|div${machineStat.index}|">
             <div>파일명</div>
             <div>로그명</div>
           </div>
           <div>
-            <div><button th:text="${log.file}">파일명</button></div>
-            <span class="log-text" th:text="${log.log}">로그명</span>
-            <div th:text="|${log.date} ${log.logTime}|">로그 시간</div>
+            <div><button class="log-file" th:id="|file${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].file}">파일명</button></div>
+            <span class="log-text" th:id="|log${machineStat.index}|"
+                  th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[1] : ''}">로그명</span>
+            <span th:id="|logStatus${machineStat.index}|"
+                  th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[0] : ''}" hidden>로그 상태</span>
+            <div class="log-time">
+              <span th:id="|date${machineStat.index}|" th:text="|${logDto[__${machineStat.index}__].date}|"></span>
+              <span th:id="|logTime${machineStat.index}|" th:text="|${logDto[__${machineStat.index}__].logTime}|"></span>
+            </div>
           </div>
         </div>
         <div class="bottom">
           <img src="/image/clock.png" alt="작동시간" />
-          <span th:text="${log.startedTime}">00:00 (현재 파일 가공 시간)</span>
+          <span th:id="|startedTime${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].startedTime}">00:00 (현재 파일 가공 시간)</span>
         </div>
       </div>
 
@@ -67,6 +78,8 @@
   </div>
 </div>
 </body>
+
+<!--웹소켓-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script th:inline="javascript">
@@ -86,6 +99,53 @@
         console.log(message);
         // Update DOM according to the message.
         // ...
+    }
+</script>
+
+<script th:inline="javascript">
+    let logText;
+    let logTextStatus;
+    let header;
+    let statusImg;
+    let file;
+    let logDate;
+    let logTime;
+    let startedTime;
+    let div;
+    for (let i = 0; i < [[${machines}]].length; i++) {
+        logText = document.getElementById('log' + i);
+        logTextStatus = document.getElementById('logStatus' + i).textContent;
+        header = document.getElementById('header' + i);
+        statusImg = document.getElementById("image" + i);
+        file = document.getElementById("file" + i);
+        logDate = document.getElementById("date"+ i);
+        logTime = document.getElementById("logTime" + i);
+        startedTime = document.getElementById("startedTime" + i);
+        div = document.getElementById("div" + i);
+
+        if (logTextStatus === '') {
+            header.style.backgroundColor = '#FFD232';
+            logText.style.color = '#FFD232';
+            statusImg.src = "/image/error.png";
+            // file.innerHTML = '와이어 기계와 연결되어있지 않습니다.<br>와이어 기계의 "스마트 와이어" 프로그램이<br> 정상적으로 실행중인지 확인해주세요';
+            file.innerHTML = "'스마트 와이어(윈도우)' 를 실행해주세요.<br>인터넷 연결 문제일 수 있습니다."
+            file.style.cursor = 'default';
+            file.style.width= '230px';
+            startedTime.textContent = '-- : --';
+            div.style.display = 'none';``
+        } else if (logTextStatus === 'stop') {
+            header.style.backgroundColor = '#f82f47';
+            logText.style.color = '#f82f47';
+            statusImg.src = "/image/breaking.png";
+        } else if (logTextStatus === 'start' || logTextStatus === 'restart') {
+            header.style.backgroundColor = '#00C220';
+            logText.style.color = '#00C220';
+            statusImg.src = "/image/working.gif";
+        } else if (logTextStatus === 'done') {
+            header.style.backgroundColor = '#3A4EFF';
+            logText.style.color = '#3A4EFF';
+            statusImg.src = "/image/done.png";
+        }
     }
 </script>
 

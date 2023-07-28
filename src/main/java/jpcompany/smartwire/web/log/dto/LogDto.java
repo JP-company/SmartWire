@@ -19,4 +19,12 @@ public class LogDto {
     private LocalTime startedTime;
     private Integer sequence;
     private String machineName;
+
+    public LogDto() {
+    }
+
+    public LogDto(String machineName, Integer sequence) {
+        this.machineName = machineName;
+        this.sequence = sequence;
+    }
 }

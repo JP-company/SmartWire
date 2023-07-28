@@ -22,6 +22,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,18 @@ public class MemberLoginController {
         List<Integer> machineIds = machines.stream()
                 .map(MachineDto::getId)
                 .collect(Collectors.toList());
+        model.addAttribute("machines", machines);
+
         List<LogDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
+        List<String> machineNameWhoHasLog = recentLogAtEachMachineList.stream()
+                .map(LogDto::getMachineName)
+                .collect(Collectors.toList());
+
+        machines.stream().filter(machine -> !machineNameWhoHasLog.contains(machine.getMachineName()))
+                .forEach(machine -> recentLogAtEachMachineList.add(new LogDto(machine.getMachineName(), machine.getSequence())));
+
+        recentLogAtEachMachineList.sort(Comparator.comparingInt(LogDto::getSequence));
+
         model.addAttribute("logDto", recentLogAtEachMachineList);
         return "home/main";
     }
@@ -70,9 +82,11 @@ public class MemberLoginController {
 
         String loginId = (String) session.getAttribute("loginId");
         String email = (String) session.getAttribute("email");
+
         if (loginId == null || loginId.equals("")) {
             throw new RuntimeException("잘못된 접근입니다.");
         }
+
         MemberResendEmailDto memberResendEmailDto = new MemberResendEmailDto(loginId, email);
         model.addAttribute("member", memberResendEmailDto);
         return "home/email_verify";
