@@ -4,16 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @ToString
-public class Log {
+public class Date {
+
     private Integer id;
-    private String log;
-    private LocalTime logTime;
-    private Integer processId;
-    private Integer machineDateId;
+    private LocalDate date;
     private Integer machineId;
 }

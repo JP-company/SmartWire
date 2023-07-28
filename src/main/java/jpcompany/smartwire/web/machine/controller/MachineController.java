@@ -102,6 +102,7 @@ public class MachineController {
 
         log.info("정상 삭제={}", machineIdSend);
         redirectAttrs.addFlashAttribute("popupMessage", "기계 삭제에 성공하였습니다.");
+        redirectAttrs.addFlashAttribute("autoClickButton", true);
         return "redirect:/member/machine";
     }
 

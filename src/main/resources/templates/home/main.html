@@ -7,11 +7,6 @@
   <link rel="icon" href="/image/favicon.ico">
   <link rel="stylesheet" href="/css/main.css"/>
   <title th:text="#{title}">스마트 와이어</title>
-  <style>
-      .main-right-grid-card > .new-class {
-        background-color: #FFD232;
-    }
-  </style>
 </head>
 <body>
 
@@ -68,10 +63,10 @@
             </div>
           </div>
         </div>
-        <div class="bottom">
-          <img src="/image/clock.png" alt="작동시간" />
-          <span th:id="|startedTime${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].startedTime}">00:00 (현재 파일 가공 시간)</span>
-        </div>
+<!--        <div class="bottom">-->
+<!--          <img src="/image/clock.png" alt="작동시간" />-->
+<!--          <span th:id="|startedTime${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].startedTime}">00:00 (현재 파일 가공 시간)</span>-->
+<!--        </div>-->
       </div>
 
     </div>
@@ -96,9 +91,8 @@
     });
 
     function handleUpdate(message) {
-        console.log(message);
-        // Update DOM according to the message.
-        // ...
+        console.log(message["loginId"]);
+        realTimeUpdate(message);
     }
 </script>
 
@@ -110,7 +104,6 @@
     let file;
     let logDate;
     let logTime;
-    let startedTime;
     let div;
     for (let i = 0; i < [[${machines}]].length; i++) {
         logText = document.getElementById('log' + i);
@@ -120,7 +113,6 @@
         file = document.getElementById("file" + i);
         logDate = document.getElementById("date"+ i);
         logTime = document.getElementById("logTime" + i);
-        startedTime = document.getElementById("startedTime" + i);
         div = document.getElementById("div" + i);
 
         if (logTextStatus === '') {
@@ -131,7 +123,6 @@
             file.innerHTML = "'스마트 와이어(윈도우)' 를 실행해주세요.<br>인터넷 연결 문제일 수 있습니다."
             file.style.cursor = 'default';
             file.style.width= '230px';
-            startedTime.textContent = '-- : --';
             div.style.display = 'none';``
         } else if (logTextStatus === 'stop') {
             header.style.backgroundColor = '#f82f47';
@@ -145,6 +136,54 @@
             header.style.backgroundColor = '#3A4EFF';
             logText.style.color = '#3A4EFF';
             statusImg.src = "/image/done.png";
+        }
+    }
+
+    let realTimeUpdate = function(logObj) {
+        logText = document.getElementById('log' + logObj["sequence"]);
+        logTextStatus = document.getElementById('logStatus' + logObj["sequence"]).textContent;
+        header = document.getElementById('header' + logObj["sequence"]);
+        statusImg = document.getElementById("image" + logObj["sequence"]);
+        file = document.getElementById("file" + logObj["sequence"]);
+        logDate = document.getElementById("date"+ logObj["sequence"]);
+        logTime = document.getElementById("logTime" + logObj["sequence"]);
+        div = document.getElementById("div" + logObj["sequence"]);
+
+
+        logText.textContent = logObj["log"].split("_")[1];
+        logTextStatus = logObj["log"].split("_")[0];
+        if (logObj["file"] !== null) {
+            file.textContent = logObj["file"];
+        }
+        if (logObj["date"] !== null) {
+            logDate.textContent = logObj["date"];
+        }
+        logTime.textContent = logObj["logTime"];
+
+        if (logTextStatus === '') {
+            header.style.backgroundColor = '#FFD232';
+            logText.style.color = '#FFD232';
+            statusImg.src = "/image/error.png";
+            // file.innerHTML = '와이어 기계와 연결되어있지 않습니다.<br>와이어 기계의 "스마트 와이어" 프로그램이<br> 정상적으로 실행중인지 확인해주세요';
+            file.innerHTML = "'스마트 와이어(윈도우)' 를 실행해주세요.<br>인터넷 연결 문제일 수 있습니다."
+            file.style.cursor = 'default';
+            file.style.width= '230px';
+            div.style.display = 'none';
+        } else if (logTextStatus === 'stop') {
+            header.style.backgroundColor = '#f82f47';
+            logText.style.color = '#f82f47';
+            statusImg.src = "/image/breaking.png";
+            div.style.display = 'block';
+        } else if (logTextStatus === 'start' || logTextStatus === 'restart') {
+            header.style.backgroundColor = '#00C220';
+            logText.style.color = '#00C220';
+            statusImg.src = "/image/working.gif";
+            div.style.display = 'block';
+        } else if (logTextStatus === 'done') {
+            header.style.backgroundColor = '#3A4EFF';
+            logText.style.color = '#3A4EFF';
+            statusImg.src = "/image/done.png";
+            div.style.display = 'block';
         }
     }
 </script>

@@ -1,4 +1,4 @@
-package jpcompany.smartwire.web.log.dto;
+package jpcompany.smartwire.web.log_view.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
-public class LogDto {
+public class LogVIewDto {
     private String log;
     private LocalDate date;
     private LocalTime logTime;
@@ -20,10 +20,10 @@ public class LogDto {
     private Integer sequence;
     private String machineName;
 
-    public LogDto() {
+    public LogVIewDto() {
     }
 
-    public LogDto(String machineName, Integer sequence) {
+    public LogVIewDto(String machineName, Integer sequence) {
         this.machineName = machineName;
         this.sequence = sequence;
     }

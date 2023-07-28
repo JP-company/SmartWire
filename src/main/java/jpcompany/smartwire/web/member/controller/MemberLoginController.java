@@ -1,7 +1,7 @@
 package jpcompany.smartwire.web.member.controller;
 
-import jpcompany.smartwire.web.log.dto.LogDto;
-import jpcompany.smartwire.web.log.repository.LogRepositoryJdbcTemplate;
+import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
+import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.auth.PrincipalDetails;
@@ -53,15 +53,15 @@ public class MemberLoginController {
                 .collect(Collectors.toList());
         model.addAttribute("machines", machines);
 
-        List<LogDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
+        List<LogVIewDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
         List<String> machineNameWhoHasLog = recentLogAtEachMachineList.stream()
-                .map(LogDto::getMachineName)
+                .map(LogVIewDto::getMachineName)
                 .collect(Collectors.toList());
 
         machines.stream().filter(machine -> !machineNameWhoHasLog.contains(machine.getMachineName()))
-                .forEach(machine -> recentLogAtEachMachineList.add(new LogDto(machine.getMachineName(), machine.getSequence())));
+                .forEach(machine -> recentLogAtEachMachineList.add(new LogVIewDto(machine.getMachineName(), machine.getSequence())));
 
-        recentLogAtEachMachineList.sort(Comparator.comparingInt(LogDto::getSequence));
+        recentLogAtEachMachineList.sort(Comparator.comparingInt(LogVIewDto::getSequence));
 
         model.addAttribute("logDto", recentLogAtEachMachineList);
         return "home/main";

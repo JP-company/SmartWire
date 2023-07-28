@@ -1,8 +1,10 @@
 package jpcompany.smartwire.web.machine.repository;
 
 import jpcompany.smartwire.domain.Machine;
+import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 @Slf4j
@@ -45,6 +50,20 @@ public class MachineRepositoryJdbcTemplate {
 
         BeanPropertySqlParameterSource param = new BeanPropertySqlParameterSource(machineDto);
         template.update(sql, param);
+    }
+
+    public Optional<Integer> findByMemberIdNMachineName(Integer memberId, String machineName) {
+        String sql = "select id from machines where member_id = :memberId and machine_name=:machineName";
+
+        try {
+            Map<String, Object> param = new ConcurrentHashMap<>();
+            param.put("memberId", memberId);
+            param.put("machineName", machineName);
+            Integer id = template.queryForObject(sql, param, Integer.class); // 없으면 예외터짐
+            return Optional.ofNullable(id);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 

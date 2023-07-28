@@ -3,8 +3,7 @@ package jpcompany.smartwire.web.machine.repository;
 
 import jpcompany.smartwire.domain.Machine;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.web.log.dto.LogDto;
-import jpcompany.smartwire.web.log.repository.LogRepositoryJdbcTemplate;
+import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

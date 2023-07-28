@@ -146,17 +146,38 @@
 </div>
 </body>
 
-<script>
-  const inputElement = document.getElementsByClassName('myInput');
-  const divElement = document.getElementById('myDiv');
+<!--드래그로 순서 바꾸기-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+<script th:inline="javascript">
+    var container = document
+        .getElementById("machine-list")
+        .getElementsByTagName("tbody")[0];
+    var drake = dragula([container], {
+        moves: function (el, container, handle) {
+            return handle.className === "machine-list-hamburger";
+        },
+        accepts: function (el, target, source, sibling) {
+            return target !== document.querySelector("#machine-list thead");
+        },
+    });
 
-  inputElement.addEventListener('focus', function() {
-      divElement.style.color = 'red'; // Change CSS property
-  });
+    drake.on("drop", function (el, target, source, sibling) {
+        updateRowPositions();
+    });
 
-  inputElement.addEventListener('blur', function() {
-      divElement.style.color = 'black'; // Revert CSS property
-  });
+    function updateRowPositions() {
+        document.querySelectorAll("#machine-list tbody tr").forEach((row, i) => {
+            row.querySelectorAll('input').forEach(input => {
+                const parts = input.name.split(".");
+                if (parts.length > 1) {
+                    input.name = `machines[${i}].${parts[1]}`;
+                }
+                if (parts[1] === 'sequence') {
+                    input.value = i;
+                }
+            });
+        });
+    }
 </script>
 
 <!--각 항목 펼치기, 줄이기-->
@@ -181,10 +202,20 @@
     });
 </script>
 
-<!--팝업창, 처음 켰을 때 순서 지정-->
+<script th:inline="javascript">
+    console.log("삭제하면 저장 하기=", [[${autoClickButton}]]);
+    if ([[${autoClickButton}]]) {
+        updateRowPositions();
+        document.getElementById('machine-list-save-button').click();
+    }
+</script>
+
+
+<!--팝업창, 처음 켰을 때 순서 지정, 삭제시 업데이트-->
+
 <script th:inline="javascript">
     window.onload = function() {
-        updateRowPositions();
+      updateRowPositions();
     }
     let popupMessage = [[${popupMessage}]];
     if (popupMessage) {
@@ -264,37 +295,5 @@
     }
 </script>
 
-<!--드래그로 순서 바꾸기-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
-<script>
-    var container = document
-        .getElementById("machine-list")
-        .getElementsByTagName("tbody")[0];
-    var drake = dragula([container], {
-        moves: function (el, container, handle) {
-            return handle.className === "machine-list-hamburger";
-        },
-        accepts: function (el, target, source, sibling) {
-            return target !== document.querySelector("#machine-list thead");
-        },
-    });
 
-    drake.on("drop", function (el, target, source, sibling) {
-        updateRowPositions();
-    });
-
-    function updateRowPositions() {
-        document.querySelectorAll("#machine-list tbody tr").forEach((row, i) => {
-            row.querySelectorAll('input').forEach(input => {
-                const parts = input.name.split(".");
-                if (parts.length > 1) {
-                    input.name = `machines[${i}].${parts[1]}`;
-                }
-                if (parts[1] === 'sequence') {
-                    input.value = i;
-                }
-            });
-        });
-    }
-</script>
 </html>

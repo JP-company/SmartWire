@@ -176,7 +176,7 @@ html, body {
 }
 #main-right-grid > div {
     width: 310px;
-    height: 206px;
+    height: 158px;
     background-color: white;
     display: flex;
     flex-direction: column;
