@@ -21,6 +21,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,14 +56,15 @@ public class LogReceiverJdbcTemplateRepository {
     }
 
     public Process saveProcess(Process process) {
-        String sql = "insert into processes(file, thickness, started_time, machine_date_id) " +
-                "values(:file, :thickness, :startedTime, :machineDateId)";
+        String sql = "insert into processes(file, thickness, started_time, machine_date_id, machine_id) " +
+                "values(:file, :thickness, :startedTime, :machineDateId, :machineId)";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("file", process.getFile())
                 .addValue("thickness", process.getThickness())
                 .addValue("startedTime", process.getStartedTime())
-                .addValue("machineDateId", process.getMachineDateId());
+                .addValue("machineDateId", process.getMachineDateId())
+                .addValue("machineId", process.getMachineId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         template.update(sql, param, keyHolder);
@@ -94,30 +97,47 @@ public class LogReceiverJdbcTemplateRepository {
         return log;
     }
 
-    public Optional<Integer> findRecentDateIdByMachineId(Integer machineId) {
-        String sql = "select id from dates where machine_id = :machineId order by id desc limit 1";
+    public Optional<Date> findRecentDateByMachineId(Integer machineId) {
+        String sql = "select id, date, machine_id from dates where machine_id = :machineId order by id desc limit 1";
 
         try {
             Map<String, Object> param = Map.of("machineId", machineId);
-            Integer id = template.queryForObject(sql, param, Integer.class);
-            return Optional.ofNullable(id);
+            Date date = template.queryForObject(sql, param, DateRowMapper());
+            return Optional.ofNullable(date);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<Integer> findRecentProcessIdByMachineDateId(Integer machineDateId) {
-        String sql = "select id from processes where machine_date_id=:machineDateId order by id desc limit 1";
+    public Optional<Process> findRecentProcessByMachineId(Integer machineId) {
+        String sql = "select id, file, thickness, started_time, finished_date_time, actual_process_time, machine_date_id, machine_id " +
+                "from processes where machine_id=:machineId order by id desc limit 1";
         try {
             Map<String, Object> param = new ConcurrentHashMap<>();
-            param.put("machineDateId", machineDateId);
-            Integer id = template.queryForObject(sql, param, Integer.class); // 없으면 예외터짐
-            return Optional.ofNullable(id);
+            param.put("machineId", machineId);
+            Process process = template.queryForObject(sql, param, ProcessRowMapper());// 없으면 예외터짐
+            return Optional.ofNullable(process);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
+    public void doneProcess(Integer processId, LocalDateTime finishedDateTime, LocalTime actualProcessTime) {
+        String sql = "update processes " +
+                "set finished_date_time=:finishedDateTime, actual_process_time=:actualProcessTime " +
+                "where id=:processId";
+
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("finishedDateTime", finishedDateTime)
+                .addValue("processId", processId)
+                .addValue("actualProcessTime", actualProcessTime);
+
+        template.update(sql, param);
+    }
+
+    private RowMapper<Process> ProcessRowMapper() {
+        return BeanPropertyRowMapper.newInstance(Process.class);
+    }
     private RowMapper<Date> DateRowMapper() {
         return BeanPropertyRowMapper.newInstance(Date.class);
     }

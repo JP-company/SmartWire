@@ -29,7 +29,9 @@ public class LogRepositoryJdbcTemplate {
     public List<LogVIewDto> getRecentLogAtEachMachine(List<Integer>  machineIdList) {
         log.info("기계 아이디 리스트 리포={}", machineIdList);
 
-        String sql = "SELECT log, log_time, processes.file, processes.thickness, processes.started_time, dates.date, machines.sequence, machines.machine_name\n" +
+        String sql = "SELECT log, log_time, " +
+                "CASE WHEN processes.finished_date_time IS NOT NULL THEN NULL ELSE processes.file END AS file, " +
+                "processes.thickness, processes.started_time, dates.date, machines.sequence, machines.machine_name " +
                 "FROM (\n" +
                 "  SELECT MAX(id) as id, machine_id\n" +
                 "  FROM logs\n" +
@@ -37,7 +39,7 @@ public class LogRepositoryJdbcTemplate {
                 "  GROUP BY machine_id\n" +
                 ") as latest_logs\n" +
                 "INNER JOIN logs ON latest_logs.id = logs.id\n" +
-                "INNER JOIN processes ON logs.process_id = processes.id\n" +
+                "LEFT OUTER JOIN processes ON logs.process_id = processes.id\n" +
                 "INNER JOIN dates ON logs.machine_date_id = dates.id \n" +
                 "INNER JOIN machines ON logs.machine_id = machines.id";
 

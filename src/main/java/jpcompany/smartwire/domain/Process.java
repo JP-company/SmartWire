@@ -16,5 +16,6 @@ public class Process {
     private LocalTime startedTime;
     private LocalDateTime finishedTime;
     private LocalTime actualProcessTime;
+    private Integer machineId;
     private Integer machineDateId;
 }
