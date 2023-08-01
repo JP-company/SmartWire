@@ -80,6 +80,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withClaim("id", principalDetails.getMember().getId())
                 .withClaim("username", principalDetails.getMember().getLoginId())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        log.info("JWT 토큰={}", jwtToken);
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
     }
