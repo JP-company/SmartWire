@@ -16,6 +16,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         if (exception.getCause() instanceof EmailNotVerifiedException) {
+            log.info("이메일 오류 URI={}", request.getRequestURI());
+            if (request.getRequestURI().startsWith("/api")) {
+                response.getWriter().write("이메일 인증되지 않은 계정입니다.");
+                return;
+            }
             EmailNotVerifiedException emailException = (EmailNotVerifiedException) exception.getCause();
             HttpSession newSession = request.getSession();
             newSession.setAttribute("loginId", emailException.getLoginId());
