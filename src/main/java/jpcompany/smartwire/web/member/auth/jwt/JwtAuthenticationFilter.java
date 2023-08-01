@@ -94,14 +94,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert machineList to JSON", e);
         }
-
-
         log.info("기계 리스트 api 로 보내기={}", machineListJson);
 
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
-                .withClaim("username", principalDetails.getMember().getLoginId())
+                .withClaim("loginId", principalDetails.getMember().getLoginId())
                 .withClaim("machineList", machineListJson)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         log.info("JWT 토큰={}", jwtToken);

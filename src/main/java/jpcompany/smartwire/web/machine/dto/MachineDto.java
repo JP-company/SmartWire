@@ -25,6 +25,7 @@ public class MachineDto {
     private LocalDate dateManufacture;
     @NotNull
     private Integer sequence;
+    private Boolean selected;
     public MachineDto() {
     }
 }

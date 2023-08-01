@@ -68,7 +68,7 @@ public class MachineRepositoryJdbcTemplate {
 
 
     public List<MachineDto> findAll(Integer memberId) {
-        String sql = "select id, machine_name, machine_model, date_manufacture, sequence " +
+        String sql = "select id, machine_name, machine_model, date_manufacture, sequence, selected " +
                 "from machines " +
                 "where member_id =:memberId";
         MapSqlParameterSource param = new MapSqlParameterSource()
