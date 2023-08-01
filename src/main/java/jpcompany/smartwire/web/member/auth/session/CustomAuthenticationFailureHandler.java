@@ -1,5 +1,6 @@
-package jpcompany.smartwire.web.member.auth;
+package jpcompany.smartwire.web.member.auth.session;
 
+import jpcompany.smartwire.web.member.auth.session.EmailNotVerifiedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;

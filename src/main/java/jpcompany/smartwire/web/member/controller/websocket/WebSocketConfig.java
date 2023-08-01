@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         SockJsServiceRegistration sockJS = registry.addEndpoint("/ws")
-                .setAllowedOrigins("https://smartwire-backend-f39394ac6218.herokuapp.com")
+                .setAllowedOrigins(WebSocketProperties.URL)
                 .withSockJS()
                 .setInterceptors(new HttpHandshakeInterceptor());
 

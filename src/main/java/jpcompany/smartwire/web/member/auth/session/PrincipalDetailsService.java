@@ -1,6 +1,8 @@
-package jpcompany.smartwire.web.member.auth;
+package jpcompany.smartwire.web.member.auth.session;
 
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.web.member.auth.PrincipalDetails;
+import jpcompany.smartwire.web.member.auth.session.EmailNotVerifiedException;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

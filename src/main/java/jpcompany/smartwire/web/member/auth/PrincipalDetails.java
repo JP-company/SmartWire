@@ -1,6 +1,7 @@
 package jpcompany.smartwire.web.member.auth;
 
 import jpcompany.smartwire.domain.Member;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 // Security Session => Authentication 객체 => UserDetails(PrincipalDetails)
+@Getter
 public class PrincipalDetails implements UserDetails {
 
     private final Member member; // 콤포지션
@@ -33,10 +35,6 @@ public class PrincipalDetails implements UserDetails {
         });
 
         return authorities;
-    }
-
-    public Member getMember() {
-        return member;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package jpcompany.smartwire.web.member.auth;
+package jpcompany.smartwire.web.member.auth.session;
 
 import org.springframework.security.core.AuthenticationException;
 
