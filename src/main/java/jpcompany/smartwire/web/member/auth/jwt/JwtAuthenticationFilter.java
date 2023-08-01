@@ -3,6 +3,8 @@ package jpcompany.smartwire.web.member.auth.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jpcompany.smartwire.web.machine.dto.MachineDto;
+import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.auth.PrincipalDetails;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,7 +25,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 //@RequiredArgsConstructor
 @Slf4j
@@ -70,15 +77,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
+        WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+        MachineRepositoryJdbcTemplate machineRepository = applicationContext.getBean(MachineRepositoryJdbcTemplate.class);
+
         log.info("로그인 성공={}", authResult.getPrincipal());
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
+        List<MachineDto> machineList = machineRepository.findAll(principalDetails.getMember().getId());
+        machineList.sort(Comparator.comparingInt(MachineDto::getSequence));
+
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
-                .withClaim("id", principalDetails.getMember().getId())
                 .withClaim("username", principalDetails.getMember().getLoginId())
+                .withClaim("machineList", machineList)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         log.info("JWT 토큰={}", jwtToken);
 
