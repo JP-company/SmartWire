@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.auth.PrincipalDetails;
@@ -87,7 +88,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         List<MachineDto> machineList = machineRepository.findAll(principalDetails.getMember().getId());
         machineList.sort(Comparator.comparingInt(MachineDto::getSequence));
+        log.info("기계 리스트 json 바꾸기 전={}", machineList);
+
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // JavaTimeModule 등록
+
         String machineListJson;
         try {
             machineListJson = objectMapper.writeValueAsString(machineList);
