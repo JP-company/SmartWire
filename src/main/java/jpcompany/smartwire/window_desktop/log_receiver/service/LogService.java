@@ -27,9 +27,12 @@ public class LogService {
 
     public void saveLog(LogSaveDto logSaveDto) {
         // 윈도우한테 받은 데이터에서 회원 정보 추출
-        Member member = memberRepository.findByLoginId(logSaveDto.getLoginId()).get();
+//        Member member = memberRepository.findByLoginId(logSaveDto.getLoginId()).get();
+
         // 회원 id, 기계 이름을 가지고 기계 id 추출
-        Integer machineId = machineRepository.findByMemberIdNMachineName(member.getId(), logSaveDto.getMachineName()).get();
+//        Integer machineId = machineRepository.findByMemberIdNMachineName(member.getId(), logSaveDto.getMachineName()).get();
+        Integer machineId = logSaveDto.getMachineId();
+
         // 기계 id를 가지고 최근 날짜 id 추출
         Date recentDateDto = logReceiverRepository.findRecentDateByMachineId(machineId).orElse(null);
         Integer machineDateId = recentDateDto.getId();
@@ -57,6 +60,7 @@ public class LogService {
         if (process != null && process.getFinishedTime() == null) {
             processId = process.getId();
         }
+
         // 로그가 작업 시작이면, 새로운 작업 생성, reset 이면 작업 종료
         if (logSaveDto.getLog().split("_")[0].equals("start")) {
             Process processDto = new Process();
@@ -71,7 +75,6 @@ public class LogService {
                     LocalDateTime.of(recentDate, logSaveDto.getLogTime()),
                     logSaveDto.getActualProcessTime());
         }
-
 
         Log log = new Log();
         log.setLog(logSaveDto.getLog());

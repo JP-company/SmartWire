@@ -10,8 +10,9 @@ import java.time.LocalTime;
 @Getter @Setter @ToString
 public class LogSaveDto {
 
-    private String loginId;
-    private String machineName;
+//    private String loginId;
+//    private String machineName;
+    private Integer machineId;
     private String log;
     private LocalDate date;
     private LocalTime logTime;
@@ -19,5 +20,5 @@ public class LogSaveDto {
     private Integer thickness;
     private LocalTime startedTime;
     private LocalTime actualProcessTime;
-    private Integer sequence;
+//    private Integer sequence;
 }

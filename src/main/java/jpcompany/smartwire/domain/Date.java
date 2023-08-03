@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class Date {
-
     private Integer id;
     private LocalDate date;
     private Integer machineId;
