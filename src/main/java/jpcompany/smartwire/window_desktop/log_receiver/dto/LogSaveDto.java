@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Getter @Setter @ToString
 public class LogSaveDto {
 
-//    private String loginId;
+    private String loginId;
 //    private String machineName;
     private Integer machineId;
     private String log;
