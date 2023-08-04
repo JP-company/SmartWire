@@ -1,7 +1,9 @@
 package jpcompany.smartwire.web.member.auth;
 
 import jpcompany.smartwire.web.member.auth.jwt.JwtAuthenticationFilter;
+import jpcompany.smartwire.web.member.auth.jwt.JwtAuthorizationFilter;
 import jpcompany.smartwire.web.member.auth.session.CustomAuthenticationFailureHandler;
+import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final CorsConfig corsConfig;
+    private final MemberRepository memberRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,9 +61,12 @@ public class SecurityConfig {
             log.info("api 로그인 설정");
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+            JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(authenticationManager, memberRepository);
             http
+                    .antMatcher("/api/**")
                     .addFilter(corsConfig.corsFilter())  // @CrossOrigin -> (인증X), 시큐리티 필터에 등록해줘야 인증이 필요할때도 접근 가능
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         }
     }
 }
