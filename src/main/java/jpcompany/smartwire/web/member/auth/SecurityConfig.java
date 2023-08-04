@@ -35,7 +35,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.authorizeRequests()
                     .antMatchers("/css/**", "/image/**", "/login", "/error/**",
-                            "/join", "/email_verify/**","api/login", "/actuator/beans").permitAll()
+                            "/join", "/email_verify/**", "api/login", "/actuator/beans").permitAll()
                     .anyRequest().hasAuthority("EMAIL_VERIFIED")
                     .and()
 

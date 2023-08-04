@@ -105,7 +105,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .withClaim("loginId", principalDetails.getMember().getLoginId())
-                .withClaim("machineList", machineListJson)
+                //.withClaim("machineList", machineListJson)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         log.info("JWT 토큰={}", jwtToken);
 
