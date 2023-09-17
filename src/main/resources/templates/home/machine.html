@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="/image/favicon.ico">
+  <link rel="icon" href="/images/favicon.ico">
   <link rel="stylesheet" href="/css/machine.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css"/>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -21,13 +21,13 @@
 <nav id="main-navbar">
   <div id="main-navbar-left">
     <a th:href="@{/}">
-      <img src="/image/logo.png" alt="로고" />
+      <img src="/images/logo.png" alt="로고" />
       <span>SMART WIRE</span>
     </a>
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.companyName}">Company name</span>
-    <button type="submit" th:onclick="|location.href='@{/member}'|"><img id="profile-img" src="/image/account.png" alt="마이페이지"/></button>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img id="profile-img" src="/images/account.png" alt="마이페이지"/></button>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
@@ -38,10 +38,10 @@
   <div id="main-left">
     <div>
       <button id="main-left-status" th:onclick="|location.href='@{/member}'|">
-        <img src="/image/account_side_grey.png" alt=""/><span>계정 관리</span>
+        <img src="/images/account_side_grey.png" alt=""/><span>계정 관리</span>
       </button>
       <button id="main-left-data" th:onclick="|location.href='@{/member/machine}'|">
-        <img src="/image/settings_side_white.png" alt=""/><span>기계 관리</span>
+        <img src="/images/settings_side_white.png" alt=""/><span>기계 관리</span>
       </button>
     </div>
   </div>
@@ -71,7 +71,7 @@
               <tr th:each="machine, machineStat : *{machines}">
                 <td id="machine-list-element">
                   <div>
-                    <img class="machine-list-hamburger" draggable="true" src="/image/hamburger.png" alt="기계순서 바꾸기" >
+                    <img class="machine-list-hamburger" draggable="true" src="/images/hamburger.png" alt="기계순서 바꾸기" >
                     <input type="text"
                            th:field="*{machines[__${machineStat.index}__].machineName}"
                            th:value="${machine.machineName}"
@@ -111,7 +111,7 @@
             </tbody>
           </table>
         <button type="button" onclick="addRow()" class="btn btn-primary" id="machine-list-add-button">
-          <img src="/image/plus_machine.png" alt="기계 추가(플러스) 버튼">
+          <img src="/images/plus_machine.png" alt="기계 추가(플러스) 버튼">
         </button>
         <button type="submit" class="btn btn-primary" id="machine-list-save-button">저장 하기</button>
       </form>
@@ -248,7 +248,7 @@
         newRow.innerHTML = `
           <td id="machine-list-element">
             <div>
-              <img class="machine-list-hamburger" draggable="true" src="/image/hamburger.png" alt="기계순서 바꾸기" >
+              <img class="machine-list-hamburger" draggable="true" src="/images/hamburger.png" alt="기계순서 바꾸기" >
               <input type="text"
                      name="machines[${index}].machineName"
                      placeholder="기계 이름을 입력해주세요. ex)1호기">

@@ -20,13 +20,4 @@ public class Machine {
     private Integer memberId;
 
     public Machine() {}
-
-    public Machine(String machineName, String machineModel, LocalDate dateManufacture, Integer sequence, Boolean selected, Integer memberId) {
-        this.machineName = machineName;
-        this.machineModel = machineModel;
-        this.dateManufacture = dateManufacture;
-        this.sequence = sequence;
-        this.selected = selected;
-        this.memberId = memberId;
-    }
 }

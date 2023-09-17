@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="/image/favicon.ico">
+  <link rel="icon" href="/images/favicon.ico">
   <link rel="stylesheet" href="/css/main.css"/>
   <title th:text="#{title}">스마트 와이어</title>
 </head>
@@ -13,13 +13,13 @@
 <nav id="main-navbar">
   <div id="main-navbar-left">
     <a th:href="@{/}">
-      <img src="/image/logo.png" alt="로고" />
+      <img src="/images/logo.png" alt="로고" />
       <span>SMART WIRE</span>
     </a>
   </div>
   <div id="main-navbar-right">
     <span th:text="${member.companyName}">Company name</span>
-    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/image/account.png" alt="마이페이지"/></button>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/images/account.png" alt="마이페이지"/></button>
     <form action="/logout" method="post">
       <button th:text="#{logout}">로그아웃</button>
     </form>
@@ -31,10 +31,10 @@
   <div id="main-left">
     <div>
       <button id="main-left-status">
-        <img src="/image/check_white.png" alt="" /><span>작동 상태</span>
+        <img src="/images/check_white.png" alt="" /><span>작동 상태</span>
       </button>
       <button id="main-left-data">
-        <img src="/image/assessment_grey.png" alt="" /><span>가공 통계</span>
+        <img src="/images/assessment_grey.png" alt="" /><span>가공 통계</span>
       </button>
     </div>
   </div>
@@ -44,7 +44,7 @@
       <div class="main-right-grid-card" th:each="machine, machineStat : ${machines}">
         <div class="header" th:id="|header${machineStat.index}|">
           <span class="machine-name" th:text="${logDto[__${machineStat.index}__].machineName}">기계명</span>
-          <img src="/image/breaking.png" th:id="|image${machineStat.index}|" alt="기계 상태"/>
+          <img src="/images/breaking.png" th:id="|image${machineStat.index}|" alt="기계 상태"/>
         </div>
         <div class="middle">
           <div th:id="|div${machineStat.index}|">
@@ -64,7 +64,7 @@
           </div>
         </div>
 <!--        <div class="bottom">-->
-<!--          <img src="/image/clock.png" alt="작동시간" />-->
+<!--          <img src="/images/clock.png" alt="작동시간" />-->
 <!--          <span th:id="|startedTime${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].startedTime}">00:00 (현재 파일 가공 시간)</span>-->
 <!--        </div>-->
       </div>
@@ -98,18 +98,18 @@
 <script th:inline="javascript">
     const setStatus = function(logTextStatus, header, logText, statusImg, file, div) {
         if (logTextStatus === '') {
-            header.style.backgroundColor = '#FFD232';
-            logText.style.color = '#FFD232';
-            statusImg.src = "/image/error.png";
+            header.style.backgroundColor = '#666666';
+            logText.style.color = '#666666';
+            statusImg.src = "/images/error.png";
             // file.innerHTML = '와이어 기계와 연결되어있지 않습니다.<br>와이어 기계의 "스마트 와이어" 프로그램이<br> 정상적으로 실행중인지 확인해주세요';
             file.innerHTML = "'스마트 와이어(윈도우)' 를 실행해주세요.<br>인터넷 연결 문제일 수 있습니다."
             file.style.cursor = 'default';
             file.style.width= '230px';
             div.style.display = 'none';
         } else if (logTextStatus === 'stop' || logTextStatus === 'reset') {
-            header.style.backgroundColor = '#f82f47';
-            logText.style.color = '#f82f47';
-            statusImg.src = "/image/breaking.png";
+            header.style.backgroundColor = '#FF6262';
+            logText.style.color = '#FF6262';
+            statusImg.src = "/images/breaking.png";
             div.style.display = 'block';
             if (logTextStatus === 'reset') {
                 file.textContent='-';
@@ -117,12 +117,12 @@
         } else if (logTextStatus === 'start' || logTextStatus === 'restart') {
             header.style.backgroundColor = '#00C220';
             logText.style.color = '#00C220';
-            statusImg.src = "/image/working.gif";
+            statusImg.src = "/images/working.gif";
             div.style.display = 'block';
         } else if (logTextStatus === 'done') {
-            header.style.backgroundColor = '#3A4EFF';
-            logText.style.color = '#3A4EFF';
-            statusImg.src = "/image/done.png";
+            header.style.backgroundColor = '#00A3FF';
+            logText.style.color = '#00A3FF';
+            statusImg.src = "/images/done.png";
             div.style.display = 'block';
         }
         if (file.textContent === '') {

@@ -24,20 +24,10 @@ public class MemberJoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public Member join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
-        Member member = new Member();
-        member.setLoginId(memberJoinDto.getLoginId());
-        member.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
-        member.setCompanyName(memberJoinDto.getCompanyName());
-        member.setEmail(memberJoinDto.getEmail());
-        member.setPhoneNumber(memberJoinDto.getPhoneNumber());
-        member.setTermOfUse(memberJoinDto.getTermOfUse());
-        member.setEmailVerified(false);
-        member.setHaveMachine(false);
-        member.setAuthToken(memberEmailService.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail()));
-
-        repository.save(member);
-        return member;
+    public void join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
+        memberJoinDto.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
+        memberJoinDto.setAuthToken(memberEmailService.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail()));
+        repository.save(memberJoinDto);
     }
 
     @Transactional

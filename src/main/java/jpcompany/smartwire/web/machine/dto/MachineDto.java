@@ -26,6 +26,7 @@ public class MachineDto {
     @NotNull
     private Integer sequence;
     private Boolean selected;
-    public MachineDto() {
-    }
+    private Integer memberId;
+
+    public MachineDto() { }
 }

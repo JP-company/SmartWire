@@ -5,7 +5,7 @@ import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.dto.MachineDtoList;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.service.MachineService;
-import jpcompany.smartwire.web.member.auth.PrincipalDetails;
+import jpcompany.smartwire.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -35,7 +34,6 @@ public class MachineController {
     private final MachineService machineService;
     private final MachineRepositoryJdbcTemplate machineRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     @GetMapping("/member/machine")
     public String machine(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
@@ -65,8 +63,6 @@ public class MachineController {
         }
         
         for (MachineDto machineDto : machineDtoList.getMachines()) {
-            log.info("machineDto={}", machineDto);
-
             // 검증 로직
             if (bindingResult.hasErrors()) {
                 log.info("errors = {}", bindingResult);
@@ -76,6 +72,7 @@ public class MachineController {
 
             redirectAttrs.addFlashAttribute("popupMessage", "기계 설정이 완료되었습니다.");
             if (!machineService.saveMachineFormNHaveMachine(loginMember.getId(), loginMember.getHaveMachine(), machineDto)) {
+                // 메인 페이지에서 기계 있을 때 화면 보여줘야 하니까
                 updateMemberSession(loginMember, true);
             }
         }

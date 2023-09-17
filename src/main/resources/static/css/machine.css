@@ -273,7 +273,7 @@ html, body {
     cursor: pointer;
 }
 .machine-list-stretch-button {
-    background-image: url("../image/expand.png");
+    background-image: url("../images/expand.png");
     background-size: 24px;
     background-color: #ffffff;
     background-repeat: no-repeat;
@@ -288,7 +288,7 @@ html, body {
     right: -42px;
     border: none;
     background-color: #ffffff;
-    background-image: url(../image/minus_machine.png);
+    background-image: url(../images/minus_machine.png);
     background-size: 28px;
     background-repeat: no-repeat;
     width: 28px;

@@ -27,7 +27,6 @@ public class LogRepositoryJdbcTemplate {
     }
 
     public List<LogVIewDto> getRecentLogAtEachMachine(List<Integer>  machineIdList) {
-        log.info("기계 아이디 리스트 리포={}", machineIdList);
 
         String sql = "SELECT log, log_time, " +
                 "CASE WHEN processes.finished_date_time IS NOT NULL THEN NULL ELSE processes.file END AS file, " +

@@ -19,21 +19,15 @@ public class MachineService {
     private final MachineRepositoryJdbcTemplate machineRepository;
 
     public Boolean saveMachineFormNHaveMachine(Integer memberId, Boolean haveMachine, MachineDto machineDto) {
-        Machine machine = new Machine();
-        machine.setId(machineDto.getId());
-        machine.setMachineName(machineDto.getMachineName());
-        machine.setMachineModel(machineDto.getMachineModel());
-        machine.setDateManufacture(machineDto.getDateManufacture());
-        machine.setMemberId(memberId);
-        machine.setSequence(machineDto.getSequence());
+        machineDto.setMemberId(memberId);
 
         if (machineDto.getId() == null) {
-            machineRepository.save(machine);
+            machineRepository.save(machineDto);
         } else {
             machineRepository.updateInformation(machineDto);
         }
 
-        log.info("추가 할떄 기계 있나요={}", haveMachine);
+        log.info("추가 할때 기계 있나요={}", haveMachine);
         // 기게 정보가 없으면 세션 업데이트를 위해 false 반환 -> 기게있는 페이지를 메인에서 보여줘야하니까
         if (!haveMachine) {
             memberRepository.updateHaveMachine(memberId, true);

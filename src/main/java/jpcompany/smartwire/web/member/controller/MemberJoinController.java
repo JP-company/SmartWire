@@ -56,8 +56,16 @@ public class MemberJoinController {
         return "home/email_verify";
     }
 
+    // 테스트 편의상 양식 미리 넣어둠
     private MemberJoinDto initMemberJoinForm() {
-        return new MemberJoinDto("wjsdj2009", "Arkskekfk1!", "Arkskekfk1!",
-                "제이피컴퍼니", "wjsdj2008@gmail.com", "01087144246", true);
+        MemberJoinDto memberJoinDto = new MemberJoinDto();
+        memberJoinDto.setLoginId("wjsdj2009");
+        memberJoinDto.setLoginPassword("Arkskekfk1!");
+        memberJoinDto.setLoginPasswordDoubleCheck("Arkskekfk1!");
+        memberJoinDto.setCompanyName("제이피컴퍼니");
+        memberJoinDto.setEmail("wjsdj2008@gmail.com");
+        memberJoinDto.setPhoneNumber("01087144246");
+        memberJoinDto.setTermOfUse(true);
+        return memberJoinDto;
     }
 }

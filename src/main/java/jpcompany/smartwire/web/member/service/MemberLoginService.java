@@ -28,6 +28,6 @@ public class MemberLoginService {
     }
     public boolean isEmailVerified(String loginId) {
         Member member = repository.findByLoginId(loginId).orElse(null);
-        return member != null && member.getEmailVerified();
+        return member != null && !member.getRole().equals("ROLE_UNVERIFIED");
     }
 }

@@ -1,11 +1,12 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 
 import java.util.Optional;
 
 public interface MemberRepository {
-    Member save(Member member);
+    void save(MemberJoinDto memberJoinDto);
     Member update(Member member);
     Optional<Member> findById(Integer id);
     Optional<Member> findByLoginId(String loginId);

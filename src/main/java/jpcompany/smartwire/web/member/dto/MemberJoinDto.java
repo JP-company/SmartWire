@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 
 @Getter @Setter @ToString
 public class MemberJoinDto {
@@ -24,25 +25,9 @@ public class MemberJoinDto {
     private String phoneNumber;
     @AssertTrue
     private Boolean termOfUse;
+    private String authToken;
+    private LocalDateTime createdDateTime;
+    private LocalDateTime updatedDateTime;
 
-    public MemberJoinDto() {
-    }
-
-    public MemberJoinDto(String loginId, String loginPassword, String loginPasswordDoubleCheck) {
-        this.loginId = loginId;
-        this.loginPassword = loginPassword;
-        this.loginPasswordDoubleCheck = loginPasswordDoubleCheck;
-    }
-
-    public MemberJoinDto(String loginId, String loginPassword, String loginPasswordDoubleCheck, String companyName, String email, String phoneNumber, Boolean termOfUse) {
-        this.loginId = loginId;
-        this.loginPassword = loginPassword;
-        this.loginPasswordDoubleCheck = loginPasswordDoubleCheck;
-        this.companyName = companyName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.termOfUse = termOfUse;
-    }
-
-
+    public MemberJoinDto() { }
 }

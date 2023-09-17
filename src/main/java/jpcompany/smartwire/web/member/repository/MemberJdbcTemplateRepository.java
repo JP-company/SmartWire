@@ -1,6 +1,7 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,17 +29,16 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("members")
-                .usingGeneratedKeyColumns("id");
-//                .usingColumns("item_name", "price", "quantity"); // 생략가능
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("login_id", "login_password", "email", "company_name", "phone_number", "term_of_use", "auth_token", "created_date_time", "updated_date_time");
     }
 
     @Override
-    public Member save(Member member) {
-        updateDateTime(member);
-        SqlParameterSource param = new BeanPropertySqlParameterSource(member);
-        Number key = jdbcInsert.executeAndReturnKey(param);
-        member.setId(key.intValue());
-        return member;
+    public void save(MemberJoinDto memberJoinDto) {
+        // TODO MYSQL 한국 시간 설정
+        updateDateTime(memberJoinDto);
+        SqlParameterSource param = new BeanPropertySqlParameterSource(memberJoinDto);
+        jdbcInsert.execute(param);
     }
 
     @Override
@@ -47,11 +47,10 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
                 "set company_name=:companyName, phone_number=:phoneNumber, updated_date_time=:updatedDateTime " +
                 "where login_id=:loginId";
 
-        updateDateTime(member);
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("companyName", member.getCompanyName())
                 .addValue("phoneNumber", member.getPhoneNumber())
-                .addValue("updatedDateTime", member.getUpdatedDateTime())
+                .addValue("updatedDateTime", LocalDateTime.now().withNano(0))
                 .addValue("loginId", member.getLoginId());
         template.update(sql, param);
 
@@ -60,8 +59,8 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findById(Integer id) {
-        String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_token, created_date_time, updated_date_time " +
+        String sql = "select id, login_id, login_password, email, company_name, phone_number, role, term_of_use, " +
+                "auth_token, created_date_time, updated_date_time " +
                 "from members where id = :id";
 
         try {
@@ -75,8 +74,8 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findByLoginId(String loginId) {
-        String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_token, created_date_time, updated_date_time, have_machine" +
+        String sql = "select id, login_id, login_password, email, company_name, phone_number, role, term_of_use, " +
+                "auth_token, created_date_time, updated_date_time, have_machine" +
                 " from members where login_id = :loginId";
 
         try {
@@ -90,9 +89,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findByAuthToken(String token) {
-        String sql = "select id, login_id, login_password, email, company_name, phone_number, term_of_use, " +
-                "email_verified, auth_token, created_date_time, updated_date_time " +
-                "from members where auth_token = :token";
+        String sql = "select auth_token from members where auth_token = :token";
 
         try {
             Map<String, Object> param = Map.of("token", token);
@@ -120,7 +117,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public void setEmailVerified(String token) {
-        String sql = "update members set email_verified=true where auth_token=:token";
+        String sql = "update members set role='ROLE_USER' where auth_token=:token";
 
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("token", token);
@@ -137,12 +134,10 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
         template.update(sql, param);
     }
 
-    private void updateDateTime(Member member) {
+    private void updateDateTime(MemberJoinDto memberJoinDto) {
         LocalDateTime now = LocalDateTime.now().withNano(0);
-        if (member.getCreatedDateTime() == null) {
-            member.setCreatedDateTime(now);
-        }
-        member.setUpdatedDateTime(now);
+        memberJoinDto.setCreatedDateTime(now);
+        memberJoinDto.setUpdatedDateTime(now);
     }
 
     private RowMapper<Member> MemberRowMapper() {

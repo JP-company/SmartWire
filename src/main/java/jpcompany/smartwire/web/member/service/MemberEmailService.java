@@ -21,6 +21,7 @@ public class MemberEmailService {
 
     //의존성 주입을 통해서 필요한 객체를 가져온다.
     private final JavaMailSender emailSender;
+
     // 타임리프를사용하기 위한 객체를 의존성 주입으로 가져온다
     private final SpringTemplateEngine templateEngine;
 
@@ -53,7 +54,7 @@ public class MemberEmailService {
         return message;
     }
 
-    // 타임리프를 이용한 context 설정
+    // 타임리프를 이용한 context 설정, 보내는 내용
     private String setContext(String loginId, String authCode) {
         Context context = new Context();
         context.setVariable("authCode", authCode);

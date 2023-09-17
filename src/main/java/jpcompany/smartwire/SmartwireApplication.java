@@ -11,8 +11,4 @@ public class SmartwireApplication {
 		SpringApplication.run(SmartwireApplication.class, args);
 	}
 
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 }

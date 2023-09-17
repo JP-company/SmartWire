@@ -123,7 +123,7 @@ form div > input {
     background-color: #ffffff;
 }
 #join-form-mainbox > div:nth-child(7) > button {
-    background-image: url("../image/arrow.png");
+    background-image: url("../images/arrow.png");
     background-color: #ffffff;
     background-size: 7.5px;
     background-repeat: no-repeat;
@@ -147,7 +147,7 @@ input[type="checkbox"] {
 #join-form-mainbox #termOfUseLabel {
     padding-left: 23px;
     background-repeat: no-repeat;
-    background-image: url("../image/checkbox_unchecked.png");
+    background-image: url("../images/checkbox_unchecked.png");
     background-position: 0px -2px;
     background-size: 24px;
     display: inline-block;
@@ -160,5 +160,5 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 #join-form-mainbox #termOfUse:checked ~ #termOfUseLabel{
-    background-image: url("../image/checkbox_checked.png");
+    background-image: url("../images/checkbox_checked.png");
 }

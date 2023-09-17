@@ -16,7 +16,6 @@ public class Member {
     private String email;
     private String phoneNumber;
     private Boolean termOfUse;
-    private Boolean emailVerified;
     private String authToken;
     private Boolean haveMachine;
     private String role;

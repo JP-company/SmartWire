@@ -4,7 +4,7 @@ import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
 import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
-import jpcompany.smartwire.web.member.auth.PrincipalDetails;
+import jpcompany.smartwire.security.PrincipalDetails;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import jpcompany.smartwire.web.member.dto.MemberResendEmailDto;
 import jpcompany.smartwire.domain.Member;
@@ -46,27 +46,22 @@ public class MemberLoginController {
             return "home/main_no_machine";
         }
 
-        // 정상 화면
+        // 정상 화면, 기계들과 로그 화면에 출력
         List<MachineDto> machines = machineRepository.findAll(member.getId());
         List<Integer> machineIds = machines.stream()
                 .map(MachineDto::getId)
                 .collect(Collectors.toList());
         model.addAttribute("machines", machines);
-        log.info("기계 아이디 리스트={}", machineIds);
 
         List<LogVIewDto> recentLogAtEachMachineList = logRepository.getRecentLogAtEachMachine(machineIds);
         List<String> machineNameWhoHasLog = recentLogAtEachMachineList.stream()
                 .map(LogVIewDto::getMachineName)
                 .collect(Collectors.toList());
-        log.info("로그 있는 기계={}", recentLogAtEachMachineList);
-        log.info("로그 있는 기계={}", machineNameWhoHasLog);
 
         machines.stream().filter(machine -> !machineNameWhoHasLog.contains(machine.getMachineName()))
                 .forEach(machine -> recentLogAtEachMachineList.add(new LogVIewDto(machine.getMachineName(), machine.getSequence())));
 
         recentLogAtEachMachineList.sort(Comparator.comparingInt(LogVIewDto::getSequence));
-
-        log.info("기계 로그 리스트={}", recentLogAtEachMachineList);
 
         model.addAttribute("logDto", recentLogAtEachMachineList);
         return "home/main";
@@ -74,7 +69,7 @@ public class MemberLoginController {
 
     @GetMapping("/login")
     public String loginForm(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        if (principalDetails != null &&principalDetails.getMember() != null) {
+        if (principalDetails != null && principalDetails.getMember() != null) {
             return "redirect:/";
         }
         model.addAttribute("memberLoginDto", new MemberLoginDto("wjsdj2008"));
@@ -83,6 +78,7 @@ public class MemberLoginController {
 
     @GetMapping("/email_verify")
     public String email(HttpServletRequest request, Model model) {
+        // 세션에 저장되있는 값 불러오기
         HttpSession session = request.getSession();
 
         String loginId = (String) session.getAttribute("loginId");
@@ -103,10 +99,11 @@ public class MemberLoginController {
             throw new IllegalAccessError("잘못된 접근입니다.");
         }
 
+        // 이메일 재전송, 토큰 값 업데이트
         String authToken = memberEmailService.sendEmail(member.getLoginId(), member.getEmail());
         serviceLogin.updateAuthToken(member.getLoginId(), authToken, member.getEmail());
 
-        // 세션 업데이트
+        // 세션 값 업데이트(계정 세션 아님)
         HttpSession session = request.getSession();
         session.setAttribute("loginId", member.getLoginId());
         session.setAttribute("email", member.getEmail());

@@ -34,12 +34,10 @@ public class MachineRepositoryJdbcTemplate {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Machine save(Machine machine) {
+    public void save(MachineDto machine) {
         machine.setSelected(false);
         SqlParameterSource param = new BeanPropertySqlParameterSource(machine);
-        Number key = jdbcInsert.executeAndReturnKey(param);
-        machine.setId(key.intValue());
-        return machine;
+        jdbcInsert.execute(param);
     }
 
     public void updateInformation(MachineDto machineDto) {
@@ -65,7 +63,6 @@ public class MachineRepositoryJdbcTemplate {
             return Optional.empty();
         }
     }
-
 
     public List<MachineDto> findAll(Integer memberId) {
         String sql = "select id, machine_name, machine_model, date_manufacture, sequence, selected " +
