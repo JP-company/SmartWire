@@ -1,5 +1,7 @@
-package jpcompany.smartwire.security.session;
+package jpcompany.smartwire.security.session.handler;
 
+import jpcompany.smartwire.security.session.exception.EmailNotVerifiedException;
+import jpcompany.smartwire.web.member.controller.SessionConst;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -15,8 +17,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         if (exception.getCause() instanceof EmailNotVerifiedException) {
             EmailNotVerifiedException emailException = (EmailNotVerifiedException) exception.getCause();
             HttpSession newSession = request.getSession();
-            newSession.setAttribute("loginId", emailException.getLoginId());
-            newSession.setAttribute("email", emailException.getEmail());
+            newSession.setAttribute(SessionConst.LOGIN_ID, emailException.getLoginId());
+            newSession.setAttribute(SessionConst.EMAIL, emailException.getEmail());
             response.sendRedirect("/email_verify");
         } else {
             response.sendRedirect("/login?error");

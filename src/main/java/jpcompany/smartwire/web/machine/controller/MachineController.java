@@ -5,7 +5,7 @@ import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.dto.MachineDtoList;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.service.MachineService;
-import jpcompany.smartwire.security.PrincipalDetails;
+import jpcompany.smartwire.security.common.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

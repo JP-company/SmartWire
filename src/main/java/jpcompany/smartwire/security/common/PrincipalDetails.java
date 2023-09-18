@@ -1,4 +1,4 @@
-package jpcompany.smartwire.security;
+package jpcompany.smartwire.security.common;
 
 import jpcompany.smartwire.domain.Member;
 import lombok.Getter;

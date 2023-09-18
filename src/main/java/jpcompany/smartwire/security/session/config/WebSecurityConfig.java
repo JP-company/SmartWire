@@ -1,6 +1,6 @@
-package jpcompany.smartwire.security.configs;
+package jpcompany.smartwire.security.session.config;
 
-import jpcompany.smartwire.security.session.CustomAuthenticationFailureHandler;
+import jpcompany.smartwire.security.session.handler.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

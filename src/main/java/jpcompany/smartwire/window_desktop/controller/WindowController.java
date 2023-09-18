@@ -27,9 +27,12 @@ public class WindowController {
 
     // JWT 인증을 기반으로 계정 정보가 넘어오면 이를 기반으로 DB, 클라이언트에 실시간으로 업데이트한다.
     @PostMapping("/api/log_test")
-    public void realTimeUpdate(@RequestBody LogSaveDto logSaveDto) {
+    public String realTimeUpdate(@RequestBody LogSaveDto logSaveDto) {
+        // 여기서 기계로부터 로그를 받을 때, 기계정보는 DB를 조회해서 가져오는 방법
+
         log.info("받은 로그 정보={}", logSaveDto);
         logService.saveLog(logSaveDto);
         this.messagingTemplate.convertAndSend("/topic/logs/" + logSaveDto.getLoginId(), logSaveDto);
+        return "Log send complete";
     }
 }

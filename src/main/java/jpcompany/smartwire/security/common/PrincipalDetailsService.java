@@ -1,7 +1,7 @@
-package jpcompany.smartwire.security.session;
+package jpcompany.smartwire.security.common;
 
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.security.PrincipalDetails;
+import jpcompany.smartwire.security.session.exception.EmailNotVerifiedException;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +33,6 @@ public class PrincipalDetailsService implements UserDetailsService {
             }
             return new PrincipalDetails(member);
         }
-        return null;
+        throw new UsernameNotFoundException("[오류]없는 아이디");
     }
 }

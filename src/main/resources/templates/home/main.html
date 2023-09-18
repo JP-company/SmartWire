@@ -79,8 +79,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script th:inline="javascript">
     // Connect to WebSocket server.
-    var socket = new SockJS('/ws');
-    var stompClient = Stomp.over(socket);
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         console.log('로그인 아이디=', [[${member.loginId}]]);
         // Subscribe to "/topic/messages" destination.
@@ -151,7 +151,9 @@
 
     let realTimeUpdate = function(logObj) {
         logText = document.getElementById('log' + logObj["sequence"]);
+        console.log("logText=", logText.textContent);
         logTextStatus = document.getElementById('logStatus' + logObj["sequence"]).textContent;
+        console.log("logTextStatus=", logTextStatus);
         header = document.getElementById('header' + logObj["sequence"]);
         statusImg = document.getElementById("image" + logObj["sequence"]);
         file = document.getElementById("file" + logObj["sequence"]);

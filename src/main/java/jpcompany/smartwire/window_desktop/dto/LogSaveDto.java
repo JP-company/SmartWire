@@ -18,6 +18,7 @@ public class LogSaveDto {
     private LocalTime logTime;
     private String file;
     private Integer thickness;
+    private Integer sequence;
     private LocalTime startedTime;
     private LocalTime actualProcessTime;
 //    private Integer sequence;

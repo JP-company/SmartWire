@@ -75,8 +75,8 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
     @Override
     public Optional<Member> findByLoginId(String loginId) {
         String sql = "select id, login_id, login_password, email, company_name, phone_number, role, term_of_use, " +
-                "auth_token, created_date_time, updated_date_time, have_machine" +
-                " from members where login_id = :loginId";
+                "auth_token, created_date_time, updated_date_time, have_machine " +
+                "from members where login_id = :loginId";
 
         try {
             Map<String, Object> param = Map.of("loginId", loginId);
@@ -117,7 +117,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public void setEmailVerified(String token) {
-        String sql = "update members set role='ROLE_USER' where auth_token=:token";
+        String sql = "update members set role='ROLE_MEMBER' where auth_token=:token";
 
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("token", token);

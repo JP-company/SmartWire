@@ -1,7 +1,7 @@
 package jpcompany.smartwire.web.member.controller;
 
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.security.PrincipalDetails;
+import jpcompany.smartwire.security.common.PrincipalDetails;
 import jpcompany.smartwire.web.member.dto.MemberUpdateDto;
 import jpcompany.smartwire.web.member.service.MemberEditService;
 import lombok.RequiredArgsConstructor;

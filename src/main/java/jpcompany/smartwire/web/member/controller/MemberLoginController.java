@@ -4,7 +4,7 @@ import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
 import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
-import jpcompany.smartwire.security.PrincipalDetails;
+import jpcompany.smartwire.security.common.PrincipalDetails;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
 import jpcompany.smartwire.web.member.dto.MemberResendEmailDto;
 import jpcompany.smartwire.domain.Member;
@@ -35,6 +35,12 @@ public class MemberLoginController {
     private final MemberEmailService memberEmailService;
     private final MachineRepositoryJdbcTemplate machineRepository;
     private final LogRepositoryJdbcTemplate logRepository;
+
+    @ResponseBody
+    @GetMapping("/api/messages")
+    public String apiMessage() {
+        return "ok";
+    }
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
