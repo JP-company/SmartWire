@@ -151,9 +151,7 @@
 
     let realTimeUpdate = function(logObj) {
         logText = document.getElementById('log' + logObj["sequence"]);
-        console.log("logText=", logText.textContent);
         logTextStatus = document.getElementById('logStatus' + logObj["sequence"]).textContent;
-        console.log("logTextStatus=", logTextStatus);
         header = document.getElementById('header' + logObj["sequence"]);
         statusImg = document.getElementById("image" + logObj["sequence"]);
         file = document.getElementById("file" + logObj["sequence"]);

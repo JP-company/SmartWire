@@ -6,6 +6,7 @@ import jpcompany.smartwire.security.jwt.handler.JwtAccessDeniedHandler;
 import jpcompany.smartwire.security.jwt.handler.JwtAuthenticationFailureHandler;
 import jpcompany.smartwire.security.jwt.handler.JwtAuthenticationSuccessHandler;
 import jpcompany.smartwire.security.jwt.provider.JwtAuthenticationProvider;
+import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.repository.MemberJdbcTemplateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +33,12 @@ public class JwtSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final MemberJdbcTemplateRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MachineRepositoryJdbcTemplate machineRepository;
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.formLogin().disable();
         http
                 .antMatcher("/api/**")
                 .authorizeRequests()
@@ -80,7 +83,7 @@ public class JwtSecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler jwtAuthenticationSuccessHandler() {
-        return new JwtAuthenticationSuccessHandler();
+        return new JwtAuthenticationSuccessHandler(machineRepository);
     }
     @Bean
     public AuthenticationFailureHandler jwtAuthenticationFailureHandler() {

@@ -13,7 +13,6 @@ import java.util.Collection;
 public class PrincipalDetails implements UserDetails {
 
     private final Member member; // 콤포지션
-
     public PrincipalDetails(Member member) {
         this.member = member;
     }

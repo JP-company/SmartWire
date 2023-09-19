@@ -8,7 +8,6 @@ import jpcompany.smartwire.security.jwt.token.JwtAuthenticationToken;
 import jpcompany.smartwire.web.member.controller.SessionConst;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -23,18 +22,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final MemberRepository memberRepository;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+                                    MemberRepository memberRepository) {
         super(authenticationManager);
         this.memberRepository = memberRepository;
     }
 
     // 인증이나 권한이 필요한 주소요청이 있을 때 해당 필터를 타게 된다.
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("인증이나 권한이 필요한 주소 요청이 됨");
-
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
+            throws IOException, ServletException {
         String jwtHeader = request.getHeader("Authorization");
-        System.out.println("jwtHeader = " + jwtHeader);
 
         // header 가 있는지 확인 (정상적으로 있는지 확인)
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
@@ -44,17 +44,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // JWT 토큰을 검증해서 정상적인 사용자인지 확인
         String jwtToken = jwtHeader.replace("Bearer ", "");
-
         String loginId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim(SessionConst.LOGIN_ID).asString();
 
         // 서명이 정상적으로 됨
         if (loginId != null) {
-            System.out.println("username 정상");
             Member member = memberRepository.findByLoginId(loginId).get();
-            System.out.println("userEntity = " + member.getLoginId());
 
             PrincipalDetails principalDetails = new PrincipalDetails(member);
-            System.out.println("principalDetails = " + principalDetails);
             // Jwt 토큰 서명을 통해서 서명이 정상이면 Authentication 객체를 만들어준다.
             Authentication authentication =
                     new JwtAuthenticationToken(principalDetails.getMember(), null, principalDetails.getAuthorities());
@@ -63,6 +59,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);
-
     }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jpcompany.smartwire.security.common.PrincipalDetails;
+import jpcompany.smartwire.security.jwt.token.JwtAuthenticationToken;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.member.dto.MemberLoginDto;
@@ -37,8 +38,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("api 로그인 요청, URI={}", request.getRequestURI());
-
         ObjectMapper om = new ObjectMapper();
         MemberLoginDto memberLoginDto = null;
         try {
@@ -46,15 +45,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         } catch (IOException e) {
             log.error("로그인 Dto 객체 할당 실패=", e);
         }
-        log.info("로그인 요청 객체={}", memberLoginDto);
 
         // 유저네임패스워드 토큰 생성
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
+        JwtAuthenticationToken authenticationToken =
+                new JwtAuthenticationToken(
                         memberLoginDto.getLoginId(),
                         memberLoginDto.getLoginPassword());
-
-        log.info("토큰 생성 완료={}", authenticationToken);
 
         return getAuthenticationManager().authenticate(authenticationToken);
     }

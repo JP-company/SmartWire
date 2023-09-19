@@ -21,5 +21,4 @@ public class LogSaveDto {
     private Integer sequence;
     private LocalTime startedTime;
     private LocalTime actualProcessTime;
-//    private Integer sequence;
 }

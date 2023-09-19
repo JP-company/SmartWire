@@ -25,7 +25,6 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
 
         Member member = memberRepository.findByLoginId(loginId).orElse(null);
-        log.info("로그인 계정={}", member);
 
         if (member != null) {
             if (member.getRole().equals("ROLE_UNVERIFIED")) {

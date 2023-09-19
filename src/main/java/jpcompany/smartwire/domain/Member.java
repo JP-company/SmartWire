@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Getter @Setter @ToString
 public class Member {
-
     private Integer id;
     private String loginId;
     private String loginPassword;

@@ -42,7 +42,7 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
         }
 
         if (exception.getCause() instanceof EmailNotVerifiedException) {
-            errMsg = "Expired password";
+            errMsg = "need email verification";
         }
 
         objectMapper.writeValue(response.getWriter(), errMsg);
