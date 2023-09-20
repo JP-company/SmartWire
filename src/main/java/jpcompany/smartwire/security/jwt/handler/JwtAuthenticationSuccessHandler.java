@@ -32,7 +32,6 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     private final MachineRepositoryJdbcTemplate machineRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
     // Jwt 토큰 담아서 response 헤더에 담아주기
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -56,7 +55,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         String jwtAuthenticationJson = objectMapper.writeValueAsString(new JwtAuthenticationDto(jwtMemberDto, machineList));
 
-        response.setContentType("json/application; charset=utf-8");
+        response.setContentType("application/json; charset=utf-8");
         response.getWriter().write(jwtAuthenticationJson);
     }
 }

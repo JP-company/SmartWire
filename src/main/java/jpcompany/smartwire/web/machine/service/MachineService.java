@@ -27,7 +27,6 @@ public class MachineService {
             machineRepository.updateInformation(machineDto);
         }
 
-        log.info("추가 할때 기계 있나요={}", haveMachine);
         // 기게 정보가 없으면 세션 업데이트를 위해 false 반환 -> 기게있는 페이지를 메인에서 보여줘야하니까
         if (!haveMachine) {
             memberRepository.updateHaveMachine(memberId, true);
@@ -39,7 +38,6 @@ public class MachineService {
 
     public Boolean deleteMachineNHaveMachine(Integer machineIdSend, Integer memberId) {
         machineRepository.delete(machineIdSend);
-        log.info("기계 얼마나 남았니={}", machineRepository.findAll(memberId).size());
         if (machineRepository.findAll(memberId).size() == 0) {
             memberRepository.updateHaveMachine(memberId, false);
             return false;

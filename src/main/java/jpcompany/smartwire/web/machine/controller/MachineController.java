@@ -43,7 +43,6 @@ public class MachineController {
         List<MachineDto> machines = machineRepository.findAll(loginMember.getId());
         machines.sort(Comparator.comparingInt(MachineDto::getSequence));
 
-        log.info("기계가 몇대있나요={}", machines);
         model.addAttribute("machineDtoList", new MachineDtoList(machines));
         return "home/machine";
     }
@@ -97,7 +96,6 @@ public class MachineController {
             updateMemberSession(loginMember, false);
         }
 
-        log.info("정상 삭제={}", machineIdSend);
         redirectAttrs.addFlashAttribute("popupMessage", "기계 삭제에 성공하였습니다.");
         redirectAttrs.addFlashAttribute("autoClickButton", true);
         return "redirect:/member/machine";

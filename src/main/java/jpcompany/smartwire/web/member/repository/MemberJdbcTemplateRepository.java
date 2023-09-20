@@ -35,7 +35,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public void save(MemberJoinDto memberJoinDto) {
-        // TODO MYSQL 한국 시간 설정
+        // TODO - MySQL 한국 시간 설정
         updateDateTime(memberJoinDto);
         SqlParameterSource param = new BeanPropertySqlParameterSource(memberJoinDto);
         jdbcInsert.execute(param);
