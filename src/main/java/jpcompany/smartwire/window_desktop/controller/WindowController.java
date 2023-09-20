@@ -50,7 +50,7 @@ public class WindowController {
 
         String jwtAuthenticationJson = objectMapper.writeValueAsString(new JwtAuthenticationDto(jwtMemberDto, machineList));
 
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=utf-8");
         response.getWriter().write(jwtAuthenticationJson);
     }
 
