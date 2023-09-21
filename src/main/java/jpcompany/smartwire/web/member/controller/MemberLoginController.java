@@ -36,12 +36,6 @@ public class MemberLoginController {
     private final MachineRepositoryJdbcTemplate machineRepository;
     private final LogRepositoryJdbcTemplate logRepository;
 
-    @ResponseBody
-    @GetMapping("/api/messages")
-    public String apiMessage() {
-        return "ok";
-    }
-
     @GetMapping("/")
     public String home(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         Member member = principalDetails.getMember();
@@ -54,6 +48,7 @@ public class MemberLoginController {
 
         // 정상 화면, 기계들과 로그 화면에 출력
         List<MachineDto> machines = machineRepository.findAll(member.getId());
+        machines.sort(Comparator.comparingInt(MachineDto::getSequence));
         List<Integer> machineIds = machines.stream()
                 .map(MachineDto::getId)
                 .collect(Collectors.toList());

@@ -42,24 +42,24 @@
     <div id="main-right-grid">
 
       <div class="main-right-grid-card" th:each="machine, machineStat : ${machines}">
-        <div class="header" th:id="|header${machineStat.index}|">
+        <div class="header" th:id="|header${machine.id}|">
           <span class="machine-name" th:text="${logDto[__${machineStat.index}__].machineName}">기계명</span>
-          <img src="/images/breaking.png" th:id="|image${machineStat.index}|" alt="기계 상태"/>
+          <img src="/images/breaking.png" th:id="|image${machine.id}|" alt="기계 상태"/>
         </div>
         <div class="middle">
-          <div th:id="|div${machineStat.index}|">
+          <div th:id="|div${machine.id}|">
             <div>파일명</div>
             <div>로그명</div>
           </div>
           <div>
-            <div><button class="log-file" th:id="|file${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].file}">파일명</button></div>
-            <span class="log-text" th:id="|log${machineStat.index}|"
+            <div><button class="log-file" th:id="|file${machine.id}|" th:text="${logDto[__${machineStat.index}__].file}">파일명</button></div>
+            <span class="log-text" th:id="|log${machine.id}|"
                   th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[1] : ''}">로그명</span>
-            <span th:id="|logStatus${machineStat.index}|"
+            <span th:id="|logStatus${machine.id}|"
                   th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[0] : ''}" hidden>로그 상태</span>
             <div class="log-time">
-              <span th:id="|date${machineStat.index}|" th:text="|${logDto[__${machineStat.index}__].date}|"></span>
-              <span th:id="|logTime${machineStat.index}|" th:text="|${logDto[__${machineStat.index}__].logTime}|"></span>
+              <span th:id="|date${machine.id}|" th:text="|${logDto[__${machineStat.index}__].date}|"></span>
+              <span th:id="|logTime${machine.id}|" th:text="|${logDto[__${machineStat.index}__].logTime}|"></span>
             </div>
           </div>
         </div>
@@ -138,26 +138,28 @@
     let logTime;
     let div;
     for (let i = 0; i < [[${machines}]].length; i++) {
-        logText = document.getElementById('log' + i);
-        logTextStatus = document.getElementById('logStatus' + i).textContent;
-        header = document.getElementById('header' + i);
-        statusImg = document.getElementById("image" + i);
-        file = document.getElementById("file" + i);
-        logDate = document.getElementById("date"+ i);
-        logTime = document.getElementById("logTime" + i);
-        div = document.getElementById("div" + i);
+        let machineId = [[${machines}]][i].id;
+        logText = document.getElementById('log' + machineId);
+        logTextStatus = document.getElementById('logStatus' + machineId).textContent;
+        header = document.getElementById('header' + machineId);
+        statusImg = document.getElementById("image" + machineId);
+        file = document.getElementById("file" + machineId);
+        logDate = document.getElementById("date"+ machineId);
+        logTime = document.getElementById("logTime" + machineId);
+        div = document.getElementById("div" + machineId);
         setStatus(logTextStatus, header, logText, statusImg, file, div);
     }
 
     let realTimeUpdate = function(logObj) {
-        logText = document.getElementById('log' + logObj["sequence"]);
-        logTextStatus = document.getElementById('logStatus' + logObj["sequence"]).textContent;
-        header = document.getElementById('header' + logObj["sequence"]);
-        statusImg = document.getElementById("image" + logObj["sequence"]);
-        file = document.getElementById("file" + logObj["sequence"]);
-        logDate = document.getElementById("date"+ logObj["sequence"]);
-        logTime = document.getElementById("logTime" + logObj["sequence"]);
-        div = document.getElementById("div" + logObj["sequence"]);
+        let machineId = logObj["machineId"];
+        logText = document.getElementById('log' + machineId);
+        logTextStatus = document.getElementById('logStatus' + machineId).textContent;
+        header = document.getElementById('header' + machineId);
+        statusImg = document.getElementById("image" + machineId);
+        file = document.getElementById("file" + machineId);
+        logDate = document.getElementById("date"+ machineId);
+        logTime = document.getElementById("logTime" + machineId);
+        div = document.getElementById("div" + machineId);
 
 
         logText.textContent = logObj["log"].split("_")[1];

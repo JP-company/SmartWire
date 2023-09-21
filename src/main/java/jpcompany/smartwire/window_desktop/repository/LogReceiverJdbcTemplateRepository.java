@@ -91,7 +91,6 @@ public class LogReceiverJdbcTemplateRepository {
         template.update(sql, param, keyHolder);
 
         Integer id = keyHolder.getKey().intValue();
-
         log.setId(id);
 
         return log;

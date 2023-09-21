@@ -11,14 +11,13 @@ import java.time.LocalTime;
 public class LogSaveDto {
 
     private String loginId;
-//    private String machineName;
     private Integer machineId;
+    private Integer sequence;
     private String log;
     private LocalDate date;
     private LocalTime logTime;
     private String file;
     private Integer thickness;
-    private Integer sequence;
     private LocalTime startedTime;
     private LocalTime actualProcessTime;
 }
