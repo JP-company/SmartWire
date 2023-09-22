@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -34,11 +35,25 @@ public class LogService {
 
         // 기계 id를 가지고 최근 날짜 id 추출
         Date recentDateDto = logReceiverRepository.findRecentDateByMachineId(machineId).orElse(null);
-        Integer machineDateId = recentDateDto.getId();
-        log.info("machineDateId 처음에={}", machineDateId);
-        LocalDate recentDate = recentDateDto.getDate();
 
-        // 데이터에 날짜가 없으면 이전과 같은 날짜, 있으면 새로운 날짜 생성
+        Integer machineDateId;
+        LocalDate recentDate;
+
+        if (recentDateDto != null) {  // 최근날짜가 있으면
+            machineDateId = recentDateDto.getId();
+            recentDate = recentDateDto.getDate();
+            log.info("machineDateId 처음에={}", machineDateId);
+        } else {  // 최근날짜가 없으면
+            recentDate = LocalDate.now();
+            Date date = new Date();
+            date.setDate(recentDate);
+            date.setMachineId(machineId);
+            log.info("날짜={}", date);
+            Date date1 = logReceiverRepository.saveDate(date);
+            machineDateId = date1.getId();
+        }
+
+        // 데이터에 날짜가 있으면 새로운 날짜 생성, 없으면 이전과 같은 날짜
         if (logSaveDto.getDate() != null) {
             Date date = new Date();
             date.setDate(logSaveDto.getDate());
