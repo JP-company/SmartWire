@@ -76,7 +76,7 @@ public class LogService {
         }
 
         // 로그가 작업 시작이면, 새로운 작업 생성, reset 이면 작업 종료
-        if (logSaveDto.getLog().split("_")[0].equals("start")) {
+        if (logSaveDto.getLog().equals("start_작업 시작")) {
             Process processDto = new Process();
             processDto.setFile(logSaveDto.getFile());
             processDto.setThickness(logSaveDto.getThickness());
