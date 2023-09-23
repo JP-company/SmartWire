@@ -33,7 +33,7 @@ public class LogService {
             machineDateId = recentDateDto.getId();
             recentDate = recentDateDto.getDate();
             // 데이터에 날짜가 있으면 새로운 날짜 생성, 없으면 이전과 같은 날짜
-            if (logSaveDto.getDate() != null && logSaveDto.getDate().equals(recentDate)) {
+            if (logSaveDto.getDate() != null && !logSaveDto.getDate().isEqual(recentDate)) {
                 Date date = new Date();
                 date.setDate(logSaveDto.getDate());
                 date.setMachineId(machineId);
