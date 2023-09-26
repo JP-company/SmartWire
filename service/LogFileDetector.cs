@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace smartwire_window_desktop
 {
@@ -25,7 +26,10 @@ namespace smartwire_window_desktop
         private string previousContent = ""; // 이전에 읽은 로그 내용 저장
         private string date = DateTime.Now.ToString("yyyy-MM-dd");
         private bool isFolderCreated = false;
+        private bool _isStopped;
 
+        public bool GetIsStopped() { return _isStopped; }
+        public void SetIsStoppedFalse() { _isStopped = false; }
 
         public LogFileDetector(MachineDto machineDto)
         {
@@ -49,12 +53,12 @@ namespace smartwire_window_desktop
             folderWatcher.Created += FolderWatcher_Created;  // 폴더에서 뭔가가 만들어질때 이벤트 발생, FolderWatcher_Created() 메서드 실행
             folderWatcher.EnableRaisingEvents = true;
         }
-
-        private void FolderWatcher_Created(object sender, FileSystemEventArgs e)
+        
+        private async void FolderWatcher_Created(object sender, FileSystemEventArgs e)
         {
             if (e.ChangeType == WatcherChangeTypes.Created)
             {
-                System.Threading.Thread.Sleep(500); // 이벤트 발생 직후 파일 읽어오는데까지 텀을 둬서 정확한 로그정보 입수
+                await Task.Delay(500); // 이벤트 발생 직후 파일 읽어오는데까지 텀을 둬서 정확한 로그정보 입수
 
                 if (!isFolderCreated) // 이중호출 방지
                 {
@@ -64,7 +68,7 @@ namespace smartwire_window_desktop
                 MonitorLatestFile();
             }
         }
-
+        
         private void MonitorLatestFile()
         {
             currentFilePath = Directory.GetFiles(Constants.DIRECTORY_PATH, "*.log")
@@ -190,7 +194,7 @@ namespace smartwire_window_desktop
                         catch (HttpRequestException ex)
                         {
                             Console.WriteLine(ex.ToString());
-                            System.Threading.Thread.Sleep(1000);
+                            await Task.Delay(1000);
                             AnalyzeAndUploadLog(newLog, isFirst);
                         }
                     }
@@ -216,6 +220,11 @@ namespace smartwire_window_desktop
                                 return;
                             }
 
+                            if (logMessage.StartsWith("stop"))
+                            {
+                                _isStopped = true;
+                            }
+
                             // 로그 내용 response
                             try
                             {
@@ -228,7 +237,7 @@ namespace smartwire_window_desktop
                             catch (HttpRequestException ex)
                             {
                                 Console.WriteLine(ex.ToString());
-                                System.Threading.Thread.Sleep(1000);
+                                await Task.Delay(1000);
                                 AnalyzeAndUploadLog(newLog, isFirst);
                             }
                         }
@@ -247,6 +256,11 @@ namespace smartwire_window_desktop
                     string logDate = null;
                     string logTime = DateTime.Now.ToString("HH:mm:ss");
                     string fileName = null;
+
+                    if (logMessage.StartsWith("stop"))
+                    {
+                        _isStopped = true;
+                    }
 
                     // 날짜, 시간 정규표현식으로 가져오기
                     Match match = Regex.Match(newLog, pattern);
@@ -297,7 +311,7 @@ namespace smartwire_window_desktop
                     catch (HttpRequestException ex)
                     {
                         Console.WriteLine(ex.ToString());
-                        System.Threading.Thread.Sleep(1000);
+                        await Task.Delay(1000);
                         AnalyzeAndUploadLog(newLog, isFirst);
                     }
                     return;

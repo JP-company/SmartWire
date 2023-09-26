@@ -7,12 +7,17 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text.Json;
 using smartwire_window_desktop.dto;
+using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace smartwire_window_desktop
 {
     public partial class Main : System.Windows.Forms.Form
     {
         private List<MachineDto> machines = null;
+        private MachineDto _machine = null;
         private JwtMemberDto member = null;
         private LogFileDetector _logFileDetector;
         private HttpClient httpClient = SingletonHttpClient.Instance;
@@ -52,7 +57,7 @@ namespace smartwire_window_desktop
                 } catch (HttpRequestException ex)
                 {
                     Console.WriteLine(ex.ToString());
-                    System.Threading.Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     autoLogin(jwtToken);
                 }
             }
@@ -97,9 +102,6 @@ namespace smartwire_window_desktop
                 Console.WriteLine(ex.ToString());
                 MessageBox.Show("인터넷 연결을 확인해주세요.", "인터넷 연결 확인");
             }
-
-
-            
         }
 
         private async void SaveMemberInfomation(HttpResponseMessage response)
@@ -169,22 +171,87 @@ namespace smartwire_window_desktop
             MainView.Visible = true;
         }
 
-        private void MainView_VisibleChanged(object sender, EventArgs e)
+        private async void MainView_VisibleChanged(object sender, EventArgs e)
         {
             if (MainView.Visible && _logFileDetector == null)
             {
                 int machineId = int.Parse(Encryption.LoadData(Constants.MACHINEID_FILE_PATH));
-                MachineDto machine = null;
+                
                 foreach (MachineDto machineDto in machines)
                 {
                     if (machineDto.Id == machineId)
                     {
-                        machine = machineDto;
+                        _machine = machineDto;
                         break;
                     }
                 }
-                _logFileDetector = new LogFileDetector(machine);
+                _logFileDetector = new LogFileDetector(_machine);
+
+                await MonitorScreenAsync();
             }
+        }
+
+        private async Task MonitorScreenAsync()
+        {
+            while (true)
+            {
+                await Task.Delay(3000);
+
+                if (_logFileDetector.GetIsStopped()) 
+                {
+                    // Console.WriteLine("멈춘 화면 감시 중");
+                    using (Bitmap screenshot = CaptureScreen())
+                    {
+                        // 초록불 감지 시
+                        if (CheckCondition(screenshot))
+                        {
+                            try
+                            {
+                                HttpResponseMessage response = await authService.UploadLog(_machine.Id, "start_작업 재시작[감지]", DateTime.Now.ToString("yyyy-MM-dd"), DateTime.Now.ToString("HH:mm:ss"), null);
+                                
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    Console.WriteLine("Response HTTP Code ={0}", response.IsSuccessStatusCode);
+                                    string jsonContent = await response.Content.ReadAsStringAsync();
+                                    Console.WriteLine($"{jsonContent}");
+                                    _logFileDetector.SetIsStoppedFalse();
+                                }
+                            }
+                            catch (HttpRequestException ex)
+                            {
+                                Console.WriteLine(ex.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private Bitmap CaptureScreen()
+        {
+            // 화면 캡처
+            Rectangle bounds = Screen.GetBounds(Point.Empty);
+            Bitmap screenshot = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
+            using (Graphics gfx = Graphics.FromImage(screenshot))
+            {
+                gfx.CopyFromScreen(bounds.X, bounds.Y, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy);
+            }
+            return screenshot;
+        }
+
+        private bool CheckCondition(Bitmap screenshot) 
+        {
+            int[] xPosition = { 755, 700, 655, 610 };
+            Color[] color = new Color[xPosition.Length];
+            for (int i = 0; i < xPosition.Length; i++)
+            {
+                color[i] = screenshot.GetPixel(xPosition[i], 695);
+                if (color[i].R != 0 || color[i].G != 255 || color[i].B != 0)
+                {
+                    return false;
+                }
+            }
+            return true; 
         }
     }
 }
