@@ -22,7 +22,6 @@ public class LogService {
 
     public void saveLog(LogSaveDto logSaveDto) {
         Integer machineId = logSaveDto.getMachineId();
-
         // 받은 로그에서 기계 id를 가지고 최근 날짜 id 추출
         Date recentDateDto = logReceiverRepository.findRecentDateByMachineId(machineId).orElse(null);
 
@@ -75,7 +74,8 @@ public class LogService {
         } else if (processId != null && logSaveDto.getLog().split("_")[0].equals("reset")) {
             logReceiverRepository.doneProcess(processId,
                     LocalDateTime.of(recentDate, logSaveDto.getLogTime()),
-                    logSaveDto.getActualProcessTime());
+                    logSaveDto.getActualProcessTime()
+            );
         }
 
         Log log = new Log();

@@ -2,11 +2,9 @@ package jpcompany.smartwire.security.jwt.config;
 
 import jpcompany.smartwire.security.jwt.filter.JwtAuthenticationFilter;
 import jpcompany.smartwire.security.jwt.filter.JwtAuthorizationFilter;
-import jpcompany.smartwire.web.member.repository.MemberJdbcTemplateRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;

@@ -23,6 +23,7 @@ public class MemberJoinService {
     private final MemberEmailService memberEmailService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    // TODO - ㄴㅅSetter 문을 닫자.
     @Transactional
     public void join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
         memberJoinDto.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
