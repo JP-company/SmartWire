@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -36,6 +37,7 @@ public class JwtSecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final MachineRepositoryJdbcTemplate machineRepository;
 
+    @Order(0)
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
