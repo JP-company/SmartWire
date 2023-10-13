@@ -1,0 +1,296 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+button:focus-visible, button:focus {
+    outline: none !important;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Pretendard", serif;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+#main-navbar {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    z-index: 1;
+    position: relative;
+}
+#main-navbar-left > a {
+    margin-left: 128px;
+    color: #00c220;
+    font-size: 22px;
+    font-weight: 800;
+    text-decoration: none;
+}
+#main-navbar-left > a > span {
+    margin-left: 22px;
+    position: relative;
+    top: 4px;
+}
+#main-navbar-left > a > img {
+    height: 40px;
+    width: 40px;
+    vertical-align: middle;
+}
+#main-navbar-right {
+    margin-right: 128px;
+    font-size: 25px;
+    font-weight: 800;
+}
+#main-navbar-right > span {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #999999;
+    margin-right: 18px;
+}
+#profile-img {
+    vertical-align: inherit;
+}
+#main-navbar-right > button:nth-child(2) {
+    align-items: center;
+    border: none;
+    background-color: white;
+    position: relative;
+    top: 9px;
+    padding: 0;
+    border-radius: 100px;
+    margin-right: 20px;
+    height: 32px;
+}
+#main-navbar-right > button:nth-child(2) > img {
+    width: 32px;
+    height: 32px;
+}
+
+#main-navbar-right > form {
+    display: inline-block;
+}
+
+#main-navbar-right > form > button {
+    align-items: center;
+    padding: 10px 20px;
+    width: 96px;
+    height: 40px;
+    border: 1px solid #666666;
+    border-radius: 10px;
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #000000;
+    background-color: white;
+}
+#main-navbar-right button:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    background-color: #e4e4e4;
+    cursor: pointer;
+}
+#main-wrap {
+    display: flex;
+    background: #f4f4f4;
+    padding-top: 80px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    min-height: 100vh;
+}
+#main-left {
+    margin: 0 78px 0 128px;
+    width: 186px;
+}
+
+#main-right {
+    margin-right: 128px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+#main-left-status {
+    display: flex;
+    margin-bottom: 16px;
+    padding: 13px 24px;
+    width: 186px;
+    height: 48px;
+
+
+    background: white;
+    border: 1px solid #cacaca;
+
+    border-radius: 24px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    color: #999999;
+}
+#main-left-data {
+    display: flex;
+    padding: 13px 24px;
+    width: 186px;
+    height: 48px;
+
+    background: #000000;
+    border: none;
+
+    border-radius: 24px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+}
+#main-left-status > img,
+#main-left-data > img {
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+}
+#main-left-status > span,
+#main-left-data > span {
+    position: relative;
+    top: 1px;
+    margin-left: 6px;
+}
+#main-left-status:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+}
+#main-left-data:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+}
+#main-right-machine {
+    width: 680px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    height: fit-content;
+}
+#machine-form-empty-text {
+    text-align: center;
+    margin-bottom: 32px;
+}
+#machine-list-add-button {
+    width: 440px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #f4f4f4;
+    border: none;
+}
+#machine-list-add-button > img {
+    width: 24px;
+    height: 24px;
+}
+#machine-list-save-button {
+    width: 400px;
+    height: 52px;
+    border-radius: 800px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    margin-top: 36px;
+    margin-bottom: 100px;
+}
+#main-right-machine-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+}
+#machine-list-element {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 440px;
+    border: solid 1px #cacaca;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    padding: 12px 24px;
+    position: relative;
+}
+.machine-list-hide {
+    display: none;
+    margin-top: 16px;
+    flex-direction: column;
+    align-items: center;
+}
+#machine-list-element > div:nth-child(1) {
+    display: flex;
+}
+#machine-list-element > div:nth-child(1) > input {
+    border: none;
+    flex-grow: 1;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 0 0 0 16px;
+}
+#machine-list-element > div:nth-child(1) > input:focus-visible {
+    outline: none;
+}
+#machine-list-element > div:nth-child(2) > input {
+    border: none;
+    border-bottom: 1px solid #cacaca;
+    width: 312px;
+    height: 36px;
+    font-size: 16px;
+}
+#machine-list-element > div:nth-child(2) > input:nth-of-type(2) {
+    margin-top: 8px;
+}
+#machine-list-element > div:nth-child(2) > button {
+    background-color: #ffffff;
+    color: #999999;
+    border: none;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    border-radius: 0;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    height: 22px;
+}
+.machine-list-hamburger {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.machine-list-stretch-button {
+    background-image: url("../images/expand.png");
+    background-size: 24px;
+    background-color: #ffffff;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 24px;
+    height: 24px;
+    border: none;
+}
+.machine-quick-delete-button {
+    position: absolute;
+    top: 10px;
+    right: -42px;
+    border: none;
+    background-color: #ffffff;
+    background-image: url(../images/minus_machine.png);
+    background-size: 28px;
+    background-repeat: no-repeat;
+    width: 28px;
+    height: 28px;
+}
