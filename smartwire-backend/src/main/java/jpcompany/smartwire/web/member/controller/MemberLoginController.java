@@ -13,6 +13,7 @@ import jpcompany.smartwire.web.member.service.MemberLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,7 +40,16 @@ public class MemberLoginController {
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        Member member = principalDetails.getMember();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (Objects.equals(principal.toString(), "anonymousUser")) {
+            return "redirect:/login";
+        }
+        Member member = (Member) principal;
+//        Member member = principalDetails.getMember();
+        if (member == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("member", member);
 
         // 기계 설정 없는 화면

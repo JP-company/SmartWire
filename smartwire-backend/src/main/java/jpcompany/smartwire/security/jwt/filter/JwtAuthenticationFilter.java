@@ -41,7 +41,14 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         ObjectMapper om = new ObjectMapper();
         MemberLoginDto memberLoginDto = null;
         try {
-            memberLoginDto = om.readValue(request.getInputStream(), MemberLoginDto.class);
+            if (request.getParameter("loginId") != null) {
+                memberLoginDto = new MemberLoginDto(
+                        request.getParameter("loginId"),
+                        request.getParameter("loginPassword")
+                );
+            } else {
+                memberLoginDto = om.readValue(request.getInputStream(), MemberLoginDto.class);
+            }
         } catch (IOException e) {
             log.error("로그인 Dto 객체 할당 실패=", e);
         }

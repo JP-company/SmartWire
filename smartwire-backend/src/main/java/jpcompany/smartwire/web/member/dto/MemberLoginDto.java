@@ -20,6 +20,11 @@ public class MemberLoginDto {
     public MemberLoginDto() {
     }
 
+    public MemberLoginDto(String loginId, String loginPassword) {
+        this.loginId = loginId;
+        this.loginPassword = loginPassword;
+    }
+
     public MemberLoginDto(String loginId) {
         this.loginId = loginId;
     }

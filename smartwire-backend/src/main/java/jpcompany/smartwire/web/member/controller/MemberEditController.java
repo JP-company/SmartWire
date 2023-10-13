@@ -26,7 +26,8 @@ public class MemberEditController {
 
     @GetMapping("/member")
     public String member(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        Member member = principalDetails.getMember();
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Member member = principalDetails.getMember();
         model.addAttribute("member", member);
         return "home/member";
     }

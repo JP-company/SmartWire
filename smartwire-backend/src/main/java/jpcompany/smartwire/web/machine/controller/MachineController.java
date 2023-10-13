@@ -37,10 +37,12 @@ public class MachineController {
 
     @GetMapping("/member/machine")
     public String machine(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        Member loginMember = principalDetails.getMember();
-        model.addAttribute("member", loginMember);
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Member member = principalDetails.getMember();
 
-        List<MachineDto> machines = machineRepository.findAll(loginMember.getId());
+        model.addAttribute("member", member);
+
+        List<MachineDto> machines = machineRepository.findAll(member.getId());
         machines.sort(Comparator.comparingInt(MachineDto::getSequence));
 
         model.addAttribute("machineDtoList", new MachineDtoList(machines));
@@ -54,7 +56,9 @@ public class MachineController {
     public String postMachine(@AuthenticationPrincipal PrincipalDetails principalDetails,
                               @Valid @ModelAttribute MachineDtoList machineDtoList, BindingResult bindingResult,
                               RedirectAttributes redirectAttrs, Model model) {
-        Member loginMember = principalDetails.getMember();
+//        Member member = principalDetails.getMember();
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         Set<String> set = new HashSet<>();
         if (machineDtoList.getMachines().stream().anyMatch(n -> !set.add(n.getMachineName()))) {
@@ -65,14 +69,14 @@ public class MachineController {
             // 검증 로직
             if (bindingResult.hasErrors()) {
                 log.info("errors = {}", bindingResult);
-                model.addAttribute("member", loginMember);
+                model.addAttribute("member", member);
                 return "home/machine";
             }
 
             redirectAttrs.addFlashAttribute("popupMessage", "기계 설정이 완료되었습니다.");
-            if (!machineService.saveMachineFormNHaveMachine(loginMember.getId(), loginMember.getHaveMachine(), machineDto)) {
+            if (!machineService.saveMachineFormNHaveMachine(member.getId(), member.getHaveMachine(), machineDto)) {
                 // 메인 페이지에서 기계 있을 때 화면 보여줘야 하니까
-                updateMemberSession(loginMember, true);
+                updateMemberSession(member, true);
             }
         }
         return "redirect:/member/machine";
@@ -82,18 +86,20 @@ public class MachineController {
     public String deleteMachine(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @RequestParam Integer machineIdSend, @RequestParam String loginPassword,
                                 RedirectAttributes redirectAttrs) {
-        Member loginMember = principalDetails.getMember();
+//        Member member = principalDetails.getMember();
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         // 비밀번호 확인
-        if (!passwordEncoder.matches(loginPassword, loginMember.getLoginPassword())) {
+        if (!passwordEncoder.matches(loginPassword, member.getLoginPassword())) {
             redirectAttrs.addFlashAttribute("popupMessage", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/machine";
         }
 
         // 기계가 하나도 없으면 DB, 세션 업데이트
         // TODO - Member 의 Setter 가 열려 있음
-        if (!machineService.deleteMachineNHaveMachine(machineIdSend, loginMember.getId())) {
-            updateMemberSession(loginMember, false);
+        if (!machineService.deleteMachineNHaveMachine(machineIdSend, member.getId())) {
+            updateMemberSession(member, false);
         }
 
         redirectAttrs.addFlashAttribute("popupMessage", "기계 삭제에 성공하였습니다.");

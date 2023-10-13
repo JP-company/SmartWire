@@ -14,9 +14,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -36,6 +38,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
         String jwtHeader = request.getHeader("Authorization");
 
+        if (request.getCookies() != null) {
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) {
+                if(Objects.equals(cookie.getName(), JwtProperties.HEADER_STRING)) {
+                    jwtHeader = cookie.getValue();
+                }
+            }
+        }
+
         // header 가 있는지 확인 (정상적으로 있는지 확인)
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
             chain.doFilter(request, response);
@@ -43,7 +54,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         // JWT 토큰을 검증해서 정상적인 사용자인지 확인
-        String jwtToken = jwtHeader.replace("Bearer ", "");
+        String jwtToken = jwtHeader.replace("Bearer", "");
         String loginId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim(SessionConst.LOGIN_ID).asString();
 
         // 서명이 정상적으로 됨

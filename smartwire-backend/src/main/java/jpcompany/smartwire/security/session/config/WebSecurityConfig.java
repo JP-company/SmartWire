@@ -18,9 +18,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+
+
+//@Configuration
+//@EnableWebSecurity  // 스프링 시큐리티 필터가 스프링 필터체인에 등록
 @Slf4j
-@EnableWebSecurity  // 스프링 시큐리티 필터가 스프링 필터체인에 등록
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)  // secured 어노테이션 활성화, preAuthorize,postAuthorize 어노테이션 활성화
 public class WebSecurityConfig {
@@ -37,8 +39,8 @@ public class WebSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    @Order(1)
-    @Bean
+//    @Order(1)
+//    @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http

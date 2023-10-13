@@ -43,10 +43,11 @@ public class JwtSecurityConfig {
         http.csrf().disable();
         http.formLogin().disable();
         http
-                .antMatcher("/api/**")
+//                .antMatcher("/api/**")
                 .authorizeRequests()
                 .antMatchers("/api/messages").hasRole("MEMBER")
-                .antMatchers("/api/login").permitAll()
+                .antMatchers("/","/login", "/error/**",
+                        "/join", "/email_verify/**", "api/login").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -61,6 +62,10 @@ public class JwtSecurityConfig {
                 .setAuthenticationManager(authenticationManager(authenticationConfiguration))
                 .setAuthorizationFilter(jwtAuthorizationFilter())
                 .loginProcessingUrl("/api/login");
+
+        http
+                .logout()
+                .deleteCookies("Authorization");
 
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

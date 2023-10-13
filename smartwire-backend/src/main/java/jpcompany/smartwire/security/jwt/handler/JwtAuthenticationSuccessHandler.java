@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.security.common.PrincipalDetails;
 import jpcompany.smartwire.security.jwt.filter.JwtProperties;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtAuthenticationDto;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtMemberDto;
@@ -18,9 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +45,6 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .withClaim(SessionConst.LOGIN_ID, member.getLoginId())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
 
         objectMapper.registerModule(new JavaTimeModule()); // JavaTimeModule 등록
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 없는 필드 무시
@@ -55,7 +55,17 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         String jwtAuthenticationJson = objectMapper.writeValueAsString(new JwtAuthenticationDto(jwtMemberDto, machineList));
 
-        response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write(jwtAuthenticationJson);
+        if (request.getParameter("loginId") != null) {
+            Cookie cookie = new Cookie(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+            cookie.setMaxAge(60*60*24*30*6);
+            cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
+            response.addCookie(cookie);
+
+            response.sendRedirect("/");
+        } else {
+            response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+            response.setContentType("application/json; charset=utf-8");
+            response.getWriter().write(jwtAuthenticationJson);
+        }
     }
 }
