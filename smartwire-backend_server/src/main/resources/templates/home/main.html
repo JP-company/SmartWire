@@ -82,6 +82,7 @@
     const socket = new SockJS('/ws');
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
+
         console.log('로그인 아이디=', [[${member.loginId}]]);
         // Subscribe to "/topic/messages" destination.
         stompClient.subscribe('/topic/logs/' + [[${member.loginId}]], function(message) {
@@ -160,7 +161,6 @@
         logDate = document.getElementById("date"+ machineId);
         logTime = document.getElementById("logTime" + machineId);
         div = document.getElementById("div" + machineId);
-
 
         logText.textContent = logObj["log"].split("_")[1];
         logTextStatus = logObj["log"].split("_")[0];

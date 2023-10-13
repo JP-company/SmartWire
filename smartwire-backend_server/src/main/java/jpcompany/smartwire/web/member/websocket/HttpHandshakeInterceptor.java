@@ -17,16 +17,13 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null && auth.getPrincipal() instanceof PrincipalDetails) {
             PrincipalDetails member = (PrincipalDetails) auth.getPrincipal();
-
             // WebSocket 세션에 인증 정보를 연결
             attributes.put("PRINCIPAL", member);
         }
-
         return true;
     }
 

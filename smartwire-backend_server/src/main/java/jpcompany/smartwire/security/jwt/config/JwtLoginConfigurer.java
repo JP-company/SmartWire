@@ -21,7 +21,6 @@ public final class JwtLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
     private AuthenticationManager authenticationManager;
     private JwtAuthorizationFilter authorizationFilter;
 
-
     public JwtLoginConfigurer() {
         // 여기서 인증필터 등록
         super(new JwtAuthenticationFilter(), null);

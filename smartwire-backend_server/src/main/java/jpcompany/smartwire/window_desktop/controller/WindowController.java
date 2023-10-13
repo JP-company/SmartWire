@@ -1,11 +1,9 @@
 package jpcompany.smartwire.window_desktop.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.security.common.PrincipalDetails;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtAuthenticationDto;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtMemberDto;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
@@ -15,7 +13,6 @@ import jpcompany.smartwire.window_desktop.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +51,7 @@ public class WindowController {
         response.getWriter().write(jwtAuthenticationJson);
     }
 
-    // JWT 인증을 기반으로 계정 정보가 넘어오면 이를 기반으로 DB, 클라이언트에 실시간으로 업데이트한다.
+    // JWT 인증을 기반으로 계정 정보가 넘어오면 이를 기반으로 DB와 클라이언트에 실시간으로 업데이트한다.
     @PostMapping("/api/log_test")
     public String realTimeUpdate(@RequestBody LogSaveDto logSaveDto) {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

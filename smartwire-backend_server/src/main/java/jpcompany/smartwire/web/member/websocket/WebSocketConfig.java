@@ -16,11 +16,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         SockJsServiceRegistration sockJS = registry.addEndpoint("/ws")
-                .setAllowedOrigins(WebSocketProperties.URL)
+//                .setAllowedOrigins(WebSocketProperties.URL)
                 .withSockJS()
                 .setInterceptors(new HttpHandshakeInterceptor());
 
-        log.info("SockJS={}", sockJS.getClass());
+        log.info("SockJS={}", sockJS);
     }
 
     @Override
@@ -28,4 +28,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/logs");
         registry.enableSimpleBroker("/topic");   // Enables a simple in-memory broker
     }
+
 }
