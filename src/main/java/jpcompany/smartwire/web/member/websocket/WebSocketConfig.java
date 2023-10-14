@@ -15,12 +15,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        SockJsServiceRegistration sockJS = registry.addEndpoint("/ws")
+        registry.addEndpoint("/ws")
 //                .setAllowedOrigins(WebSocketProperties.URL)
                 .withSockJS()
                 .setInterceptors(new HttpHandshakeInterceptor());
-
-        log.info("SockJS={}", sockJS);
     }
 
     @Override

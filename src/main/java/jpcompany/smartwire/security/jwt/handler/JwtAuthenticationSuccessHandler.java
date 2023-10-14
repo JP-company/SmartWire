@@ -57,8 +57,10 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         if (request.getParameter("loginId") != null) {
             Cookie cookie = new Cookie(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
-            cookie.setMaxAge(60*60*24*30*6);
+            cookie.setMaxAge(60*60*24*30*6); // 6개월
             cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
             response.addCookie(cookie);
 
             response.sendRedirect("/");
