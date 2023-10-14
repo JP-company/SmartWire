@@ -1,6 +1,7 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -98,6 +100,15 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<String> getFcmTokenListById(Integer memberId) {
+        String sql = "SELECT fcm_token FROM fcmtokens WHERE member_id = :memberId";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberId", memberId);
+
+        return template.query(sql, params, (rs, rowNum) -> rs.getString("fcm_token"));
     }
 
 

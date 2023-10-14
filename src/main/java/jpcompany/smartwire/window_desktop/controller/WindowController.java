@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jpcompany.smartwire.domain.Member;
+import jpcompany.smartwire.firebase.dto.FCMNotificationDto;
+import jpcompany.smartwire.firebase.service.FCMNotificationService;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtAuthenticationDto;
 import jpcompany.smartwire.security.jwt.handler.dto.JwtMemberDto;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
@@ -33,6 +35,7 @@ public class WindowController {
     private final LogService logService;
     private final ObjectMapper objectMapper;
     private final MachineRepositoryJdbcTemplate machineRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @GetMapping("/api/auto_login")
     public void autoLogin(HttpServletResponse response) throws IOException {
@@ -51,15 +54,16 @@ public class WindowController {
         response.getWriter().write(jwtAuthenticationJson);
     }
 
-    // JWT 인증을 기반으로 계정 정보가 넘어오면 이를 기반으로 DB와 클라이언트에 실시간으로 업데이트한다.
     @PostMapping("/api/log_test")
     public String realTimeUpdate(@RequestBody LogSaveDto logSaveDto) {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        // 여기서 기계로부터 로그를 받을 때, 기계정보는 DB를 조회해서 가져오는 방법
 
-        log.info("받은 로그 정보={}", logSaveDto);
         logService.saveLog(logSaveDto);
         this.messagingTemplate.convertAndSend("/topic/logs/" + member.getLoginId(), logSaveDto);
+        fcmNotificationService.sendNotificationByToken(
+                new FCMNotificationDto(member.getId(), "test", "testBody")
+        );
+
         return "Log send complete";
     }
 }
