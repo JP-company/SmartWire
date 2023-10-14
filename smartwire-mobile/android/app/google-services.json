@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "678016711135",
+    "project_id": "smartwire-f275b",
+    "storage_bucket": "smartwire-f275b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678016711135:android:9993db4c4f967baccd2c6a",
+        "android_client_info": {
+          "package_name": "com.example.smartwire_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaup4djTfe2u9JbZ3Qao4ai7ZRG9W2pO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

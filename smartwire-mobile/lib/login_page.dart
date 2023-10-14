@@ -204,8 +204,8 @@ class _LoginPageState extends State<LoginPage> {
 
         jwtDtoProvider.machineDtoList = jwtDto.machineDtoList;
         jwtDtoProvider.jwtMemberDto = jwtDto.jwtMemberDto;
-        Navigator.pushNamed(context, '/');
-        // Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        // Navigator.pushNamed(context, '/');
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     } else {
       showSnackBar(context, '아이디 혹은 비밀번호를 확인해주세요.');
     }

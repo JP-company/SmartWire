@@ -18,7 +18,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<List<LogDto>> getLogList() async {
+    Future<dynamic> future = RememberMember.loadMemberJwt();
+    var jwt = await future;
+
+    if (jwt != null) {
+      Map<String, String> headers = {
+        'Authorization': jwt
+      };
+
+      final response = await http.get(
+        Uri.parse('https://smartwire-backend-f39394ac6218.herokuapp.com/api/home'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        List<LogDto> logList = (json.decode(response.body) as List).map((item) => LogDto.fromJson(item)).toList();
+
+        return logList;
+      }
+    }
+    return <LogDto>[];
+  }
+
+  Future<List<LogDto>>? logListFuture;
   dynamic logList;
+
+  @override
+  void initState() {
+    super.initState();
+    logListFuture = getLogList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +56,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0.5,
         backgroundColor: Colors.white,
+        centerTitle: false,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           'SMART WIRE',
@@ -38,9 +69,9 @@ class _HomePageState extends State<HomePage> {
       ),
       endDrawer: SafeArea(
         child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Column(
                 children: [
                   SizedBox( height: 40 ),
@@ -105,108 +136,163 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
+              Container(
+                height: 112,
+                color: Color(0xffF4F4F4),
+                child: Center(
+                  child: Text("대표자 전정표\n문의 - 010-8714-4246\n전화, 문자 주시면 빠르게 답변 드리겠습니다.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xff999999)
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
       ),
       body: Container(
-        padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
-        child: ListView.builder(
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.only(top: 16.0),
-              height: 150,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.0),
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xffD9D9D9),
-                      blurRadius: 8,
-                    )
-                  ]
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(16.0)),
-                      color: Color(0xff00C220),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '1호기',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/working.gif'),
-                          radius: 12.0,
-                          backgroundColor: Color(0xff00C220),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
-                      decoration: const BoxDecoration(),
+        // padding: EdgeInsets.only(top: 16.0),
+        child: FutureBuilder<List<LogDto>>(
+          future: logListFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // 데이터 로딩 중인 경우의 화면
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              // 데이터 로딩 중에 오류가 발생한 경우
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              // 데이터 로딩이 성공한 경우
+              List<LogDto> logList = snapshot.data ?? [];
+              // 로그 리스트를 사용하여 화면을 구성
+              return ListView.builder(
+                  padding: EdgeInsets.only(top: 8.0,bottom: 24.0),
+                  itemCount: logList.length,
+                  itemBuilder: (context, index) {
+
+                    var status = logList[index].log?.split("_")[0] ?? "none";
+                    Color color = status == "start" ? Color(0xff00C220) :
+                                  status == "stop" || status == "reset" ? Color(0xffFF6262) :
+                                  status == "done" ? Color(0xff00A3FF) :
+                                  Color(0xff666666);
+
+                    String image = status == "start" ? "assets/images/working.gif" :
+                                   status == "stop" || status == "reset" ? "assets/images/breaking.png" :
+                                   status == "done" ? "assets/images/done.png" :
+                                   "assets/images/error.png";
+                    double fontSize = status == "none" ? 0.0 : 14.0;
+
+                    var machineName = logList[index].machineName ?? "";
+                    var file = logList[index].file ?? "-";
+                    var log = logList[index].log?.split("_")[1] ?? "기계와의 연결을 확인해 주세요.";
+                    var logDate = logList[index].date ?? "";
+                    var logTime = logList[index].logTime ?? "";
+
+
+
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xffD9D9D9),
+                              blurRadius: 8.0,
+                            )
+                          ]
+                      ),
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Text('파일명'),
-                              SizedBox(width: 16.0),
-                              Text(
-                                '123.NC',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8.0,
-                          ),
-                          Row(
-                            children: [
-                              Text('로그명'),
-                              SizedBox(width: 16.0),
-                              Text('작업 재시작',
+                          Container(
+                            padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16.0)),
+                              color: color,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  machineName,
                                   style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff00C220)
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 56.0),
-                              Text('2023-10-01 18:20:13',
-                                  style: TextStyle(
-                                    fontSize: 14.0,
+                                    color: Colors.white,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
-                                  )),
-                            ],
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  backgroundImage: AssetImage(image),
+                                  radius: 12.0,
+                                  backgroundColor: color,
+                                ),
+                              ],
+                            ),
                           ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
+                              decoration: const BoxDecoration(),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('파일명'),
+                                      SizedBox(width: 16.0),
+                                      Text(
+                                        file,
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8.0,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('로그명'),
+                                      SizedBox(width: 16.0),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(log,
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: color
+                                              )),
+                                          Text(logDate + " " + logTime,
+                                              style: TextStyle(
+                                                fontSize: fontSize,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
                         ],
-                      )),
-                ],
-              ),
-            );
+                      ),
+                    );
+                  }
+              );
+            }
+
+
+
+
+
           }
         ),
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LogDto with ChangeNotifier{
-  final String log;
-  final String date;
-  final String logTime;
-  final String file;
+  final String? log;
+  final String? date;
+  final String? logTime;
+  final String? file;
   final String machineName;
 
   LogDto({
