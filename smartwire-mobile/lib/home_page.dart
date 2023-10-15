@@ -41,13 +41,15 @@ class _HomePageState extends State<HomePage> {
     return <LogDto>[];
   }
 
-  Future<List<LogDto>>? logListFuture;
-  dynamic logList;
+  Future<void> refresh() async {
+    setState(() {
+      getLogList();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    logListFuture = getLogList();
   }
 
   @override
@@ -66,6 +68,15 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+            setState(() {
+              getLogList();
+            });
+          },
+        backgroundColor: Colors.black,
+        child: Icon(Icons.refresh),
       ),
       endDrawer: SafeArea(
         child: Drawer(
@@ -155,17 +166,18 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Container(
-        // padding: EdgeInsets.only(top: 16.0),
+      body: RefreshIndicator(
+        onRefresh: () => refresh(),
         child: FutureBuilder<List<LogDto>>(
-          future: logListFuture,
+          future: getLogList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 데이터 로딩 중인 경우의 화면
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               // 데이터 로딩 중에 오류가 발생한 경우
-              return Center(child: Text('Error: ${snapshot.error}'));
+              print('Error: ${snapshot.error}');
+              return Center(child: Text("네트워크 연결을 확인해주세요."));
             } else {
               // 데이터 로딩이 성공한 경우
               List<LogDto> logList = snapshot.data ?? [];
@@ -192,8 +204,6 @@ class _HomePageState extends State<HomePage> {
                     var log = logList[index].log?.split("_")[1] ?? "기계와의 연결을 확인해 주세요.";
                     var logDate = logList[index].date ?? "";
                     var logTime = logList[index].logTime ?? "";
-
-
 
                     return Container(
                       margin: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
@@ -288,11 +298,6 @@ class _HomePageState extends State<HomePage> {
                   }
               );
             }
-
-
-
-
-
           }
         ),
       ),
