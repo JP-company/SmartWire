@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     return <LogDto>[];
   }
 
+
   Future<void> refresh() async {
     setState(() {
       getLogList();
@@ -167,13 +168,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: RefreshIndicator(
+        color: Colors.black,
         onRefresh: () => refresh(),
         child: FutureBuilder<List<LogDto>>(
           future: getLogList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 데이터 로딩 중인 경우의 화면
-              return Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(
+                color: Colors.black,
+              ));
             } else if (snapshot.hasError) {
               // 데이터 로딩 중에 오류가 발생한 경우
               print('Error: ${snapshot.error}');

@@ -1,31 +1,41 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:smartwire_mobile/alarm_setting_page.dart';
-import 'package:smartwire_mobile/firebase_options.dart';
+import 'package:smartwire_mobile/firebase/NotificationController.dart';
+import 'package:smartwire_mobile/firebase/firebase_options.dart';
 import 'package:smartwire_mobile/login_page.dart';
 import 'package:smartwire_mobile/home_page.dart';
 import 'package:smartwire_mobile/member_page.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'dto/jwt_dto.dart';
 import 'local_storage/remember_member.dart';
 import 'package:http/http.dart' as http;
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("앱꺼져있을때 알림");
+  print("Handling a background message: ${message.messageId}, ${message.notification}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   JwtDto? jwtDto = await autoLogin();
   jwtDto = (jwtDto == null) ? JwtDto() : jwtDto;
-  runApp(MyApp(
-      jwtDto: jwtDto,
-  ));
+  runApp(
+      GetMaterialApp(
+        home: MyApp(jwtDto: jwtDto),
+        initialBinding: BindingsBuilder.put(() => NotificationController(), permanent: true),
+      )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -40,6 +50,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         initialRoute: jwtDto.jwtMemberDto == null ? '/login': '/',
+
         routes: {
           '/login' : (context) => const LoginPage(),
           '/' : (context) => const HomePage(),
