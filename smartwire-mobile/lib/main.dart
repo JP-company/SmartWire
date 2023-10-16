@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smartwire_mobile/alarm_setting_page.dart';
 import 'package:smartwire_mobile/firebase/NotificationController.dart';
+import 'package:smartwire_mobile/firebase/config/notification_config.dart';
 import 'package:smartwire_mobile/firebase/firebase_options.dart';
 import 'package:smartwire_mobile/login_page.dart';
 import 'package:smartwire_mobile/home_page.dart';
@@ -17,8 +18,7 @@ import 'local_storage/remember_member.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("앱꺼져있을때 알림");
-  print("Handling a background message: ${message.messageId}, ${message.notification}");
+  print("백그라운드 메시지 수신: ${message.notification!.title}, ${message.notification!.body}");
 }
 
 void main() async {
@@ -26,15 +26,19 @@ void main() async {
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform
   );
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  /// 알림 설정 최초 초기화
+  NotificationConfig.initialize();
 
   JwtDto? jwtDto = await autoLogin();
   jwtDto = (jwtDto == null) ? JwtDto() : jwtDto;
   runApp(
-      GetMaterialApp(
-        home: MyApp(jwtDto: jwtDto),
-        initialBinding: BindingsBuilder.put(() => NotificationController(), permanent: true),
-      )
+      MyApp(jwtDto: jwtDto)
+      // GetMaterialApp(
+      //   home: MyApp(jwtDto: jwtDto),
+      //   // initialBinding: BindingsBuilder.put(() => NotificationController(), permanent: true),
+      // )
   );
 }
 
@@ -49,18 +53,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => jwtDto)
       ],
       child: MaterialApp(
-        initialRoute: jwtDto.jwtMemberDto == null ? '/login': '/',
-
-        routes: {
-          '/login' : (context) => const LoginPage(),
-          '/' : (context) => const HomePage(),
-          '/alarm_setting' : (context) => const AlarmSettingPage(),
-          '/member' : (context) => const MemberPage(),
-        },
         title: "SMART WIRE MOBILE APP",
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
+        home: jwtDto.jwtMemberDto == null ? LoginPage() : HomePage(),
       ),
     );
   }

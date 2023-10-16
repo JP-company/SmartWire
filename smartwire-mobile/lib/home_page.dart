@@ -2,8 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smartwire_mobile/alarm_setting_page.dart';
+import 'package:smartwire_mobile/firebase/config/notification_config.dart';
 import 'package:smartwire_mobile/local_storage/remember_member.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:smartwire_mobile/login_page.dart';
+import 'package:smartwire_mobile/member_page.dart';
 
 import 'dto/jwt_dto.dart';
 import 'dto/log_dto.dart';
@@ -40,8 +45,6 @@ class _HomePageState extends State<HomePage> {
     }
     return <LogDto>[];
   }
-
-
   Future<void> refresh() async {
     setState(() {
       getLogList();
@@ -52,6 +55,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
   }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    NotificationConfig.initializeAfterLogin();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +97,19 @@ class _HomePageState extends State<HomePage> {
             children: [
               Column(
                 children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+                        flutterLocalNotificationsPlugin.show(
+                          1,
+                          "하이",
+                          "방가",
+                          NotificationDetails(
+                              iOS: DarwinNotificationDetails()
+                          ),
+                        );
+                      },
+                      child: Text("알림 테스트")),
                   SizedBox( height: 40 ),
                   Text('${Provider.of<JwtDto>(context).jwtMemberDto?.companyName} 님 안녕하세요.',
                     style: TextStyle(
@@ -112,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                           title: Text('계정 정보'),
                           onTap: () {
                             print("계정 정보 버튼 클릭");
-                            Navigator.pushNamed(context, '/member');
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MemberPage()));
                           },
                         ),
                         Divider(
@@ -126,7 +150,12 @@ class _HomePageState extends State<HomePage> {
                           title: Text('알림 설정'),
                           onTap: () {
                             print("알림 설정 버튼 클릭");
-                            Navigator.pushNamed(context, '/alarm_setting');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AlarmSettingPage()
+                                )
+                            );
                           },
                         ),
                         Divider(
@@ -143,7 +172,12 @@ class _HomePageState extends State<HomePage> {
                             Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
                             Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
                             RememberMember.saveMemberJwt("");
-                            Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()
+                                ),
+                                    (route) => false
+                            );
                           },
                         ),
                       ],

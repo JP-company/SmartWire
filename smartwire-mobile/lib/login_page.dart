@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwire_mobile/dto/jwt_dto.dart';
+import 'package:smartwire_mobile/home_page.dart';
 import 'package:smartwire_mobile/local_storage/remember_member.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   var jwtDto;
   TextEditingController ctrId = TextEditingController();
   TextEditingController ctrPw = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -204,8 +204,14 @@ class _LoginPageState extends State<LoginPage> {
 
         jwtDtoProvider.machineDtoList = jwtDto.machineDtoList;
         jwtDtoProvider.jwtMemberDto = jwtDto.jwtMemberDto;
-        // Navigator.pushNamed(context, '/');
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const HomePage()
+            ),
+                (route) => false
+        );
+
     } else {
       showSnackBar(context, '아이디 혹은 비밀번호를 확인해주세요.');
     }
