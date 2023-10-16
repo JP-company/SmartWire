@@ -21,7 +21,7 @@ public class MobileRepository {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("fcmtokens")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("fcm_token", "member_id");
+                .usingColumns("fcm_token", "alarm_setting", "member_id");
     }
 
     public void saveFcmTokenAndAlarmSetting(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {

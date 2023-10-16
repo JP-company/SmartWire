@@ -96,11 +96,8 @@ public class FCMNotificationService {
                                     fcmTokenAndAlarmSettingDto.getFcmToken(),
                                     e.getMessage()
                             );
-
                         }
                     }
-
-
                 }
             } else {
                 log.error( "푸시 알림 실패 해당 맴버 토큰 없음 / id = {}", notificationDto.getTargetMemberId());
