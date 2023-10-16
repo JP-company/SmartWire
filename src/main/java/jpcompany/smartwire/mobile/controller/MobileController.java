@@ -1,8 +1,9 @@
-package jpcompany.smartwire.mobile;
+package jpcompany.smartwire.mobile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.security.jwt.handler.dto.JwtAuthenticationDto;
+import jpcompany.smartwire.mobile.dto.FcmTokenAndAlarmSettingDto;
+import jpcompany.smartwire.mobile.service.MobileService;
 import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
 import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ public class MobileController {
     private final MachineRepositoryJdbcTemplate machineRepository;
     private final LogRepositoryJdbcTemplate logRepository;
     private final ObjectMapper objectMapper;
+    private final MobileService mobileService;
 
     @GetMapping("/api/home")
     public void apiHome(HttpServletResponse response) throws IOException {
@@ -53,4 +57,25 @@ public class MobileController {
         response.setContentType("application/json; charset=utf-8");
         response.getWriter().write(jwtAuthenticationJson);
     }
+
+    @PostMapping("/api/fcm_token")
+    public String getFCMToken(@RequestBody FcmTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
+        mobileService.saveFcmTokenAndAlarmSettingAtDB(fcmTokenAndAlarmSettingDto);
+        return "fcmToken and AlarmSetting saved complete";
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

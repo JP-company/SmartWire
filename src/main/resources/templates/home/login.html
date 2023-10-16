@@ -30,8 +30,11 @@
                   th:placeholder="#{login.password.placeholder}"
                   th:errorclass="field-error-input"
                 />
-                <div th:if="${#fields.hasGlobalErrors()}" id="login-error">
-                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+<!--                <div th:if="${#fields.hasGlobalErrors()}" id="login-error">-->
+<!--                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--                </div>-->
+                <div th:if="${errmsg != null}" id="login-error">
+                    <p class="field-error" th:text="asdasdas">글로벌 오류 메시지</p>
                 </div>
 
                 <button id="login-button" th:text="#{login.button}" type="submit">로그인</button>

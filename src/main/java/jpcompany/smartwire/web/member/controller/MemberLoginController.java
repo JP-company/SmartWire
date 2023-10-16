@@ -88,6 +88,18 @@ public class MemberLoginController {
         return "home/login";
     }
 
+    @GetMapping("/login/{error}")
+    public String loginForm(@AuthenticationPrincipal PrincipalDetails principalDetails,@PathVariable String error, Model model) {
+        if (principalDetails != null && principalDetails.getMember() != null) {
+            return "redirect:/";
+        }
+        model.addAttribute("memberLoginDto", new MemberLoginDto("wjsdj2008"));
+        if (Objects.equals(error, "1")) {
+            model.addAttribute("errmsg", "아이디와 비밀번호를 확인해주세요");
+        }
+        return "home/login";
+    }
+
     @GetMapping("/email_verify")
     public String email(HttpServletRequest request, Model model) {
         // 세션에 저장되있는 값 불러오기

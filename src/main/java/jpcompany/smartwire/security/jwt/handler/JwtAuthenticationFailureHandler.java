@@ -45,6 +45,10 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
             errMsg = "need email verification";
         }
 
+        if (request.getParameter("loginId") != null) {
+            response.sendRedirect("/login?error=1");
+            return;
+        }
         objectMapper.writeValue(response.getWriter(), errMsg);
     }
 }
