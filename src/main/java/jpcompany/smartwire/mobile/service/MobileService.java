@@ -11,7 +11,7 @@ public class MobileService {
 
     private final MobileRepository mobileRepository;
 
-    public void saveFcmTokenAndAlarmSettingFromDB(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+    public void saveFcmTokenAndAlarmSetting(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         mobileRepository.saveFcmTokenAndAlarmSetting(fcmTokenAndAlarmSettingDto);
     }
 

@@ -59,10 +59,10 @@ public class MobileController {
     }
 
     @PostMapping("/api/fcm_token")
-    public String getFCMToken(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+    public String getFCMTokenAndAlarmSetting(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
-        mobileService.saveFcmTokenAndAlarmSettingFromDB(fcmTokenAndAlarmSettingDto);
+        mobileService.saveFcmTokenAndAlarmSetting(fcmTokenAndAlarmSettingDto);
         return "saved completely fcmToken and AlarmSetting";
     }
 

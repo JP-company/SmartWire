@@ -104,7 +104,7 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
 
     @Override
     public List<FCMTokenAndAlarmSettingDto> getFcmTokenListById(Integer memberId) {
-        String sql = "SELECT id, fcm_token, member_id  FROM fcmtokens WHERE member_id = :memberId";
+        String sql = "SELECT id, fcm_token, alarm_setting, member_id  FROM fcmtokens WHERE member_id = :memberId";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
 

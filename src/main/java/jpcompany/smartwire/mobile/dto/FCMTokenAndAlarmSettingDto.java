@@ -8,5 +8,6 @@ import lombok.ToString;
 public class FCMTokenAndAlarmSettingDto {
     private Integer id;
     private String fcmToken;
+    private String alarmSetting;
     private Integer memberId;
 }
