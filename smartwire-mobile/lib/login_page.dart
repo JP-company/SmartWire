@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwire_mobile/dto/jwt_dto.dart';
 import 'package:smartwire_mobile/home_page.dart';
-import 'package:smartwire_mobile/local_storage/remember_member.dart';
+import 'package:smartwire_mobile/local_storage/local_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
     final response = await http.post(Uri.parse('https://smartwire-backend-f39394ac6218.herokuapp.com/api/login'), headers: headers, body: data);
     if (response.statusCode == 200) {
         String? jwt = response.headers['authorization'];
-        await RememberMember.saveMemberJwt(jwt);
+        await LocalStorage.save("jwt", jwt);
 
         JwtDto jwtDto = JwtDto.fromJson(json.decode(response.body));
         JwtDto jwtDtoProvider = Provider.of<JwtDto>(context, listen: false);

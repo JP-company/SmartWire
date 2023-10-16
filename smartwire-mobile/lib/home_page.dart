@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartwire_mobile/alarm_setting_page.dart';
 import 'package:smartwire_mobile/firebase/config/notification_config.dart';
-import 'package:smartwire_mobile/local_storage/remember_member.dart';
+import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smartwire_mobile/login_page.dart';
@@ -23,8 +24,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  Future<bool> _deleteFCMTokenFromDB() async {
+    // Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
+    var savedFCMToken = await LocalStorage.load("fcmToken");
+
+    if (savedFCMToken != null) {
+      // Future<dynamic> futureJwt = LocalStorage.load("jwt");
+      var jwt = await LocalStorage.load("jwt");
+
+      if (jwt != null) {
+        Map<String, String> headers = {
+          'Content-Type' : 'application/json',
+          'Authorization': jwt
+        };
+
+        var data = jsonEncode({
+          "fcmToken": savedFCMToken,
+        });
+
+        final response = await http.post(
+          Uri.parse(
+              'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token/delete'),
+          headers: headers,
+          body: data,
+        );
+
+        print('reponse= ${response.statusCode}, ${response.body}');
+        if (response.statusCode == 200) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   Future<List<LogDto>> getLogList() async {
-    Future<dynamic> future = RememberMember.loadMemberJwt();
+    Future<dynamic> future = LocalStorage.load("jwt");
     var jwt = await future;
 
     if (jwt != null) {
@@ -97,19 +133,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               Column(
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-                        flutterLocalNotificationsPlugin.show(
-                          1,
-                          "하이",
-                          "방가",
-                          NotificationDetails(
-                              iOS: DarwinNotificationDetails()
-                          ),
-                        );
-                      },
-                      child: Text("알림 테스트")),
                   SizedBox( height: 40 ),
                   Text('${Provider.of<JwtDto>(context).jwtMemberDto?.companyName} 님 안녕하세요.',
                     style: TextStyle(
@@ -169,15 +192,7 @@ class _HomePageState extends State<HomePage> {
                           title: Text('로그아웃'),
                           onTap: () async {
                             print("로그아웃 버튼 클릭");
-                            Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
-                            Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
-                            RememberMember.saveMemberJwt("");
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()
-                                ),
-                                    (route) => false
-                            );
+                            _logout();
                           },
                         ),
                       ],
@@ -339,6 +354,73 @@ class _HomePageState extends State<HomePage> {
           }
         ),
       ),
+    );
+  }
+
+  void showSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text,
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 2),
+        )
+    );
+  }
+
+  Future<void> _logout() async {
+    return showDialog<void>(
+      //다이얼로그 위젯 소환
+      context: context,
+      barrierDismissible: false, // 다이얼로그 이외의 바탕 눌러도 안꺼지도록 설정
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0)),
+          content: SingleChildScrollView(
+              child: Center(
+                  child: Text('로그아웃 하시겠습니까?')
+              )
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            TextButton(
+              child: Text('확인'),
+              // style: ElevatedButton.styleFrom(
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   backgroundColor: const Color(0xff00C220),
+              //   elevation: 0.0,
+              // ),
+              onPressed: () async {
+                bool completelyLogout = await _deleteFCMTokenFromDB();
+                if (completelyLogout) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()
+                      ), (route) => false
+                  );
+                  // sleep(const Duration(milliseconds: 500));
+                  LocalStorage.save("jwt", "");
+                  LocalStorage.save("fcmToken", "");
+                  Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
+                  Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
+                  return;
+                }
+                showSnackBar(context, '로그아웃에 실패했습니다. 네트워크 연결을 확인해주세요.');
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

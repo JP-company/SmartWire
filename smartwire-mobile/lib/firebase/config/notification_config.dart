@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:smartwire_mobile/local_storage/remember_member.dart';
+import 'package:get/get.dart';
+import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +43,7 @@ class NotificationConfig {
 
   static void initializeAfterLogin() {
     _requestPermission();
-    _getTokenAndSaveToDB();
+    _saveFCMTokenAndAlarmSettingToDB();
     _setPushNotificationListener();
   }
 
@@ -58,35 +59,50 @@ class NotificationConfig {
     );
   }
 
-  static Future<void> _getTokenAndSaveToDB() async {
+  static Future<void> _saveFCMTokenAndAlarmSettingToDB() async {
     FirebaseMessaging.instance.getToken().then((fcmToken) async {
+      Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
+      var savedFCMToken = await futureFCMToken;
 
-      Future<dynamic> future = RememberMember.loadMemberJwt();
-      var jwt = await future;
+      if (savedFCMToken == null || savedFCMToken == "" || savedFCMToken != fcmToken) {
+        await LocalStorage.save("fcmToken", fcmToken);
 
-      if (jwt != null) {
-        Map<String, String> headers = {
-          'Authorization': jwt
-        };
+        var alarmSetting = await LocalStorage.load("alarmSetting");
+        if (alarmSetting == null || alarmSetting == "") {
+          alarmSetting = "y20:00,23:59z";
+          await LocalStorage.save("alarmSetting", alarmSetting);
+        }
 
-        var data = jsonEncode({
-          "fcmToken": fcmToken,
-        });
+        Future<dynamic> futureJwt = LocalStorage.load("jwt");
+        var jwt = await futureJwt;
 
-        final response = await http.post(
-          Uri.parse('https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
-          headers: headers,
-          body: data,
-        );
+        if (jwt != null || jwt != "") {
+          Map<String, String> headers = {
+            'Content-Type' : 'application/json',
+            'Authorization': jwt
+          };
 
-        print('reponse= ${response.statusCode}, ${response.body}');
+          print("초기 알람 설정 시간=$alarmSetting");
 
+          var data = jsonEncode({
+            "fcmToken": fcmToken,
+            "alarmSetting" : alarmSetting,
+          });
+
+          final response = await http.post(
+            Uri.parse(
+                'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
+            headers: headers,
+            body: data,
+          );
+
+          print('response= ${response.statusCode}, ${response.body}');
+        }
       }
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((token) {
       print("token= $token");
-      // client.post(Uri.parse(Constants.API + 'booster/v1/fcm-token'), body: jsonEncode({ 'fcmToken': "$token" }));
     });
   }
 

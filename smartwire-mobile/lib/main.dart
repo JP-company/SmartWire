@@ -1,20 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:smartwire_mobile/alarm_setting_page.dart';
-import 'package:smartwire_mobile/firebase/NotificationController.dart';
 import 'package:smartwire_mobile/firebase/config/notification_config.dart';
 import 'package:smartwire_mobile/firebase/firebase_options.dart';
 import 'package:smartwire_mobile/login_page.dart';
 import 'package:smartwire_mobile/home_page.dart';
-import 'package:smartwire_mobile/member_page.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'dto/jwt_dto.dart';
-import 'local_storage/remember_member.dart';
+import 'local_storage/local_storage.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -64,7 +60,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<JwtDto?> autoLogin() async {
-  Future<dynamic> future = RememberMember.loadMemberJwt();
+  Future<dynamic> future = LocalStorage.load("jwt");
   var jwt = await future;
 
   if (jwt != null) {
