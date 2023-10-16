@@ -51,7 +51,7 @@ public class FCMNotificationService {
 
                     } catch (FirebaseMessagingException e) {
                         if (e.getMessage().contains("not a valid FCM")) {
-                            mobileRepository.deleteFCMToken(fcmTokenAndAlarmSettingDto.getId());
+                            mobileRepository.deleteFCMTokenById(fcmTokenAndAlarmSettingDto.getId());
                             log.info("유효하지 않은 FCM Token 삭제 = {}", fcmTokenAndAlarmSettingDto.getFcmToken());
                             return;
                         }

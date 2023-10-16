@@ -62,8 +62,16 @@ public class MobileController {
     public String getFCMToken(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
-        mobileService.saveFcmTokenAndAlarmSettingAtDB(fcmTokenAndAlarmSettingDto);
-        return "fcmToken and AlarmSetting saved complete";
+        mobileService.saveFcmTokenAndAlarmSettingFromDB(fcmTokenAndAlarmSettingDto);
+        return "saved completely fcmToken and AlarmSetting";
+    }
+
+    @PostMapping("/api/fcm_token/delete")
+    public String deleteFCMToken(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
+        mobileService.deleteFcmTokenAndAlarmSettingFromDB(fcmTokenAndAlarmSettingDto);
+        return "deleted completely fcmToken and AlarmSetting";
     }
 }
 

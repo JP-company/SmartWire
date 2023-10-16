@@ -29,10 +29,17 @@ public class MobileRepository {
         jdbcInsert.execute(param);
     }
 
-    public void deleteFCMToken(Integer fcmTokensId) {
+    public void deleteFCMTokenById(Integer fcmTokensId) {
         String sql = "DELETE FROM fcmtokens WHERE id=:fcmTokensId";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("fcmTokensId", fcmTokensId);
+        template.update(sql, param);
+    }
+
+    public void deleteFcmTokenByFCMToken(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        String sql = "DELETE FROM fcmtokens WHERE fcm_token=:fcmToken";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("fcmToken", fcmTokenAndAlarmSettingDto.getFcmToken());
         template.update(sql, param);
     }
 }
