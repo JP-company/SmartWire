@@ -1,7 +1,7 @@
 package jpcompany.smartwire.web.member.repository;
 
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.web.machine.dto.MachineDto;
+import jpcompany.smartwire.mobile.dto.FCMTokenAndAlarmSettingDto;
 import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -103,14 +103,17 @@ public class MemberJdbcTemplateRepository implements MemberRepository{
     }
 
     @Override
-    public List<String> getFcmTokenListById(Integer memberId) {
-        String sql = "SELECT fcm_token FROM fcmtokens WHERE member_id = :memberId";
-        MapSqlParameterSource params = new MapSqlParameterSource()
+    public List<FCMTokenAndAlarmSettingDto> getFcmTokenListById(Integer memberId) {
+        String sql = "SELECT id, fcm_token, member_id  FROM fcmtokens WHERE member_id = :memberId";
+        MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
 
-        return template.query(sql, params, (rs, rowNum) -> rs.getString("fcm_token"));
+        return template.query(sql, param, fcmNotificationRowMapper());
     }
 
+    private RowMapper<FCMTokenAndAlarmSettingDto> fcmNotificationRowMapper() {
+        return BeanPropertyRowMapper.newInstance(FCMTokenAndAlarmSettingDto.class);
+    }
 
     @Override
     public void updateAuthTokenEmail(String loginId, String authToken, String email) {

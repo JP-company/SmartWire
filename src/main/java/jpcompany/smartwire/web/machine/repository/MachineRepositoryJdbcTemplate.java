@@ -50,15 +50,15 @@ public class MachineRepositoryJdbcTemplate {
         template.update(sql, param);
     }
 
-    public Optional<Integer> findByMemberIdNMachineName(Integer memberId, String machineName) {
-        String sql = "select id from machines where member_id = :memberId and machine_name=:machineName";
+    public Optional<String> findMachineNameById(Integer machineId) {
+        String sql = "select machine_name from machines where id = :machineId";
 
         try {
             Map<String, Object> param = new ConcurrentHashMap<>();
-            param.put("memberId", memberId);
-            param.put("machineName", machineName);
-            Integer id = template.queryForObject(sql, param, Integer.class); // 없으면 예외터짐
-            return Optional.ofNullable(id);
+            param.put("machineId", machineId);
+
+            String machineName = template.queryForObject(sql, param, String.class); // 없으면 예외터짐
+            return Optional.ofNullable(machineName);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

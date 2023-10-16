@@ -2,7 +2,7 @@ package jpcompany.smartwire.mobile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jpcompany.smartwire.domain.Member;
-import jpcompany.smartwire.mobile.dto.FcmTokenAndAlarmSettingDto;
+import jpcompany.smartwire.mobile.dto.FCMTokenAndAlarmSettingDto;
 import jpcompany.smartwire.mobile.service.MobileService;
 import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
 import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
@@ -59,7 +59,7 @@ public class MobileController {
     }
 
     @PostMapping("/api/fcm_token")
-    public String getFCMToken(@RequestBody FcmTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+    public String getFCMToken(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
         mobileService.saveFcmTokenAndAlarmSettingAtDB(fcmTokenAndAlarmSettingDto);

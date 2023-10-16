@@ -1,7 +1,8 @@
 package jpcompany.smartwire.mobile.repository;
 
-import jpcompany.smartwire.mobile.dto.FcmTokenAndAlarmSettingDto;
+import jpcompany.smartwire.mobile.dto.FCMTokenAndAlarmSettingDto;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -23,8 +24,15 @@ public class MobileRepository {
                 .usingColumns("fcm_token", "member_id");
     }
 
-    public void saveFcmTokenAndAlarmSetting(FcmTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+    public void saveFcmTokenAndAlarmSetting(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         SqlParameterSource param = new BeanPropertySqlParameterSource(fcmTokenAndAlarmSettingDto);
         jdbcInsert.execute(param);
+    }
+
+    public void deleteFCMToken(Integer fcmTokensId) {
+        String sql = "DELETE FROM fcmtokens WHERE id=:fcmTokensId";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("fcmTokensId", fcmTokensId);
+        template.update(sql, param);
     }
 }

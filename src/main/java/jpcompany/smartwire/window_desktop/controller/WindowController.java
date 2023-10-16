@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,9 +61,19 @@ public class WindowController {
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         logService.saveLog(logSaveDto);
+        String machineName = machineRepository.findMachineNameById(logSaveDto.getMachineId()).orElse("");
+
+        String log = logSaveDto.getLog().split("_")[1];
+
+        String message =
+                Objects.equals(log, "작업 시작")
+//                || Objects.equals(log, "리셋")
+//                || Objects.equals(log, "작업 완료")
+                ? log + " " + logSaveDto.getFile() : log;
+
         this.messagingTemplate.convertAndSend("/topic/logs/" + member.getLoginId(), logSaveDto);
         fcmNotificationService.sendNotificationByToken(
-                new FCMNotificationDto(member.getId(), "test", "testBody")
+                new FCMNotificationDto(member.getId(), machineName + " 상태 변경 알림", message)
         );
 
         return "Log send complete";
