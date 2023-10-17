@@ -57,6 +57,7 @@ public class FCMNotificationService {
 
     public void sendNotificationByToken(FCMNotificationDto notificationDto) {
         LocalTime now = LocalTime.now();
+        log.info("지금 시간={}", now);
         Optional<Member> member = memberRepository.findById(notificationDto.getTargetMemberId());
 
         if (member.isPresent()) {
@@ -83,20 +84,25 @@ public class FCMNotificationService {
                                     notificationDto.getTargetMemberId(),
                                     fcmTokenAndAlarmSettingDto.getFcmToken()
                             );
-
                         } catch (FirebaseMessagingException e) {
-                            if (e.getMessage().contains("not a valid FCM")) {
+                            if (e.getMessage().contains("not a valid FCM") ||
+                                e.getMessage().contains("Requested entity was not found")
+                            ) {
                                 mobileRepository.deleteFCMTokenById(fcmTokenAndAlarmSettingDto.getId());
                                 log.info("유효하지 않은 FCM Token 삭제 = {}", fcmTokenAndAlarmSettingDto.getFcmToken());
-                                return;
                             }
-
                             log.error( "푸시 알림 실패 / id = {} / token = {} / message = {}",
                                     notificationDto.getTargetMemberId(),
                                     fcmTokenAndAlarmSettingDto.getFcmToken(),
                                     e.getMessage()
                             );
                         }
+                    } else {
+                        log.error( "푸시 알림 시간 아님 / id = {} / token = {} / alarmSetting = {}",
+                                notificationDto.getTargetMemberId(),
+                                fcmTokenAndAlarmSettingDto.getFcmToken(),
+                                fcmTokenAndAlarmSettingDto.getAlarmSetting()
+                        );
                     }
                 }
             } else {
