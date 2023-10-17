@@ -26,7 +26,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   Future<bool> _deleteFCMTokenFromDB() async {
-    // Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
     var savedFCMToken = await LocalStorage.load("fcmToken");
 
     if (savedFCMToken != null) {
@@ -92,13 +91,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     NotificationConfig.initializeAfterLogin();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -394,19 +391,20 @@ class _HomePageState extends State<HomePage> {
               //   elevation: 0.0,
               // ),
               onPressed: () async {
-                bool completelyLogout = await _deleteFCMTokenFromDB();
+                var completelyLogout = await _deleteFCMTokenFromDB();
                 if (completelyLogout) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()
-                      ), (route) => false
-                  );
-                  // sleep(const Duration(milliseconds: 500));
-                  LocalStorage.save("jwt", "");
-                  LocalStorage.save("fcmToken", "");
-                  Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
-                  Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
-                  return;
+                  var jwt = await LocalStorage.save("jwt", "");
+                  var fcmToken = await LocalStorage.save("fcmToken", "");
+                  if (jwt&&fcmToken) {
+                    Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
+                    Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()
+                        ), (route) => false
+                    );
+                    return;
+                  }
                 }
                 showSnackBar(context, '로그아웃에 실패했습니다. 네트워크 연결을 확인해주세요.');
                 Navigator.of(context).pop();

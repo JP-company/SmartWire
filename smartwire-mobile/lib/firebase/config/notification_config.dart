@@ -65,18 +65,18 @@ class NotificationConfig {
       var savedFCMToken = await futureFCMToken;
 
       if (savedFCMToken == null || savedFCMToken == "" || savedFCMToken != fcmToken) {
-        await LocalStorage.save("fcmToken", fcmToken);
-
-        var alarmSetting = await LocalStorage.load("alarmSetting");
-        if (alarmSetting == null || alarmSetting == "") {
-          alarmSetting = "y20:00,23:59z";
-          await LocalStorage.save("alarmSetting", alarmSetting);
-        }
-
         Future<dynamic> futureJwt = LocalStorage.load("jwt");
         var jwt = await futureJwt;
 
-        if (jwt != null || jwt != "") {
+        if (jwt != null && jwt != "") {
+          await LocalStorage.save("fcmToken", fcmToken);
+
+          var alarmSetting = await LocalStorage.load("alarmSetting");
+          if (alarmSetting == null || alarmSetting == "") {
+            alarmSetting = "y20:00,23:59";
+            await LocalStorage.save("alarmSetting", alarmSetting);
+          }
+
           Map<String, String> headers = {
             'Content-Type' : 'application/json',
             'Authorization': jwt
@@ -101,8 +101,45 @@ class NotificationConfig {
       }
     });
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-      print("token= $token");
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
+      var savedFCMToken = await futureFCMToken;
+
+      if (savedFCMToken == null || savedFCMToken == "" || savedFCMToken != fcmToken) {
+        Future<dynamic> futureJwt = LocalStorage.load("jwt");
+        var jwt = await futureJwt;
+
+        if (jwt != null && jwt != "") {
+          await LocalStorage.save("fcmToken", fcmToken);
+
+          var alarmSetting = await LocalStorage.load("alarmSetting");
+          if (alarmSetting == null || alarmSetting == "") {
+            alarmSetting = "y20:00,23:59";
+            await LocalStorage.save("alarmSetting", alarmSetting);
+          }
+
+          Map<String, String> headers = {
+            'Content-Type' : 'application/json',
+            'Authorization': jwt
+          };
+
+          print("초기 알람 설정 시간=$alarmSetting");
+
+          var data = jsonEncode({
+            "fcmToken": fcmToken,
+            "alarmSetting" : alarmSetting,
+          });
+
+          final response = await http.post(
+            Uri.parse(
+                'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
+            headers: headers,
+            body: data,
+          );
+
+          print('response= ${response.statusCode}, ${response.body}');
+        }
+      }
     });
   }
 
