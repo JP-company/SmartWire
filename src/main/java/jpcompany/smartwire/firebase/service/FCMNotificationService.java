@@ -56,8 +56,10 @@ public class FCMNotificationService {
     }
 
     public void sendNotificationByToken(FCMNotificationDto notificationDto) {
-        LocalTime now = LocalTime.now();
+        // 한국 시간
+        LocalTime now = LocalTime.now().plusHours(9);
         log.info("지금 시간={}", now);
+
         Optional<Member> member = memberRepository.findById(notificationDto.getTargetMemberId());
 
         if (member.isPresent()) {
