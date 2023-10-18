@@ -1,6 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:smartwire_mobile/dto/alarm_setting_dto.dart';
+import 'package:smartwire_mobile/dto/jwt_dto.dart';
 import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -41,9 +45,9 @@ class NotificationConfig {
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static void initializeAfterLogin() {
+  static void initializeAfterLogin(BuildContext context) {
     _requestPermission();
-    _saveFCMTokenAndAlarmSettingToDB();
+    _saveFCMTokenAndAlarmSettingToDB(context);
     _setPushNotificationListener();
   }
 
@@ -58,90 +62,89 @@ class NotificationConfig {
       sound: true,
     );
   }
+  static Future<void> _saveFCMTokenAndAlarmSettingToDB(BuildContext context) async {
 
-  static Future<void> _saveFCMTokenAndAlarmSettingToDB() async {
+    /// Provider jwt 없으면 return;
+    String? jwt = Provider.of<JwtDto>(context, listen: false).jwt;
+    if (jwt == null || jwt == "") { return; }
+
+    /// fcmToken 생성
     FirebaseMessaging.instance.getToken().then((fcmToken) async {
-      Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
-      var savedFCMToken = await futureFCMToken;
 
+      // LocalStorage "fcmToken" 꺼내옴
+      var savedFCMToken = await LocalStorage.load("fcmToken");
+      Provider.of<AlarmSettingDto>(context, listen: false).fcmToken = fcmToken;
+
+      // LocalStorage "fcmToken" 가 없거나 현재 fcmToken 와 다르면
       if (savedFCMToken == null || savedFCMToken == "" || savedFCMToken != fcmToken) {
-        Future<dynamic> futureJwt = LocalStorage.load("jwt");
-        var jwt = await futureJwt;
 
-        if (jwt != null && jwt != "") {
-          await LocalStorage.save("fcmToken", fcmToken);
+        // LocalStorage "fcmToken" 저장, Provider fcmToken 저장
+        await LocalStorage.save("fcmToken", fcmToken);
 
-          var alarmSetting = await LocalStorage.load("alarmSetting");
-          if (alarmSetting == null || alarmSetting == "") {
-            alarmSetting = "y20:00,23:59";
-            await LocalStorage.save("alarmSetting", alarmSetting);
+        // LocalStorage "alarmSetting" 확인 후 없으면 LocalStorage, Provider 초기화 (최초 저장)
+        var alarmSetting = await LocalStorage.load("alarmSetting");
+        if (alarmSetting == null || alarmSetting == "") {
+          alarmSetting = "y20:0,23:0";
+          bool save = await LocalStorage.save("alarmSetting", alarmSetting);
+          if (save) {
+            Provider.of<AlarmSettingDto>(context, listen: false).isAlarmTrue = true;
+            Provider.of<AlarmSettingDto>(context, listen: false).startTime = TimeOfDay(hour: 20, minute: 0);
+            Provider.of<AlarmSettingDto>(context, listen: false).lastTime = TimeOfDay(hour: 23, minute: 0);
           }
-
-          Map<String, String> headers = {
-            'Content-Type' : 'application/json',
-            'Authorization': jwt
-          };
-
-          print("초기 알람 설정 시간=$alarmSetting");
-
-          var data = jsonEncode({
-            "fcmToken": fcmToken,
-            "alarmSetting" : alarmSetting,
-          });
-
-          final response = await http.post(
-            Uri.parse(
-                'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
-            headers: headers,
-            body: data,
-          );
-
-          print('response= ${response.statusCode}, ${response.body}');
         }
+
+        // 서버에 fcmToken, alarmSetting POST 저장 요청
+        Map<String, String> headers = {
+          'Content-Type' : 'application/json',
+          'Authorization': jwt
+        };
+        var data = jsonEncode({
+          "fcmToken": fcmToken,
+          "alarmSetting" : alarmSetting,
+        });
+
+        final response = await http.post(
+          Uri.parse(
+              'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
+          headers: headers,
+          body: data,
+        );
+
+        print('response= ${response.statusCode}, ${response.body}');
       }
+
     });
 
+    /// fcmToken Refresh Listener 등록
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-      Future<dynamic> futureFCMToken = LocalStorage.load("fcmToken");
-      var savedFCMToken = await futureFCMToken;
 
-      if (savedFCMToken == null || savedFCMToken == "" || savedFCMToken != fcmToken) {
-        Future<dynamic> futureJwt = LocalStorage.load("jwt");
-        var jwt = await futureJwt;
+      // LocalStorage "fcmToken" 저장, Provider fcmToken 저장
+      await LocalStorage.save("fcmToken", fcmToken);
+      Provider.of<AlarmSettingDto>(context, listen: false).fcmToken = fcmToken;
 
-        if (jwt != null && jwt != "") {
-          await LocalStorage.save("fcmToken", fcmToken);
+      var alarmSetting = await LocalStorage.load("alarmSetting");
 
-          var alarmSetting = await LocalStorage.load("alarmSetting");
-          if (alarmSetting == null || alarmSetting == "") {
-            alarmSetting = "y20:00,23:59";
-            await LocalStorage.save("alarmSetting", alarmSetting);
-          }
+      // 서버에 fcmToken, alarmSetting POST 저장 요청
+      Map<String, String> headers = {
+        'Content-Type' : 'application/json',
+        'Authorization': jwt
+      };
+      var data = jsonEncode({
+        "fcmToken": fcmToken,
+        "alarmSetting" : alarmSetting,
+      });
 
-          Map<String, String> headers = {
-            'Content-Type' : 'application/json',
-            'Authorization': jwt
-          };
+      final response = await http.post(
+        Uri.parse(
+            'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
+        headers: headers,
+        body: data,
+      );
 
-          print("초기 알람 설정 시간=$alarmSetting");
-
-          var data = jsonEncode({
-            "fcmToken": fcmToken,
-            "alarmSetting" : alarmSetting,
-          });
-
-          final response = await http.post(
-            Uri.parse(
-                'https://smartwire-backend-f39394ac6218.herokuapp.com/api/fcm_token'),
-            headers: headers,
-            body: data,
-          );
-
-          print('response= ${response.statusCode}, ${response.body}');
-        }
-      }
+      print('Token Refresh response= ${response.statusCode}, ${response.body}');
     });
   }
+
 
   static void _setPushNotificationListener() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -154,7 +157,6 @@ class NotificationConfig {
       }
     });
   }
-
 
   static void _showNotification(RemoteNotification notification) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -169,9 +171,9 @@ class NotificationConfig {
 
     NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: DarwinNotificationDetails(
-        badgeNumber: 1,
-      ),
+      // iOS: DarwinNotificationDetails(
+      //   // badgeNumber: 1,
+      // ),
     );
 
     await _flutterLocalNotificationsPlugin.show(
@@ -181,5 +183,6 @@ class NotificationConfig {
         platformChannelSpecifics,
         // payload: "item x"
     );
+
   }
 }

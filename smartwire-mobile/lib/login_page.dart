@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  var jwtDto;
   TextEditingController ctrId = TextEditingController();
   TextEditingController ctrPw = TextEditingController();
 
@@ -184,37 +183,48 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> login(BuildContext context, String loginId, String loginPassword) async {
-    Map<String, String> headers = {
+    final Map<String, String> headers = {
       'Content-Type' : 'application/json',
       'Accept' : 'application/json',
     };
-
-    var data = jsonEncode({
+    final data = jsonEncode({
       "loginId": loginId,
       "loginPassword": loginPassword,
     });
 
-    final response = await http.post(Uri.parse('https://smartwire-backend-f39394ac6218.herokuapp.com/api/login'), headers: headers, body: data);
+    final response = await http.post(
+        Uri.parse('https://smartwire-backend-f39394ac6218.herokuapp.com/api/login'),
+        headers: headers,
+        body: data
+    );
+
     if (response.statusCode == 200) {
         String? jwt = response.headers['authorization'];
+
+        /// 로그인 성공 시
+        /// Local Storage - JWT Token 저장
         await LocalStorage.save("jwt", jwt);
 
+        /// 받은 정보를 JwtDto 로 변환
         JwtDto jwtDto = JwtDto.fromJson(json.decode(response.body));
-        JwtDto jwtDtoProvider = Provider.of<JwtDto>(context, listen: false);
 
+        /// Provider - JwtDto( List<MachineDto>, JwtMemberDto, String jwt )저장
+        JwtDto jwtDtoProvider = Provider.of<JwtDto>(context, listen: false);
+        jwtDtoProvider.jwt = jwt;
         jwtDtoProvider.machineDtoList = jwtDto.machineDtoList;
         jwtDtoProvider.jwtMemberDto = jwtDto.jwtMemberDto;
 
+        /// HomePage 이동
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => const HomePage()
             ),
                 (route) => false
         );
-
-    } else {
-      showSnackBar(context, '아이디 혹은 비밀번호를 확인해주세요.');
+        return;
     }
+
+    showSnackBar(context, '아이디 혹은 비밀번호를 확인해주세요.');
   }
 
 }

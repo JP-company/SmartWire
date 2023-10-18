@@ -4,8 +4,9 @@ import 'jwt_member_dto.dart';
 import 'machine_dto.dart';
 
 class JwtDto with ChangeNotifier {
-  List<MachineDto>? _machineDtoList;
-  JwtMemberDto? _jwtMemberDto;
+  List<MachineDto>? _machineDtoList; // 기계 정보 리스트
+  JwtMemberDto? _jwtMemberDto; // 계정 정보
+  String? jwt;
 
   JwtDto({
     List<MachineDto>? machineDtoList,

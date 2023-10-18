@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:smartwire_mobile/dto/alarm_setting_dto.dart';
 import 'package:smartwire_mobile/firebase/config/notification_config.dart';
 import 'package:smartwire_mobile/firebase/firebase_options.dart';
 import 'package:smartwire_mobile/login_page.dart';
@@ -22,20 +23,12 @@ void main() async {
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform
   );
-
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  /// 알림 설정 최초 초기화
   NotificationConfig.initialize();
 
-  JwtDto? jwtDto = await autoLogin();
-  jwtDto = (jwtDto == null) ? JwtDto() : jwtDto;
-  runApp(
-      MyApp(jwtDto: jwtDto)
-      // GetMaterialApp(
-      //   home: MyApp(jwtDto: jwtDto),
-      //   // initialBinding: BindingsBuilder.put(() => NotificationController(), permanent: true),
-      // )
-  );
+  /// 앱 처음 실행 시 자동 로그인 시도
+  JwtDto jwtDto = await autoLogin() ?? JwtDto();
+  runApp(MyApp(jwtDto: jwtDto));
 }
 
 class MyApp extends StatelessWidget {
@@ -46,10 +39,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => jwtDto)
+        ChangeNotifierProvider(create: (context) => jwtDto),
+        ChangeNotifierProvider(create: (context) => AlarmSettingDto()),
       ],
       child: MaterialApp(
-        title: "SMART WIRE MOBILE APP",
+        title: "SMARTWIRE MOBILE APP",
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
@@ -60,8 +54,8 @@ class MyApp extends StatelessWidget {
 }
 
 Future<JwtDto?> autoLogin() async {
-  Future<dynamic> future = LocalStorage.load("jwt");
-  var jwt = await future;
+  /// Local Storage 에서 jwt 토큰 꺼내옴
+  var jwt = await LocalStorage.load("jwt");
 
   if (jwt != null) {
     Map<String, String> headers = {
@@ -74,7 +68,9 @@ Future<JwtDto?> autoLogin() async {
     );
 
     if (response.statusCode == 200) {
-      return JwtDto.fromJson(json.decode(response.body));; // 자동 로그인 성공
+      JwtDto jwtDto = JwtDto.fromJson(json.decode(response.body));
+      jwtDto.jwt = jwt;
+      return jwtDto; // 자동 로그인 성공
     }
   }
   return null;

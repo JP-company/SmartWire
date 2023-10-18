@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +6,6 @@ import 'package:smartwire_mobile/alarm_setting_page.dart';
 import 'package:smartwire_mobile/firebase/config/notification_config.dart';
 import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smartwire_mobile/login_page.dart';
 import 'package:smartwire_mobile/member_page.dart';
 
@@ -27,9 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<bool> _deleteFCMTokenFromDB() async {
     var savedFCMToken = await LocalStorage.load("fcmToken");
-
     if (savedFCMToken != null) {
-      // Future<dynamic> futureJwt = LocalStorage.load("jwt");
       var jwt = await LocalStorage.load("jwt");
 
       if (jwt != null) {
@@ -57,7 +53,6 @@ class _HomePageState extends State<HomePage> {
     }
     return false;
   }
-
   Future<List<LogDto>> getLogList() async {
     Future<dynamic> future = LocalStorage.load("jwt");
     var jwt = await future;
@@ -88,30 +83,55 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    NotificationConfig.initializeAfterLogin(context);
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    NotificationConfig.initializeAfterLogin();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    TimeOfDay timeOfDay = TimeOfDay.now();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
         backgroundColor: Colors.white,
         centerTitle: false,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
-          'SMART WIRE',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'SMART WIRE',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                // color: Colors.grey,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.black, width: 2.0),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.access_time_outlined,),
+                  SizedBox(width: 2),
+                  Text("${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -121,8 +141,9 @@ class _HomePageState extends State<HomePage> {
             });
           },
         backgroundColor: Colors.black,
-        child: Icon(Icons.refresh),
+        child: Icon(Icons.refresh)
       ),
+
       endDrawer: SafeArea(
         child: Drawer(
           child: Column(
@@ -232,120 +253,149 @@ class _HomePageState extends State<HomePage> {
               // 데이터 로딩이 성공한 경우
               List<LogDto> logList = snapshot.data ?? [];
               // 로그 리스트를 사용하여 화면을 구성
-              return ListView.builder(
-                  padding: EdgeInsets.only(top: 8.0,bottom: 24.0),
-                  itemCount: logList.length,
-                  itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  // SizedBox(height: 4.0),
+                  // Text("새로 고침 시간: 2023-10-18 17:30:53",
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.bold
+                  //   ),
+                  // ),
+                  Flexible(
+                    child: ListView.builder(
+                        padding: EdgeInsets.only(top: 16.0,bottom: 24.0),
+                        itemCount: logList.length,
+                        itemBuilder: (context, index) {
 
-                    var status = logList[index].log?.split("_")[0] ?? "none";
-                    Color color = status == "start" ? Color(0xff00C220) :
-                                  status == "stop" || status == "reset" ? Color(0xffFF6262) :
-                                  status == "done" ? Color(0xff00A3FF) :
-                                  Color(0xff666666);
+                          var status = logList[index].log?.split("_")[0] ?? "none";
+                          Color color = status == "start" ? Color(0xff00C220) :
+                                        status == "stop" || status == "reset" ? Color(0xffFF6262) :
+                                        status == "done" ? Color(0xff00A3FF) :
+                                        Color(0xff666666);
 
-                    String image = status == "start" ? "assets/images/working.gif" :
-                                   status == "stop" || status == "reset" ? "assets/images/breaking.png" :
-                                   status == "done" ? "assets/images/done.png" :
-                                   "assets/images/error.png";
-                    double fontSize = status == "none" ? 0.0 : 14.0;
+                          String image = status == "start" ? "assets/images/working.gif" :
+                                         status == "stop" || status == "reset" ? "assets/images/breaking.png" :
+                                         status == "done" ? "assets/images/done.png" :
+                                         "assets/images/error.png";
+                          double fontSize = status == "none" ? 0.0 : 14.0;
 
-                    var machineName = logList[index].machineName ?? "";
-                    var file = logList[index].file ?? "-";
-                    var log = logList[index].log?.split("_")[1] ?? "기계와의 연결을 확인해 주세요.";
-                    var logDate = logList[index].date ?? "";
-                    var logTime = logList[index].logTime ?? "";
+                          var machineName = logList[index].machineName ?? "";
+                          var file = logList[index].file ?? "-";
+                          var log = logList[index].log?.split("_")[1] ?? "기계와의 연결을 확인해 주세요.";
+                          var logDate = logList[index].date ?? "";
+                          var logTime = logList[index].logTime ?? "";
 
-                    return Container(
-                      margin: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xffD9D9D9),
-                              blurRadius: 8.0,
-                            )
-                          ]
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
-                            height: 48,
+                          // if (index == 0) {
+                          //   return Center(
+                          //     child: Column(
+                          //       children: [
+                          //         Text("새로 고침한 시간 = 17:30:14",
+                          //           style: TextStyle(
+                          //               fontWeight: FontWeight.bold
+                          //           ),
+                          //         ),
+                          //         SizedBox(
+                          //           height: 4.0,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   );
+                          // }
+
+                          return Container(
+                            margin: EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 16.0),
                             decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(16.0)),
-                              color: color,
+                                borderRadius: BorderRadius.circular(16.0),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0xffD9D9D9),
+                                    blurRadius: 8.0,
+                                  )
+                                ]
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
                               children: [
-                                Text(
-                                  machineName,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.vertical(top: Radius.circular(16.0)),
+                                    color: color,
                                   ),
-                                ),
-                                CircleAvatar(
-                                  backgroundImage: AssetImage(image),
-                                  radius: 12.0,
-                                  backgroundColor: color,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
-                              decoration: const BoxDecoration(),
-                              child: Column(
-                                children: [
-                                  Row(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('파일명'),
-                                      SizedBox(width: 16.0),
                                       Text(
-                                        file,
+                                        machineName,
                                         style: TextStyle(
-                                          fontSize: 14.0,
+                                          color: Colors.white,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 8.0,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('로그명'),
-                                      SizedBox(width: 16.0),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(log,
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: color
-                                              )),
-                                          Text(logDate + " " + logTime,
-                                              style: TextStyle(
-                                                fontSize: fontSize,
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                        ],
+                                      ),
+                                      CircleAvatar(
+                                        backgroundImage: AssetImage(image),
+                                        radius: 12.0,
+                                        backgroundColor: color,
                                       ),
                                     ],
                                   ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    );
-                  }
+                                ),
+                                Container(
+                                    margin: EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
+                                    decoration: const BoxDecoration(),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text('파일명'),
+                                            SizedBox(width: 16.0),
+                                            Text(
+                                              file,
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('로그명'),
+                                            SizedBox(width: 16.0),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(log,
+                                                    style: TextStyle(
+                                                        fontSize: 14.0,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: color
+                                                    )),
+                                                Text(logDate + " " + logTime,
+                                                    style: TextStyle(
+                                                      fontSize: fontSize,
+                                                      fontWeight: FontWeight.bold,
+                                                    )),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                              ],
+                            ),
+                          );
+                        }
+                    ),
+                  ),
+                ],
               );
             }
           }
@@ -367,13 +417,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _logout() async {
     return showDialog<void>(
-      //다이얼로그 위젯 소환
+      //다이얼 로그 위젯 소환
       context: context,
-      barrierDismissible: false, // 다이얼로그 이외의 바탕 눌러도 안꺼지도록 설정
+      barrierDismissible: false, // 다이얼 로그 이외의 바탕 눌러도 안꺼지도록 설정
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0)),
+              borderRadius: BorderRadius.circular(12.0)
+          ),
           content: SingleChildScrollView(
               child: Center(
                   child: Text('로그아웃 하시겠습니까?')
@@ -393,11 +444,15 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 var completelyLogout = await _deleteFCMTokenFromDB();
                 if (completelyLogout) {
+
                   var jwt = await LocalStorage.save("jwt", "");
                   var fcmToken = await LocalStorage.save("fcmToken", "");
+
                   if (jwt&&fcmToken) {
                     Provider.of<JwtDto>(context, listen: false).jwtMemberDto = null;
                     Provider.of<JwtDto>(context, listen: false).machineDtoList = null;
+                    Provider.of<JwtDto>(context, listen: false).jwt = null;
+
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => const LoginPage()
