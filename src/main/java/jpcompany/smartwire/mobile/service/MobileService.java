@@ -18,4 +18,8 @@ public class MobileService {
     public void deleteFcmTokenAndAlarmSettingFromDB(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
         mobileRepository.deleteFcmTokenByFCMToken(fcmTokenAndAlarmSettingDto);
     }
+
+    public void updateAlarmSettingFromDB(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        mobileRepository.updateAlarmSettingByFCMToken(fcmTokenAndAlarmSettingDto);
+    }
 }

@@ -73,7 +73,8 @@ public class WindowController {
 
         this.messagingTemplate.convertAndSend("/topic/logs/" + member.getLoginId(), logSaveDto);
         fcmNotificationService.sendNotificationByToken(
-                new FCMNotificationDto(member.getId(), machineName + " 상태 변경 알림", message)
+                new FCMNotificationDto(member.getId(), machineName + " 상태 변경 알림", message),
+                member
         );
 
         return "Log send complete";

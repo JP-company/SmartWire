@@ -20,7 +20,7 @@ class MemberJdbcTemplateRepositoryTest {
 
     @Test
     void doTest() {
-        service.sendNotificationByToken(FCMNotificationDto.builder().targetMemberId(195).title("test").body("testMessage").build());
+//        service.sendNotificationByToken(FCMNotificationDto.builder().targetMemberId(195).title("test").body("testMessage").build());
 
 //        List<String> fcmTokenListById = memberRepository.getFcmTokenListById(195);
 //        for (String token : fcmTokenListById) {

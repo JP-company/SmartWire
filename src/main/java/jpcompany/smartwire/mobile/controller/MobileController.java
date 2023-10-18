@@ -73,6 +73,14 @@ public class MobileController {
         mobileService.deleteFcmTokenAndAlarmSettingFromDB(fcmTokenAndAlarmSettingDto);
         return "deleted completely fcmToken and AlarmSetting";
     }
+
+    @PostMapping("/api/fcm_token/update")
+    public String updateAlarmSetting(@RequestBody FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        fcmTokenAndAlarmSettingDto.setMemberId(member.getId());
+        mobileService.updateAlarmSettingFromDB(fcmTokenAndAlarmSettingDto);
+        return "updated completely AlarmSetting";
+    }
 }
 
 

@@ -42,4 +42,12 @@ public class MobileRepository {
                 .addValue("fcmToken", fcmTokenAndAlarmSettingDto.getFcmToken());
         template.update(sql, param);
     }
+
+    public void updateAlarmSettingByFCMToken(FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto) {
+        String sql = "UPDATE fcmtokens SET alarm_setting =:alarmSetting WHERE fcm_token=:fcmToken";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("alarmSetting", fcmTokenAndAlarmSettingDto.getAlarmSetting())
+                .addValue("fcmToken", fcmTokenAndAlarmSettingDto.getFcmToken());
+        template.update(sql, param);
+    }
 }

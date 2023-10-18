@@ -38,6 +38,61 @@ public class FCMNotificationService {
                     .build())
             .build();
 
+    public void sendNotificationByToken(FCMNotificationDto notificationDto, Member member) {
+        // Heroku 기준 한국 시간
+        LocalTime now = LocalTime.now().plusHours(9);
+//        LocalTime now = LocalTime.now();
+
+        List<FCMTokenAndAlarmSettingDto> fcmTokenAndAlarmSettingDtoList = memberRepository.getFcmTokenListById(member.getId());
+        if (fcmTokenAndAlarmSettingDtoList != null) {
+            Notification notification = Notification.builder()
+                    .setTitle(notificationDto.getTitle())
+                    .setBody(notificationDto.getBody())
+                    .build();
+
+            for (FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto : fcmTokenAndAlarmSettingDtoList) {
+                String alarmSetting = fcmTokenAndAlarmSettingDto.getAlarmSetting();
+
+                if (alarmSetting.charAt(0) == 'y' && isTime(now, alarmSetting)) {
+                    Message message = Message.builder()
+                            .setToken(fcmTokenAndAlarmSettingDto.getFcmToken())
+                            .setNotification(notification)
+                            .setAndroidConfig(androidConfig)
+                            .setApnsConfig(apnsConfig)
+                            .build();
+                    try {
+                        firebaseMessaging.send(message);
+                        log.info( "푸시 알림 성공 / id = {} / token = {}",
+                                notificationDto.getTargetMemberId(),
+                                fcmTokenAndAlarmSettingDto.getFcmToken()
+                        );
+                    } catch (FirebaseMessagingException e) {
+                        if (e.getMessage().contains("not a valid FCM") ||
+                            e.getMessage().contains("Requested entity was not found")
+                        ) {
+                            mobileRepository.deleteFCMTokenById(fcmTokenAndAlarmSettingDto.getId());
+                            log.info("유효하지 않은 FCM Token 삭제 = {}", fcmTokenAndAlarmSettingDto.getFcmToken());
+                        }
+                        log.error( "푸시 알림 실패 / id = {} / token = {} / message = {}",
+                                notificationDto.getTargetMemberId(),
+                                fcmTokenAndAlarmSettingDto.getFcmToken(),
+                                e.getMessage()
+                        );
+                    }
+                } else {
+                    log.error( "푸시 알림 시간 아님 / id = {} / token = {} / alarmSetting = {}",
+                            notificationDto.getTargetMemberId(),
+                            fcmTokenAndAlarmSettingDto.getFcmToken(),
+                            fcmTokenAndAlarmSettingDto.getAlarmSetting()
+                    );
+                }
+            }
+        } else {
+            log.error( "푸시 알림 실패 해당 맴버 토큰 없음 / id = {}", notificationDto.getTargetMemberId());
+        }
+
+    }
+
     private boolean isTime(LocalTime now, String alarmSetting) {
         String alarmStartTimeStr = alarmSetting.substring(1).split(",")[0];
         String alarmLastTimeStr = alarmSetting.substring(1).split(",")[1];
@@ -52,64 +107,6 @@ public class FCMNotificationService {
             return now.isAfter(alarmStartTime) && now.isBefore(alarmLastTime);
         } else {
             return now.isAfter(alarmStartTime) || now.isBefore(alarmLastTime);
-        }
-    }
-
-    public void sendNotificationByToken(FCMNotificationDto notificationDto) {
-        // 한국 시간
-        LocalTime now = LocalTime.now().plusHours(9);
-        log.info("지금 시간={}", now);
-
-        Optional<Member> member = memberRepository.findById(notificationDto.getTargetMemberId());
-
-        if (member.isPresent()) {
-            List<FCMTokenAndAlarmSettingDto> fcmTokenAndAlarmSettingDtoList = memberRepository.getFcmTokenListById(member.get().getId());
-            if (fcmTokenAndAlarmSettingDtoList != null) {
-                Notification notification = Notification.builder()
-                        .setTitle(notificationDto.getTitle())
-                        .setBody(notificationDto.getBody())
-                        .build();
-
-                for (FCMTokenAndAlarmSettingDto fcmTokenAndAlarmSettingDto : fcmTokenAndAlarmSettingDtoList) {
-                    String alarmSetting = fcmTokenAndAlarmSettingDto.getAlarmSetting();
-
-                    if (alarmSetting.charAt(0) == 'y' && isTime(now, alarmSetting)) {
-                        Message message = Message.builder()
-                                .setToken(fcmTokenAndAlarmSettingDto.getFcmToken())
-                                .setNotification(notification)
-                                .setAndroidConfig(androidConfig)
-                                .setApnsConfig(apnsConfig)
-                                .build();
-                        try {
-                            firebaseMessaging.send(message);
-                            log.info( "푸시 알림 성공 / id = {} / token = {}",
-                                    notificationDto.getTargetMemberId(),
-                                    fcmTokenAndAlarmSettingDto.getFcmToken()
-                            );
-                        } catch (FirebaseMessagingException e) {
-                            if (e.getMessage().contains("not a valid FCM") ||
-                                e.getMessage().contains("Requested entity was not found")
-                            ) {
-                                mobileRepository.deleteFCMTokenById(fcmTokenAndAlarmSettingDto.getId());
-                                log.info("유효하지 않은 FCM Token 삭제 = {}", fcmTokenAndAlarmSettingDto.getFcmToken());
-                            }
-                            log.error( "푸시 알림 실패 / id = {} / token = {} / message = {}",
-                                    notificationDto.getTargetMemberId(),
-                                    fcmTokenAndAlarmSettingDto.getFcmToken(),
-                                    e.getMessage()
-                            );
-                        }
-                    } else {
-                        log.error( "푸시 알림 시간 아님 / id = {} / token = {} / alarmSetting = {}",
-                                notificationDto.getTargetMemberId(),
-                                fcmTokenAndAlarmSettingDto.getFcmToken(),
-                                fcmTokenAndAlarmSettingDto.getAlarmSetting()
-                        );
-                    }
-                }
-            } else {
-                log.error( "푸시 알림 실패 해당 맴버 토큰 없음 / id = {}", notificationDto.getTargetMemberId());
-            }
         }
     }
 }
