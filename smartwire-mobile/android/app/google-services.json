@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:678016711135:android:9993db4c4f967baccd2c6a",
+        "mobilesdk_app_id": "1:678016711135:android:d4aae4333e301d84cd2c6a",
         "android_client_info": {
-          "package_name": "com.example.smartwire_mobile"
+          "package_name": "com.jpCompany.smartwireMobile"
         }
       },
       "oauth_client": [],
