@@ -25,8 +25,8 @@ public class MemberJoinController {
 
     @GetMapping("/join")
     public String join(Model model) {
-//        model.addAttribute("memberJoinForm", new MemberJoinForm());
-        model.addAttribute("memberJoinDto", initMemberJoinForm());
+        model.addAttribute("memberJoinDto", new MemberJoinDto());
+//        model.addAttribute("memberJoinDto", initMemberJoinForm());
         return "home/join";
     }
 

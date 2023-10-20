@@ -40,8 +40,8 @@ public class FCMNotificationService {
 
     public void sendNotificationByToken(FCMNotificationDto notificationDto, Member member) {
         // Heroku 기준 한국 시간
-        LocalTime now = LocalTime.now().plusHours(9);
-//        LocalTime now = LocalTime.now();
+//        LocalTime now = LocalTime.now().plusHours(9);
+        LocalTime now = LocalTime.now();
 
         List<FCMTokenAndAlarmSettingDto> fcmTokenAndAlarmSettingDtoList = memberRepository.getFcmTokenListById(member.getId());
         if (fcmTokenAndAlarmSettingDtoList != null) {

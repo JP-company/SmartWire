@@ -79,12 +79,13 @@ public class MemberLoginController {
         return "home/main";
     }
 
+
     @GetMapping("/login")
     public String loginForm(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         if (principalDetails != null && principalDetails.getMember() != null) {
             return "redirect:/";
         }
-        model.addAttribute("memberLoginDto", new MemberLoginDto("wjsdj2008"));
+        model.addAttribute("memberLoginDto", new MemberLoginDto());
         return "home/login";
     }
 
