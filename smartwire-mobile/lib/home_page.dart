@@ -76,9 +76,7 @@ class _HomePageState extends State<HomePage> {
     return <LogDto>[];
   }
   Future<void> refresh() async {
-    setState(() {
-      getLogList();
-    });
+    setState(() { });
   }
 
   @override
@@ -135,11 +133,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-            setState(() {
-              getLogList();
-            });
-          },
+        onPressed: () { refresh(); },
         backgroundColor: Colors.black,
         child: Icon(Icons.refresh)
       ),
@@ -248,7 +242,7 @@ class _HomePageState extends State<HomePage> {
             } else if (snapshot.hasError) {
               // 데이터 로딩 중에 오류가 발생한 경우
               print('Error: ${snapshot.error}');
-              return Center(child: Text("네트워크 연결을 확인해주세요."));
+              return Center(child: Text("인터넷 연결을 확인해 주세요."));
             } else {
               // 데이터 로딩이 성공한 경우
               List<LogDto> logList = snapshot.data ?? [];
@@ -405,15 +399,44 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showSnackBar(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(text,
-            textAlign: TextAlign.center,
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).size.height * 0.5 - 20, // 화면 중앙에서 약간 위쪽에 배치
+        left: MediaQuery.of(context).size.width * 0.2, // 화면의 25%부터 시작
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.6, // 화면의 80% 너비
+            height: 80,
+            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(8), // 모서리 둥글게
+                border: Border.all(color: Colors.black, width: 2)
+            ),
+            child: Center(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16
+                ),
+              ),
+            ),
           ),
-          duration: const Duration(seconds: 2),
-        )
+        ),
+      ),
     );
+
+    overlay.insert(overlayEntry);
+
+    Future.delayed(Duration(seconds: 1), () {
+      overlayEntry.remove();
+    });
   }
+
 
   Future<void> _logout() async {
     return showDialog<void>(
@@ -476,6 +499,9 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+
+
 }
 
 

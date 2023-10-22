@@ -1,4 +1,4 @@
-package com.example.smartwire_mobile
+package com.jpCompany.smartwireMobile
 
 import io.flutter.embedding.android.FlutterActivity
 

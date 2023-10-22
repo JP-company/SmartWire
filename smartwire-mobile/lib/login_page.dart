@@ -34,8 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: [
                             const CircleAvatar(
-                              backgroundImage: AssetImage(
-                                  'assets/images/smartwire.png'),
+                              backgroundImage: AssetImage('assets/images/smartwire.png'),
                               radius: 32.0,
                             ),
                             const SizedBox(

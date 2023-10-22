@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:smartwire_mobile/dto/jwt_dto.dart';
 import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:smartwire_mobile/alarm_setting_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'dto/alarm_setting_dto.dart';
 
@@ -239,6 +238,12 @@ class _AlarmSettingPageState extends State<AlarmSettingPage> {
                 SizedBox(height: 32.0,),
                 ElevatedButton(
                   onPressed: () async {
+                    var connectivityResult = await (Connectivity().checkConnectivity());
+                    if (connectivityResult == ConnectivityResult.none) {
+                      showSnackBar(context, "저장에 실패 했습니다.\n인터넷 연결을 확인해 주세요.");
+                      return;
+                    }
+
                     String alarmSettingStr = makeAlarmSettingStr(
                         Provider.of<AlarmSettingDto>(context, listen: false).isAlarmTrue,
                         Provider.of<AlarmSettingDto>(context, listen: false).startTime,
@@ -309,11 +314,11 @@ class _AlarmSettingPageState extends State<AlarmSettingPage> {
     final overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: MediaQuery.of(context).size.height * 0.5 - 20, // 화면 중앙에서 약간 위쪽에 배치
-        left: MediaQuery.of(context).size.width * 0.2, // 화면의 25%부터 시작
+        left: MediaQuery.of(context).size.width * 0.15, //
         child: Material(
           color: Colors.transparent,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.6, // 화면의 80% 너비
+            width: MediaQuery.of(context).size.width * 0.7, // 화면의 80% 너비
             height: 80,
             padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             decoration: BoxDecoration(

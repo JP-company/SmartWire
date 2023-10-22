@@ -1,4 +1,7 @@
 PODS:
+  - connectivity_plus (0.0.1):
+    - Flutter
+    - ReachabilitySwift
   - Firebase/CoreOnly (10.15.0):
     - FirebaseCore (= 10.15.0)
   - Firebase/Messaging (10.15.0):
@@ -61,11 +64,13 @@ PODS:
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - PromisesObjC (2.3.1)
+  - ReachabilitySwift (5.0.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -83,8 +88,11 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - PromisesObjC
+    - ReachabilitySwift
 
 EXTERNAL SOURCES:
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -97,6 +105,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
+  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
   firebase_core: 28e84c2a4fcf6a50ef83f47b145ded8c1fa331e4
   firebase_messaging: 91ec967913a5d144f951b3c3ac17a57796d38735
@@ -110,6 +119,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
 
 PODFILE CHECKSUM: b17e1ecfe97aba85f3997d462fe23d9e4313a8d8
