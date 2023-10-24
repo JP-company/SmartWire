@@ -44,6 +44,10 @@ class InternetError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "SMARTWIRE MOBILE APP",
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
       home: Scaffold(
         body: Center(
           child: Column(
@@ -60,6 +64,10 @@ class InternetError extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              TextButton(
+                  onPressed: () { main(); },
+                  child: Text("새로고침",)
+              )
             ],
           ),
         ),

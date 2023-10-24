@@ -8,6 +8,7 @@ import 'package:smartwire_mobile/local_storage/local_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwire_mobile/login_page.dart';
 import 'package:smartwire_mobile/member_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'dto/jwt_dto.dart';
 import 'dto/log_dto.dart';
@@ -203,7 +204,6 @@ class _HomePageState extends State<HomePage> {
                         ListTile(
                           title: Text('로그아웃'),
                           onTap: () async {
-                            print("로그아웃 버튼 클릭");
                             _logout();
                           },
                         ),
@@ -403,11 +403,11 @@ class _HomePageState extends State<HomePage> {
     final overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: MediaQuery.of(context).size.height * 0.5 - 20, // 화면 중앙에서 약간 위쪽에 배치
-        left: MediaQuery.of(context).size.width * 0.2, // 화면의 25%부터 시작
+        left: MediaQuery.of(context).size.width * 0.15,
         child: Material(
           color: Colors.transparent,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.6, // 화면의 80% 너비
+            width: MediaQuery.of(context).size.width * 0.7, // 화면의 80% 너비
             height: 80,
             padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             decoration: BoxDecoration(
@@ -439,6 +439,7 @@ class _HomePageState extends State<HomePage> {
 
 
   Future<void> _logout() async {
+
     return showDialog<void>(
       //다이얼 로그 위젯 소환
       context: context,
@@ -465,6 +466,12 @@ class _HomePageState extends State<HomePage> {
               //   elevation: 0.0,
               // ),
               onPressed: () async {
+                var connectivityResult = await (Connectivity().checkConnectivity());
+                if (connectivityResult == ConnectivityResult.none) {
+                  showSnackBar(context, "로그아웃에 실패 했습니다.\n인터넷 연결을 확인해 주세요.");
+                  return;
+                }
+
                 var completelyLogout = await _deleteFCMTokenFromDB();
                 if (completelyLogout) {
 
@@ -484,7 +491,7 @@ class _HomePageState extends State<HomePage> {
                     return;
                   }
                 }
-                showSnackBar(context, '로그아웃에 실패했습니다. 네트워크 연결을 확인해주세요.');
+                showSnackBar(context, '로그아웃에 실패 했습니다.');
                 Navigator.of(context).pop();
               },
             ),
