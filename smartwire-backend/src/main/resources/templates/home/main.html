@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/images/smartwire_favicon.ico">
+  <link rel="stylesheet" href="/css/main.css"/>
+  <title th:text="#{title}">스마트 와이어</title>
+</head>
+<body>
+
+<nav id="main-navbar">
+  <div id="main-navbar-left">
+    <a th:href="@{/}">
+      <img src="/images/logo.png" alt="로고" />
+      <span>SMART WIRE</span>
+    </a>
+  </div>
+  <div id="main-navbar-right">
+    <span th:text="${member.companyName}">Company name</span>
+    <button type="submit" th:onclick="|location.href='@{/member}'|"><img src="/images/account.png" alt="마이페이지"/></button>
+    <form action="/logout" method="post">
+      <button th:text="#{logout}">로그아웃</button>
+    </form>
+
+  </div>
+</nav>
+
+<div id="main-wrap">
+  <div id="main-left">
+    <div>
+      <button id="main-left-status">
+        <img src="/images/check_white.png" alt="" /><span>작동 상태</span>
+      </button>
+      <button id="main-left-data" disabled>
+        <img src="/images/assessment_grey.png" alt="" /><span>가공 통계</span>
+      </button>
+    </div>
+  </div>
+  <div id="main-right">
+    <div id="main-right-grid">
+
+      <div class="main-right-grid-card" th:each="machine, machineStat : ${machines}">
+        <div class="header" th:id="|header${machine.id}|">
+          <span class="machine-name" th:text="${logDto[__${machineStat.index}__].machineName}">기계명</span>
+          <img src="/images/breaking.png" th:id="|image${machine.id}|" alt="기계 상태"/>
+        </div>
+        <div class="middle">
+          <div th:id="|div${machine.id}|">
+            <div>파일명</div>
+            <div>로그명</div>
+          </div>
+          <div>
+            <div><button class="log-file" th:id="|file${machine.id}|" th:text="${logDto[__${machineStat.index}__].file}">파일명</button></div>
+            <span class="log-text" th:id="|log${machine.id}|"
+                  th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[1] : ''}">로그명</span>
+            <span th:id="|logStatus${machine.id}|"
+                  th:text="${(logDto[__${machineStat.index}__].log != null) ? logDto[__${machineStat.index}__].log.split('_')[0] : ''}" hidden>로그 상태</span>
+            <div class="log-time">
+              <span th:id="|date${machine.id}|" th:text="|${logDto[__${machineStat.index}__].date}|"></span>
+              <span th:id="|logTime${machine.id}|" th:text="|${logDto[__${machineStat.index}__].logTime}|"></span>
+            </div>
+          </div>
+        </div>
+<!--        <div class="bottom">-->
+<!--          <img src="/images/clock.png" alt="작동시간" />-->
+<!--          <span th:id="|startedTime${machineStat.index}|" th:text="${logDto[__${machineStat.index}__].startedTime}">00:00 (현재 파일 가공 시간)</span>-->
+<!--        </div>-->
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+
+<!--웹소켓-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript">
+  function connect()
+  {
+    // Connect to WebSocket server.
+    let socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+    stompClient.debug = null;
+    stompClient.connect({}, function(frame) {
+      // console.log('로그인 아이디=', [[${member.loginId}]]);
+      stompClient.subscribe('/topic/logs/' + [[${member.loginId}]], function(message) {
+        handleUpdate(JSON.parse(message.body));
+      });
+    });
+
+    socket.onclose = function()
+    {
+      setTimeout(function()
+      {
+        socket = connect();
+      }, 1000);
+    }
+
+    return socket;
+  }
+
+  connect();
+  function handleUpdate(message) {
+      realTimeUpdate(message);
+  }
+</script>
+
+<script th:inline="javascript">
+    const setStatus = function(logTextStatus, header, logText, statusImg, file, div) {
+        if (logTextStatus === '') {
+            header.style.backgroundColor = '#666666';
+            logText.style.color = '#666666';
+            statusImg.src = "/images/error.png";
+            // file.innerHTML = '와이어 기계와 연결되어있지 않습니다.<br>와이어 기계의 "스마트 와이어" 프로그램이<br> 정상적으로 실행중인지 확인해주세요';
+            file.innerHTML = "'스마트 와이어(윈도우)' 를 실행해주세요.<br>인터넷 연결 문제일 수 있습니다."
+            file.style.cursor = 'default';
+            file.style.width= '230px';
+            div.style.display = 'none';
+        } else if (logTextStatus === 'stop' || logTextStatus === 'reset') {
+            header.style.backgroundColor = '#FF6262';
+            logText.style.color = '#FF6262';
+            statusImg.src = "/images/breaking.png";
+            div.style.display = 'block';
+            if (logTextStatus === 'reset') {
+                file.textContent='-';
+            }
+        } else if (logTextStatus === 'start' || logTextStatus === 'restart') {
+            header.style.backgroundColor = '#00C220';
+            logText.style.color = '#00C220';
+            statusImg.src = "/images/working.gif";
+            div.style.display = 'block';
+        } else if (logTextStatus === 'done') {
+            header.style.backgroundColor = '#00A3FF';
+            logText.style.color = '#00A3FF';
+            statusImg.src = "/images/done.png";
+            div.style.display = 'block';
+        }
+        if (file.textContent === '') {
+            file.textContent = '-';
+        }
+    }
+    let logText;
+    let logTextStatus;
+    let header;
+    let statusImg;
+    let file;
+    let logDate;
+    let logTime;
+    let div;
+    for (let i = 0; i < [[${machines}]].length; i++) {
+        let machineId = [[${machines}]][i].id;
+        logText = document.getElementById('log' + machineId);
+        logTextStatus = document.getElementById('logStatus' + machineId).textContent;
+        header = document.getElementById('header' + machineId);
+        statusImg = document.getElementById("image" + machineId);
+        file = document.getElementById("file" + machineId);
+        logDate = document.getElementById("date"+ machineId);
+        logTime = document.getElementById("logTime" + machineId);
+        div = document.getElementById("div" + machineId);
+        setStatus(logTextStatus, header, logText, statusImg, file, div);
+    }
+
+    let realTimeUpdate = function(logObj) {
+        let machineId = logObj["machineId"];
+        logText = document.getElementById('log' + machineId);
+        logTextStatus = document.getElementById('logStatus' + machineId).textContent;
+        header = document.getElementById('header' + machineId);
+        statusImg = document.getElementById("image" + machineId);
+        file = document.getElementById("file" + machineId);
+        logDate = document.getElementById("date"+ machineId);
+        logTime = document.getElementById("logTime" + machineId);
+        div = document.getElementById("div" + machineId);
+
+        logText.textContent = logObj["log"].split("_")[1];
+        logTextStatus = logObj["log"].split("_")[0];
+        if (logObj["log"].split("_")[0] === 'reset') {
+            file.textContent = "-";
+        }
+        if (logObj["file"] !== null) {
+            file.textContent = logObj["file"];
+        }
+        if (logObj["date"] !== null) {
+            logDate.textContent = logObj["date"];
+        }
+        logTime.textContent = logObj["logTime"];
+
+        setStatus(logTextStatus, header, logText, statusImg, file, div);
+    }
+</script>
+
+</html>
+

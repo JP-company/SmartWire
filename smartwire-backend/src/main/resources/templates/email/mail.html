@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div style="margin:100px;">
+  <h1> 안녕하세요.</h1>
+  <h1> 스마트 와이어 입니다.</h1>
+
+  <div style="border:1px solid black; ">
+    <h3 style="color:blue"> 아래 인증버튼을 누르시면 인증이 완료됩니다.</h3>
+    <a th:href="@{{domain}/email_verify/{authCode}(domain=#{domain}, authCode=${emailAuthToken})}" >인증하기</a>
+  </div>
+  <br/>
+</div>
+
+</body>
+</html>
