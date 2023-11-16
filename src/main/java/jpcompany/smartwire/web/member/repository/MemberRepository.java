@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository {
-    void save(MemberJoinDto memberJoinDto);
+    Integer save(MemberJoinDto memberJoinDto);
     Member update(Member member);
     Optional<Member> findById(Integer id);
     Optional<Member> findByLoginId(String loginId);

@@ -124,8 +124,9 @@ public class MemberLoginController {
             throw new IllegalAccessError("잘못된 접근입니다.");
         }
 
-        // 이메일 재전송, 토큰 값 업데이트
-        String authToken = memberEmailService.sendEmail(member.getLoginId(), member.getEmail());
+        // 메일 인증 토큰 값 새로 생성 해서 이메일 재전송
+        String emailAuthToken = memberEmailService.createEmailAuthToken();
+        String authToken = memberEmailService.sendEmail(member.getLoginId(), member.getEmail(), emailAuthToken);
         serviceLogin.updateAuthToken(member.getLoginId(), authToken, member.getEmail());
 
         // 세션 값 업데이트(계정 세션 아님)

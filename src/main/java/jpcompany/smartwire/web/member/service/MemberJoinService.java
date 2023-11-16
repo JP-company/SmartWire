@@ -5,6 +5,8 @@ import jpcompany.smartwire.web.member.dto.MemberJoinDto;
 import jpcompany.smartwire.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +25,22 @@ public class MemberJoinService {
     private final MemberEmailService memberEmailService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // TODO - ㄴㅅSetter 문을 닫자.
     @Transactional
-    public void join(MemberJoinDto memberJoinDto) throws MessagingException, UnsupportedEncodingException {
+    public void join(MemberJoinDto memberJoinDto) throws MessagingException {
+        String emailAuthToken = memberEmailService.createEmailAuthToken();
+
         memberJoinDto.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
-        memberJoinDto.setAuthToken(memberEmailService.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail()));
-        repository.save(memberJoinDto);
+        memberJoinDto.setAuthToken(emailAuthToken);
+
+        try {
+            repository.save(memberJoinDto);  // DB에 정상적으로 저장되면 이메일 전송
+            memberEmailService.sendEmail(memberJoinDto.getLoginId(), memberJoinDto.getEmail(), emailAuthToken); // 메일 전송 안되면 재전송 사용자에게 재전송 버튼 클릭 요청
+        } catch (MessagingException | MailAuthenticationException | MailSendException e) {
+            // 메일 전송 실패
+        } catch (Exception e) {
+            // DB 저장 실패
+        }
+
     }
 
     @Transactional

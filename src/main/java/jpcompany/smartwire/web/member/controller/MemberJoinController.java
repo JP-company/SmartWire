@@ -21,12 +21,11 @@ import java.io.UnsupportedEncodingException;
 @Slf4j
 public class MemberJoinController {
 
-    private final MemberJoinService serviceJoin;
+    private final MemberJoinService memberJoinService;
 
     @GetMapping("/join")
     public String join(Model model) {
         model.addAttribute("memberJoinDto", new MemberJoinDto());
-//        model.addAttribute("memberJoinDto", initMemberJoinForm());
         return "home/join";
     }
 
@@ -34,13 +33,13 @@ public class MemberJoinController {
     public String joinIn(@Validated @ModelAttribute(name = "memberJoinDto") MemberJoinDto memberJoinDto,
                          BindingResult bindingResult,
                          Model model)
-            throws MessagingException, UnsupportedEncodingException {
+            throws MessagingException {
 
         // 비밀번호 확인 불일치, 아이디 중복 오류
-        if (!serviceJoin.passwordDoubleCheck(memberJoinDto.getLoginPassword(), memberJoinDto.getLoginPasswordDoubleCheck())) {
+        if (!memberJoinService.passwordDoubleCheck(memberJoinDto.getLoginPassword(), memberJoinDto.getLoginPasswordDoubleCheck())) {
             bindingResult.rejectValue("loginPasswordDoubleCheck", "Incorrect");
         }
-        if (!serviceJoin.idDuplicateCheck(memberJoinDto.getLoginId())) {
+        if (!memberJoinService.idDuplicateCheck(memberJoinDto.getLoginId())) {
             bindingResult.rejectValue("loginId", "Duplicated");
         }
 
@@ -50,22 +49,14 @@ public class MemberJoinController {
             return "home/join";
         }
 
+        // 회원 저장
+        memberJoinService.join(memberJoinDto);
+
+        // DB 저장 실패 -> 회원 가입 실패 팝업 메시지
+        // 인증 메일 전송 실패 -> 사용자에게 재전송 버튼 클릭 요청
+
         // 회원가입 성공 -> 메일 인증 요청 페이지 이동
-        serviceJoin.join(memberJoinDto);
         model.addAttribute("member", memberJoinDto);
         return "home/email_verify";
-    }
-
-    // 테스트 편의상 양식 미리 넣어둠
-    private MemberJoinDto initMemberJoinForm() {
-        MemberJoinDto memberJoinDto = new MemberJoinDto();
-        memberJoinDto.setLoginId("wjsdj2009");
-        memberJoinDto.setLoginPassword("Arkskekfk1!");
-        memberJoinDto.setLoginPasswordDoubleCheck("Arkskekfk1!");
-        memberJoinDto.setCompanyName("제이피컴퍼니");
-        memberJoinDto.setEmail("wjsdj2008@gmail.com");
-        memberJoinDto.setPhoneNumber("01087144246");
-        memberJoinDto.setTermOfUse(true);
-        return memberJoinDto;
     }
 }

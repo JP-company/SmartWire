@@ -193,10 +193,11 @@
 
             if (computedStyle.display === 'none') {
                 hideDiv.style.display = 'flex';
-                button.style.backgroundImage = "url('../image/expand_less.png')";
+                button.style.backgroundImage = "url('../image/arrow.png')";
+                console.log(button.style.backgroundImage); // 이를 통해 실제로 스타일이 적용되었는지 확인
             } else {
                 hideDiv.style.display = 'none';
-                button.style.backgroundImage = "url('../image/expand.png')";
+                button.style.backgroundImage = 'url(\"../image/expand.png\")';
             }
         });
     });
@@ -279,10 +280,10 @@
 
             if (computedStyle.display === 'none') {
                 hideDiv.style.display = 'flex';
-                button.style.backgroundImage = "url('../image/expand_less.png')";
+                button.style.backgroundImage = 'url(\"../image/expand_less.png\")';
             } else {
                 hideDiv.style.display = 'none';
-                button.style.backgroundImage = "url('../image/expand.png')";
+                button.style.backgroundImage = 'url(\"../image/expand.png\")';
             }
         });
 
