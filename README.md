@@ -40,19 +40,22 @@
 
 
 - 시연 영상
-https://github.com/JP-company/smartwire/assets/77595494/9ffa1752-7742-4bd0-98e3-a184263b91f7
+
+https://github.com/JP-company/smartwire/assets/77595494/ded56e60-393e-4eae-a09c-92d521559ef9
+
 
 
 - 링크
-<웹페이지 링크>
+  
+<웹페이지 링크> <br>
 https://smartwire-backend-f39394ac6218.herokuapp.com/
 
 
-<IOS 앱스토어 링크>
+<IOS 앱스토어 링크> <br>
 https://apps.apple.com/app/id6469705578
 
 
-<구글 플레이스토어 링크>
+<구글 플레이스토어 링크> <br>
 https://play.google.com/store/apps/details?id=com.jpCompany.smartwireMobile
 
 
