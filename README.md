@@ -33,7 +33,7 @@
 
 - 컴퓨터 웹 페이지 화면
 
-<img width="644" src="https://github.com/JP-company/smartwire-backend/assets/77595494/358f5b5a-34ce-440e-b54b-95236d181a1c">
+<img width="800" src="https://github.com/JP-company/smartwire-backend/assets/77595494/358f5b5a-34ce-440e-b54b-95236d181a1c">
 
 
 ### 소개 템플릿
