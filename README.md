@@ -35,8 +35,26 @@
 
 <img width="800" src="https://github.com/JP-company/smartwire-backend/assets/77595494/358f5b5a-34ce-440e-b54b-95236d181a1c">
 
-
 ### 소개 템플릿
 <img width="644" alt="smartwire-leaflet" src="https://github.com/JP-company/smartwire-backend/assets/77595494/5b28e5c5-930e-4c34-a6bd-57eaef9e6909">
+
+
+- 시연 영상
+https://github.com/JP-company/smartwire/assets/77595494/9ffa1752-7742-4bd0-98e3-a184263b91f7
+
+
+- 링크
+<웹페이지 링크>
+https://smartwire-backend-f39394ac6218.herokuapp.com/
+
+
+<IOS 앱스토어 링크>
+https://apps.apple.com/app/id6469705578
+
+
+<구글 플레이스토어 링크>
+https://play.google.com/store/apps/details?id=com.jpCompany.smartwireMobile
+
+
 
 
