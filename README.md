@@ -26,7 +26,11 @@
 
 ### 모바일 앱, 웹 페이지 화면
 - 모바일 앱 화면
-![모바일 메인화면](https://github.com/JP-company/smartwire-backend/assets/77595494/b7360340-92ee-4198-b425-971906841ab0)
+
+<img width="180" height="320" src="https://github.com/JP-company/smartwire-backend/assets/77595494/b7360340-92ee-4198-b425-971906841ab0">
+<img width="180" height="320" src="https://github.com/JP-company/smartwire-backend/assets/77595494/08466b05-ff0f-45d8-a511-6163d2799bfe">
+
+
 - 컴퓨터 웹 페이지 화면
 ![웹페이지 메인화면](https://github.com/JP-company/smartwire-backend/assets/77595494/358f5b5a-34ce-440e-b54b-95236d181a1c)
 
