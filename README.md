@@ -25,6 +25,5 @@
 
 
 ### 소개 템플릿
-![스크린샷 2023-12-03 오후 6.33.23.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fhx%2Fbcjw5s8934gcv9d56rt202vr0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_ZJFVW0%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-12-03%20%EC%98%A4%ED%9B%84%206.33.23.png)
-
+![smartwire-leaflet](https://github.com/JP-company/smartwire-backend/assets/77595494/6bfa7524-86e5-47c2-bac2-d06597b77872)
 
