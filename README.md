@@ -19,7 +19,7 @@
 | 윈도우 앱  | C#, Winform             |
 | 모바일 앱  | Flutter                 |
 | 백엔드 서버 | Java, Spring            |
-| 웹 프론트  | HTML, CSS, JS, Thmeleaf |
+| 웹 프론트  | HTML, CSS, JS, Thymeleaf |
 | DB     | MySQL, Jdbc Template    |
 | 배포     | Heroku                  |
 | 기타     | Spring Security         |
@@ -39,8 +39,6 @@
   
 https://github.com/JP-company/smartwire/assets/77595494/ded56e60-393e-4eae-a09c-92d521559ef9
 
-<br>
-
 ### 소개 템플릿
 <img width="644" alt="smartwire-leaflet" src="https://github.com/JP-company/smartwire-backend/assets/77595494/5b28e5c5-930e-4c34-a6bd-57eaef9e6909">
 
@@ -57,5 +55,6 @@ https://apps.apple.com/app/id6469705578
 - 구글 플레이스토어 링크 <br>
 https://play.google.com/store/apps/details?id=com.jpCompany.smartwireMobile
 <br>
+
 
 
