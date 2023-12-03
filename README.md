@@ -25,4 +25,4 @@
 
 
 ### 소개 템플릿
-![smartwire-leaflet](https://github.com/JP-company/smartwire-backend/assets/77595494/6bfa7524-86e5-47c2-bac2-d06597b77872)
+<img width="644" alt="smartwire-leaflet" src="https://github.com/JP-company/smartwire-backend/assets/77595494/5b28e5c5-930e-4c34-a6bd-57eaef9e6909">
