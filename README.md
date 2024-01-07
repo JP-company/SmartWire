@@ -63,7 +63,7 @@ https://github.com/JP-company/smartwire/assets/77595494/ded56e60-393e-4eae-a09c-
 ### 서비스 링크  
 - 테스트 계정
 
-  ID : wjsdj2009 <br>]
+  ID : wjsdj2009 <br>
   PASSWORD : Qweasdzxc1!
 
 
