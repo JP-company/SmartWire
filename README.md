@@ -79,4 +79,9 @@ https://github.com/JP-company/smartwire/assets/77595494/ded56e60-393e-4eae-a09c-
   <br>
 
 
+### 다른 버전
+- VER 1.0, 1.1 <br>
+   https://github.com/JP-company/smartwire-1.0-1.1
 
+- VER 2.0 <br>
+   https://github.com/JP-company/smartwire-backend-2.0
