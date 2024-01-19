@@ -1,0 +1,293 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Pretendard", serif;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+#main-navbar {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    z-index: 1;
+    position: relative;
+}
+#main-navbar-left > a {
+    margin-left: 128px;
+    color: #00c220;
+    font-size: 22px;
+    font-weight: 800;
+    text-decoration: none;
+}
+#main-navbar-left > a > span {
+    margin-left: 22px;
+    position: relative;
+    top: 4px;
+}
+#main-navbar-left > a > img {
+    height: 40px;
+    width: 40px;
+    vertical-align: middle;
+}
+#main-navbar-right {
+    margin-right: 128px;
+    font-size: 25px;
+    font-weight: 800;
+}
+#main-navbar-right > span {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #999999;
+    margin-right: 18px;
+}
+#main-navbar-right > button:nth-child(2) {
+    align-items: center;
+    border: none;
+    background-color: white;
+    position: relative;
+    top: 9px;
+    padding: 0;
+    border-radius: 100px;
+    margin-right: 20px;
+    height: 32px;
+}
+#main-navbar-right > button:nth-child(2) > img {
+    width: 32px;
+    height: 32px;
+}
+
+#main-navbar-right > form {
+    display: inline-block;
+}
+
+#main-navbar-right > form > button {
+    align-items: center;
+    padding: 10px 20px;
+    width: 96px;
+    height: 40px;
+    border: 1px solid #666666;
+    border-radius: 10px;
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #000000;
+    background-color: white;
+}
+#main-navbar-right button:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    background-color: #e4e4e4;
+    cursor: pointer;
+}
+#main-wrap {
+    display: flex;
+    background: #f4f4f4;
+    padding-top: 80px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    min-height: 100vh;
+}
+#main-left {
+    margin: 0 78px 0 128px;
+    width: 186px;
+}
+
+#main-right {
+    margin-right: 128px;
+    flex: 1;
+}
+#main-left-status {
+    display: flex;
+    margin-bottom: 16px;
+    padding: 13px 24px;
+    width: 186px;
+    height: 48px;
+    background: #000000;
+    border: none;
+    border-radius: 24px;
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+}
+#main-left-data {
+    display: flex;
+    padding: 13px 24px;
+    width: 186px;
+    height: 48px;
+    background: white;
+    border: 1px solid #cacaca;
+    border-radius: 24px;
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    align-items: center;
+    text-align: center;
+    color: #999999;
+}
+#main-left-status > img,
+#main-left-data > img {
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+}
+#main-left-status > span,
+#main-left-data > span {
+    position: relative;
+    top: 1px;
+    margin-left: 6px;
+}
+#main-left-status:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+}
+#main-left-data:hover {
+    /*box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);*/
+    cursor: not-allowed;
+}
+#main-right-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 0fr));
+    grid-gap: 24px;
+    background-color: #f4f4f4;
+    flex: 1;
+}
+#main-right-grid > div {
+    width: 310px;
+    height: 158px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 16px;
+}
+.main-right-grid-card {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+}
+.main-right-grid-card:hover {
+    background-color: #999999;
+}
+.main-right-grid-card .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    width: 310px;
+    background-color: #f82f47;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+.main-right-grid-card .header span {
+    padding-left: 24px;
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+    position: relative;
+    top: 1px;
+}
+.main-right-grid-card .header img {
+    width: 20px;
+    height: 20px;
+    margin-right: 17px;
+}
+.main-right-grid-card .middle {
+    display: flex;
+    padding: 16px 24px;
+    flex: 1;
+}
+.main-right-grid-card .middle div {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+}
+.main-right-grid-card .middle div div:first-child {
+    margin-bottom: 10px;
+    width: 37px;
+}
+.main-right-grid-card .middle > div:nth-child(2) {
+    margin-left: 16px;
+}
+.main-right-grid-card .middle div button {
+    background-color: #ffffff;
+    border: none;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    text-align: start;
+
+    text-overflow: ellipsis;
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.main-right-grid-card .middle .log-text {
+    font-weight: 800;
+    color: #f82f47;
+}
+.bottom {
+    display: flex;
+    width: 310px;
+    height: 48px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background-color: #f4f4f4;
+    align-items: center;
+}
+.bottom > img {
+    width: 24px;
+    height: 24px;
+    margin-left: 24px;
+    margin-right: 30px;
+}
+.bottom > span {
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    top: 1px;
+}
+
+.main-right-grid-card .middle .log-start {
+    color: #00c220;
+}
+.main-right-grid-card .header-start {
+    background-color: #00c220;
+}
+.main-right-grid-card .middle .log-finished {
+    color: blue;
+}
+.main-right-grid-card .header-finished {
+    background-color: blue;
+}
+#main-right-machine-button {
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+}
