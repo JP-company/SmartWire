@@ -1,6 +1,6 @@
 package jpcompany.smartwire.security.jwt.config;
 
-import jpcompany.smartwire.security.jwt.entry_point.JwtLoginAuthenticationEntryPoint;
+import jpcompany.smartwire.security.jwt.handler.JwtLoginAuthenticationEntryPoint;
 import jpcompany.smartwire.security.jwt.filter.JwtAuthorizationFilter;
 import jpcompany.smartwire.security.jwt.handler.JwtAccessDeniedHandler;
 import jpcompany.smartwire.security.jwt.handler.JwtAuthenticationFailureHandler;
@@ -33,8 +33,8 @@ public class JwtSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
-    private final MemberJdbcTemplateRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberJdbcTemplateRepository memberRepository;
     private final MachineRepositoryJdbcTemplate machineRepository;
 
     @Order(0)
@@ -46,8 +46,8 @@ public class JwtSecurityConfig {
 //                .antMatcher("/api/**")
                 .authorizeRequests()
                 .antMatchers("/api/messages").hasRole("MEMBER")
-                .antMatchers("/","/login", "/error/**",
-                        "/join", "/email_verify/**", "api/login").permitAll()
+                .antMatchers("/","/login", "api/login", "/error/**",
+                        "/email_verify/**").permitAll()
                 .anyRequest().authenticated();
 
         http

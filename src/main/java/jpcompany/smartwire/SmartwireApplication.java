@@ -8,5 +8,4 @@ public class SmartwireApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SmartwireApplication.class, args);
 	}
-
 }

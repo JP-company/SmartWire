@@ -1,6 +1,6 @@
-package jpcompany.smartwire.web.log_view.repository;
+package jpcompany.smartwire.web.main.repository;
 
-import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
+import jpcompany.smartwire.web.main.dto.LogVIewDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,7 +41,6 @@ public class LogRepositoryJdbcTemplate {
                 "LEFT OUTER JOIN processes ON logs.process_id = processes.id\n" +
                 "INNER JOIN dates ON logs.machine_date_id = dates.id \n" +
                 "INNER JOIN machines ON logs.machine_id = machines.id";
-
 
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("machineIdList", machineIdList);

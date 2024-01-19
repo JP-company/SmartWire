@@ -19,6 +19,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
+
     // 시큐리티 session(내부 Authentication(내부 UserDetails))
     @Override
     // '/login' POST 에서 받는 폼 input 태그의 name 과 loadUserByUsername() 메서드의 파라미터가 같아야 한다.

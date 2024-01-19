@@ -1,4 +1,4 @@
-package jpcompany.smartwire.security.jwt.entry_point;
+package jpcompany.smartwire.security.jwt.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.AuthenticationException;

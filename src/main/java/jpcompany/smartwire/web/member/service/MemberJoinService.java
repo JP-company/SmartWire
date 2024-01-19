@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class MemberJoinService {
 
     private final MemberRepository repository;
@@ -26,7 +25,7 @@ public class MemberJoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public void join(MemberJoinDto memberJoinDto) throws MessagingException {
+    public void join(MemberJoinDto memberJoinDto) {
         String emailAuthToken = memberEmailService.createEmailAuthToken();
 
         memberJoinDto.setLoginPassword(bCryptPasswordEncoder.encode(memberJoinDto.getLoginPassword()));
@@ -40,7 +39,6 @@ public class MemberJoinService {
         } catch (Exception e) {
             // DB 저장 실패
         }
-
     }
 
     @Transactional

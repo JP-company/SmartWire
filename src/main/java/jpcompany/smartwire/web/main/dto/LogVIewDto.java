@@ -1,4 +1,4 @@
-package jpcompany.smartwire.web.log_view.dto;
+package jpcompany.smartwire.web.main.dto;
 
 import lombok.Getter;
 import lombok.Setter;

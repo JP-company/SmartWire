@@ -1,6 +1,5 @@
 package jpcompany.smartwire.security.jwt.handler.dto;
 
-import jpcompany.smartwire.domain.Member;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import lombok.Getter;
 import lombok.ToString;

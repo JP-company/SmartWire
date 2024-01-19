@@ -32,8 +32,7 @@ public class MemberJoinController {
     @PostMapping("/join")
     public String joinIn(@Validated @ModelAttribute(name = "memberJoinDto") MemberJoinDto memberJoinDto,
                          BindingResult bindingResult,
-                         Model model)
-            throws MessagingException {
+                         Model model) {
 
         // 비밀번호 확인 불일치, 아이디 중복 오류
         if (!memberJoinService.passwordDoubleCheck(memberJoinDto.getLoginPassword(), memberJoinDto.getLoginPasswordDoubleCheck())) {
@@ -52,8 +51,8 @@ public class MemberJoinController {
         // 회원 저장
         memberJoinService.join(memberJoinDto);
 
-        // DB 저장 실패 -> 회원 가입 실패 팝업 메시지
-        // 인증 메일 전송 실패 -> 사용자에게 재전송 버튼 클릭 요청
+        // TODO - DB 저장 실패 -> 회원 가입 실패 팝업 메시지
+        // TODO - 인증 메일 전송 실패 -> 사용자에게 재전송 버튼 클릭 요청
 
         // 회원가입 성공 -> 메일 인증 요청 페이지 이동
         model.addAttribute("member", memberJoinDto);

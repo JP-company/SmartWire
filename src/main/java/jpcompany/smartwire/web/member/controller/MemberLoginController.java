@@ -1,7 +1,7 @@
 package jpcompany.smartwire.web.member.controller;
 
-import jpcompany.smartwire.web.log_view.dto.LogVIewDto;
-import jpcompany.smartwire.web.log_view.repository.LogRepositoryJdbcTemplate;
+import jpcompany.smartwire.web.main.dto.LogVIewDto;
+import jpcompany.smartwire.web.main.repository.LogRepositoryJdbcTemplate;
 import jpcompany.smartwire.web.machine.dto.MachineDto;
 import jpcompany.smartwire.web.machine.repository.MachineRepositoryJdbcTemplate;
 import jpcompany.smartwire.security.common.PrincipalDetails;
